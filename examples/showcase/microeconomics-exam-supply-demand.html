@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mock exam: markets and intervention</title>
-<meta name="generator" content="academic-learning-skills 0.1.0 · exam">
+<meta name="generator" content="academic-learning-skills 0.2.0 · exam">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <script>(function(){try{var m=localStorage.getItem('als:mode')||'auto';var d=m==='dark'||(m==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-als-mode',d?'dark':'light');}catch(e){}})();</script>
 <style>/* ALS component contract.
@@ -740,7 +740,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
     }
     nodes.forEach(function (n) {
       try {
-        window.katex.render(n.getAttribute('data-tex'), n, { displayMode: n.getAttribute('data-display') === '1', throwOnError: false, strict: 'ignore' });
+        window.katex.render(n.getAttribute('data-tex'), n, { displayMode: n.getAttribute('data-display') === '1', throwOnError: false, strict: 'ignore', macros: ALS.macros });
         n.classList.remove('als-math-raw');
         n.setAttribute('data-done', '1');
       } catch (e) { n.classList.add('als-math-raw'); }
@@ -981,6 +981,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
       return;
     }
     ALS.pageKey = ALS.slug((ALS.data.module || '') + '-' + ALS.data.kind + '-' + ALS.data.title);
+    ALS.macros = Object.assign({}, ALS.data.macros || {}); // LaTeX shorthands defined once per data file
     ALS.setTheme(ALS.store.get('theme', root.getAttribute('data-als-theme')));
     ALS.applyMode();
     if (ALS.hasMath(node.textContent)) ALS.loadKatex();

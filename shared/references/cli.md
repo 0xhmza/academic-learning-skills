@@ -23,11 +23,14 @@ to use a workspace other than `$ALS_HOME` or `./study`.
 | Command | Does |
 |---|---|
 | `ALS new <kind> <out.json> --title T --module id --subject S` | Copy a valid starter (deck, lesson, quiz, exam, sheet, events) |
-| `ALS validate <files…>` | Schema + semantic checks; prints errors and warnings |
-| `ALS build <files…> [-o out.html] [--theme X] [--no-due]` | Build themed, self-contained HTML. Files in `modules/<id>/data/` build to `modules/<id>/out/` |
+| `ALS new lesson <out.json> … --outline "title,points,plot,check,summary" --source "L3=sources/L03.pdf" [--depth D --grounding G --lang de]` | Lesson skeleton with one slide per named layout; depth and grounding default to `ALS settings` |
+| `ALS settings [key=value …] [--module id] [--json]` | Show the lesson settings that apply (module, then profile, then default); with `key=value`, save them to `profile.md` or the module's `module.md`. Keys: depth, audience, grounding, order, ask, checks, visuals, notes, language |
+| `ALS extract <pdf…> [--module id \| -o dir] [--pages 1-20] [--images thin\|all] [--dpi 80] [--toc] [--keep-builds] [--layout]` | Page-numbered text (`=== <name> p.N ===`) for citing; reports pages without text and merges build-up slides; `--images` renders pages as PNG (for viewing or `figure` slides). Needs Poppler, `pypdf` or `pymupdf` |
+| `ALS validate <files…>` | Schema + semantic checks; prints errors and warnings. Folders and quoted globs (`"data/lesson-*.json"`) are expanded |
+| `ALS build <files…> [-o out.html] [--theme X] [--no-due]` | Build themed, self-contained HTML. Files in `modules/<id>/data/` build to `modules/<id>/out/`. Folders and quoted globs are expanded |
 | `ALS theme "<subject>"` / `--list` | Show which design system a subject routes to |
 | `ALS anki <deck.json> [--format apkg\|anki-tsv\|quizlet\|csv] [-o out]` | Export a deck. `.apkg` needs `genanki`; falls back to Anki text import |
-| `ALS pdf <page.html> [-o out.pdf] [--query "solutions=end"]` | Headless Chrome/Edge print. Query options: exam `solutions=off\|inline\|end`, `space=on\|off`; lesson and deck `print=1` |
+| `ALS pdf <page.html> [-o out.pdf] [--query "solutions=end"]` | Headless Chrome/Edge print. Query options: exam `solutions=off\|inline\|end`, `space=on\|off`; lesson and deck `print=1`; lesson `depth=brief\|medium\|deep`, `more=1` |
 
 ## Calendar and progress
 

@@ -120,12 +120,63 @@
   @keyframes ls-in { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
   @keyframes ls-back { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
 
+  /* diagram engine: emphasis, focus, line drawing */
+  .ls-svg .d-halo { paint-order: stroke; stroke: var(--bg-elev); stroke-width: 4px; stroke-linejoin: round; }
+  .ls-svg .ls-svg-el, .ls-svg .ls-svg-el * { transition: opacity .55s ease, fill .35s ease, stroke .35s ease; }
+  .ls-svg.has-focus .ls-svg-el.is-past { opacity: .38; }
+  .ls-svg .is-mark.d-fill, .ls-svg .is-mark .d-fill, .ls-svg .is-mark.d-fill-accent, .ls-svg .is-mark .d-fill-accent { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2.4; }
+  .ls-svg .is-mark.d-text, .ls-svg .is-mark .d-text, .ls-svg .is-mark.d-text-muted, .ls-svg .is-mark .d-text-muted { fill: var(--accent); font-weight: 700; }
+  .ls-svg .is-mark.d-line, .ls-svg .is-mark .d-line, .ls-svg .is-mark.d-muted, .ls-svg .is-mark .d-muted { stroke: var(--accent); }
+  .ls-svg .is-current .ls-drawable, .ls-svg .ls-drawable.is-current { stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000); animation: ls-draw .9s ease forwards; }
+  @keyframes ls-draw { to { stroke-dashoffset: 0; } }
+
+  /* formula with named parts */
+  .ls-formula { font-size: clamp(1.3rem, 3.2vw, 2.1rem); padding: 1.1rem 1rem; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); overflow-x: auto; }
+  .ls-parts { display: grid; gap: .55rem; margin-top: 1.1rem; }
+  .ls-part { display: grid; grid-template-columns: minmax(4.5rem, max-content) 1fr; gap: 1rem; align-items: baseline; padding: .45rem .8rem; border-radius: var(--radius-sm); border: 1px solid transparent; }
+  .ls-part.is-current { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+  .ls-part .sym { font-size: 1.2rem; color: var(--accent); }
+  .ls-part .means { font-size: 1.08rem; }
+  .ls-formula-note { margin-top: 1rem; }
+
+  /* worked example frame around a derivation */
+  .ls-deriv-row .w { color: var(--text-faint); font-size: .88rem; font-style: italic; }
+  .ls-given, .ls-result { font-size: 1.08rem; }
+
+  /* table */
+  .ls-table { width: 100%; border-collapse: collapse; font-size: clamp(1rem, 1.8vw, 1.2rem); }
+  .ls-table th { text-align: left; font-family: var(--font-mono); font-size: .76rem; letter-spacing: .05em; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--border-strong); padding: .5rem .75rem; }
+  .ls-table td { padding: .6rem .75rem; border-bottom: 1px solid var(--border); vertical-align: top; transition: background .35s ease; }
+  .ls-table tr.is-current td { background: var(--accent-soft); }
+  .ls-table-wrap { overflow-x: auto; }
+
+  /* pitfall, recall */
+  .ls-pitfall { display: grid; gap: .8rem; }
+  .ls-hint { margin-top: .75rem; font-size: .95rem; }
+
+  /* figure from the source with spotlight marks */
+  .ls-fig { display: flex; justify-content: center; }
+  .ls-fig-frame { position: relative; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-elev); max-width: 100%; }
+  .ls-fig-frame img { display: block; max-width: 100%; max-height: 58vh; height: auto; }
+  .ls-fig-mark { position: absolute; border: 2px solid var(--accent); border-radius: 6px; transition: opacity .4s ease, box-shadow .5s ease; }
+  .ls-fig-mark .n { position: absolute; top: 2px; left: 2px; min-width: 1.35rem; padding: 0 .3rem; border-radius: 999px; background: var(--accent); color: var(--accent-contrast); font-family: var(--font-mono); font-size: .72rem; line-height: 1.35rem; text-align: center; }
+  .ls-fig-mark.is-off { opacity: 0; }
+  .ls-fig-mark.is-past { opacity: .5; }
+  .ls-fig-mark.is-current { box-shadow: 0 0 0 200vmax color-mix(in srgb, var(--bg) 62%, transparent); }
+
+  /* optional deeper explanation */
+  .ls-more { max-width: 60rem; margin: 0 auto 1rem; }
+  .ls-bottom [hidden], .ls-more[hidden], .ls-notes[hidden] { display: none !important; }
+  .ls-level { font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); }
+  #ls-depth { font-family: var(--font-mono); font-size: .76rem; white-space: nowrap; }
+
   @media print {
     .ls-progress, .ls-bottom, .ls-overview { display: none !important; }
     .ls-stage { min-height: 0; display: block; padding: 0; }
     .ls-print-slide { break-after: page; padding: 8mm 0; }
     .ls-step.is-hidden, .ls-step.is-past { opacity: 1 !important; transform: none !important; }
     .ls-svg [data-ls-hidden="1"] { opacity: 1 !important; }
+    .ls-fig-mark { opacity: 1 !important; box-shadow: none !important; }
   }
 </style>
 </head>
@@ -133,30 +184,102 @@
 <div id="app"></div>
 <!--ALS:DATA-->
 <script>/*ALS:CORE*/</script>
+<script>/*ALS:VIZ*/</script>
 <script>
 ALS.boot(function (lesson) {
-  var E = ALS.el, $ = ALS.$, $$ = ALS.$$;
+  var E = ALS.el, $ = ALS.$, $$ = ALS.$$, V = ALS.viz;
   var app = $('#app');
-  var slides = lesson.slides;
-  var st = { i: 0, step: 0, notes: ALS.store.get('notes', false), overview: false, playing: false, timer: null, dir: 1 };
+  var all = lesson.slides;
+
+  /* ---------- labels (English, German) ---------- */
+  var TEXT = {
+    en: { check: 'Quick check', answer: 'Answer', example: 'Example', notes: 'Notes', given: 'Given', result: 'Result', mistake: 'Common mistake', why: 'Why it fails', correct: 'Correct',
+      recall: 'Recall', recallHint: 'Answer in your head or aloud, then press →', more: 'More detail', slides: 'slides', begin: 'Press <span class="als-kbd">→</span> to begin',
+      strict: 'From your material only', depth: 'Depth', brief: 'brief', medium: 'medium', standard: 'medium', deep: 'deep', oneDepth: 'This lesson has one depth', noNotes: 'No notes on this slide',
+      noMore: 'No extra detail on this slide', definition: 'Definition', badSvg: 'Diagram could not be displayed.' },
+    de: { check: 'Kurze Frage', answer: 'Antwort', example: 'Beispiel', notes: 'Notizen', given: 'Gegeben', result: 'Ergebnis', mistake: 'Häufiger Fehler', why: 'Warum das nicht stimmt', correct: 'Richtig',
+      recall: 'Abruf', recallHint: 'Erst selbst beantworten, dann → drücken', more: 'Mehr Details', slides: 'Folien', begin: 'Mit <span class="als-kbd">→</span> starten',
+      strict: 'Nur aus deinen Unterlagen', depth: 'Tiefe', brief: 'kurz', medium: 'mittel', standard: 'mittel', deep: 'tief', oneDepth: 'Diese Lektion hat nur eine Tiefe', noNotes: 'Keine Notizen auf dieser Folie',
+      noMore: 'Keine Zusatzdetails auf dieser Folie', definition: 'Definition', badSvg: 'Diagramm konnte nicht angezeigt werden.' }
+  };
+  var L = TEXT[String(lesson.lang || 'en').slice(0, 2).toLowerCase()] || TEXT.en;
+
+  /* ---------- depth: untagged content is core; "medium" and "deep" tags mark optional material ("standard" = older name for medium) ---------- */
+  var RANK = { core: 0, medium: 1, standard: 1, deep: 2 }, DEPTH = { brief: 0, medium: 1, standard: 1, deep: 2 };
+  function depthName(d) { return d === 'standard' ? 'medium' : d; }
+  function lvl(x) { var r = RANK[x && x.level]; return r == null ? 0 : r; }
+  function countAt(d) {
+    var n = 0;
+    all.forEach(function (s) { if (lvl(s) > d) return; n++; if (s.layout === 'steps') s.steps.forEach(function (r) { if (lvl(r) <= d) n++; }); });
+    return n;
+  }
+  var depths = ['brief', 'medium', 'deep'];
+  if (countAt(0) === countAt(1)) depths.splice(depths.indexOf('brief'), 1);
+  if (countAt(1) === countAt(2)) depths.splice(depths.indexOf('deep'), 1);
+  var startDepth = depthName(ALS.store.get('depth', null) || lesson.depth || 'medium');
+  if (depths.indexOf(startDepth) < 0) startDepth = 'medium';
+
+  var st = { i: 0, step: 0, notes: ALS.store.get('notes', false), more: ALS.store.get('more', false), depth: startDepth, overview: false, playing: false, timer: null, dir: 1 };
+  var slides = [];
+  function refilter() {
+    var d = DEPTH[st.depth];
+    slides = all.filter(function (s) { return lvl(s) <= d; });
+    if (!slides.length) slides = all.slice();
+  }
+  refilter();
+  function rows(s) { var d = DEPTH[st.depth]; return (s.steps || []).filter(function (r) { return lvl(r) <= d; }); }
 
   function rich(tag, text, cls) { var n = E(tag, { class: cls || '' }); ALS.rich(n, text); return n; }
   function inlineRich(tag, text, cls) { var n = E(tag, { class: cls || '' }); ALS.rich(n, text, { inline: true }); return n; }
   function stepEl(node) { node.classList.add('ls-step'); return node; }
 
+  /* ---------- diagram engine shared by `diagram` and the visual components ---------- */
+  function isDiagram(s) { return s.layout === 'diagram' || V.kinds.indexOf(s.layout) > -1; }
+  function viz(s) {
+    if (s._viz === undefined) {
+      try { s._viz = V[s.layout](s); } catch (e) { s._viz = { svg: '', auto: [] }; }
+    }
+    return s._viz;
+  }
+  function dsteps(s) {
+    if (s.steps && s.steps.length) return s.steps;
+    return s.layout === 'diagram' ? [] : viz(s).auto;
+  }
+  function token(s, t) {
+    var op = t.charAt(0) === '-' ? 'hide' : t.charAt(0) === '!' ? 'mark' : 'show', id = op === 'show' ? t : t.slice(1);
+    return { op: op, ids: s.layout === 'grid' ? V.gridExpand(s, id) : [id] };
+  }
+  var ARROWS = '<defs>' + [['', 'line'], ['-accent', 'accent'], ['-accent2', 'accent2'], ['-muted', 'muted'], ['-good', 'good'], ['-bad', 'bad']].map(function (a) {
+    return '<marker id="als-arrow' + a[0] + '" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-solid-' + a[1] + '" d="M0 0L10 5L0 10z"/></marker>';
+  }).join('') + '</defs>';
+  function prepSvg(src) {
+    src = String(src || '');
+    if (src.indexOf('url(#als-arrow') > -1) src = src.replace(/<svg\b[^>]*>/, function (m) { return m + ARROWS; });
+    var svg = ALS.safeSvg(src);
+    if (!svg) return null;
+    $$('.ls-draw', svg).forEach(function (el) { if (!el.getAttribute('stroke-dasharray')) el.classList.add('ls-drawable'); });
+    return svg;
+  }
+  function byId(svg, id) { return svg.querySelector('[id="' + String(id).replace(/["\\]/g, '') + '"]'); }
+
   function stepCount(s) {
     switch (s.layout) {
       case 'points': case 'summary': return s.points.length;
-      case 'steps': return s.steps.length;
-      case 'diagram': return Math.max(1, (s.steps || []).length);
+      case 'steps': return Math.max(1, (s.given ? 1 : 0) + rows(s).length + (s.result ? 1 : 0));
       case 'code': return Math.max(1, (s.highlight || []).length, (s.explain || []).length);
       case 'compare': return s.columns.length;
-      case 'check': return 2;
+      case 'check': case 'recall': return 2;
       case 'timeline': return s.events.length;
       case 'definition': return s.example ? 2 : 1;
-      default: return 1;
+      case 'formula': return 1 + (s.parts || []).length;
+      case 'table': return s.reveal === 'all' ? 1 : Math.max(1, s.rows.length);
+      case 'pitfall': return s.why ? 3 : 2;
+      case 'figure': return 1 + (s.marks || []).length;
+      default: return isDiagram(s) ? Math.max(1, dsteps(s).length) : 1;
     }
   }
+  /* number of → presses before the first .ls-step element appears */
+  function lead(s) { return s.layout === 'definition' || s.layout === 'formula' || s.layout === 'recall' ? 1 : 0; }
 
   /* ---------- builders: each returns a node; steps are .ls-step elements in order ---------- */
   var build = {
@@ -166,9 +289,11 @@ ALS.boot(function (lesson) {
         E('h1', { class: 'als-h1', html: ALS.md(s.title || lesson.title, { inline: true }) }),
         s.subtitle || lesson.subtitle ? E('p', { class: 'als-sub', text: s.subtitle || lesson.subtitle }) : null,
         E('div', { class: 'ls-title-meta' }, [
-          E('span', { class: 'als-chip', text: slides.length + ' slides' }),
+          E('span', { class: 'als-chip', text: slides.length + ' ' + L.slides }),
           lesson.subject ? E('span', { class: 'als-chip als-chip--accent', text: lesson.subject }) : null,
-          E('span', { class: 'als-chip', html: 'Press <span class="als-kbd">→</span> to begin' })
+          lesson.grounding === 'strict' ? E('span', { class: 'als-chip als-chip--good', text: L.strict }) : null,
+          depths.length > 1 ? E('span', { class: 'als-chip', text: L.depth + ': ' + L[st.depth] }) : null,
+          E('span', { class: 'als-chip', html: L.begin })
         ])
       ]);
     },
@@ -183,20 +308,63 @@ ALS.boot(function (lesson) {
     summary: function (s) { return build.points(s, true); },
     steps: function (s) {
       var wrap = E('div', { class: 'ls-deriv' });
-      s.steps.forEach(function (row) {
+      if (s.given) wrap.appendChild(stepEl(rich('div', '**' + L.given + '.** ' + s.given, 'als-callout ls-given')));
+      rows(s).forEach(function (row) {
         var r = E('div', { class: 'ls-deriv-row' });
         if (row.text) r.appendChild(inlineRich('div', row.text, 't'));
         if (row.math) { var m = E('div', { class: 'm' }); ALS.rich(m, '$$' + row.math + '$$'); r.appendChild(m); }
+        if (row.why) r.appendChild(inlineRich('div', row.why, 'w'));
         wrap.appendChild(stepEl(r));
       });
+      if (s.result) wrap.appendChild(stepEl(rich('div', '**' + L.result + '.** ' + s.result, 'als-callout als-callout--good ls-result')));
       return wrap;
     },
     diagram: function (s) {
-      var box = E('div', { class: 'ls-svg' });
-      var svg = ALS.safeSvg(s.svg);
-      if (svg) box.appendChild(svg); else box.appendChild(E('p', { class: 'als-muted', text: 'Diagram could not be displayed (invalid SVG).' }));
-      var cap = E('div', { class: 'ls-caption als-rich' });
-      return E('div', { class: 'ls-diagram' }, [box, cap]);
+      var box = E('div', { class: 'ls-svg' + (s.focus ? ' has-focus' : '') });
+      var svg = prepSvg(s.layout === 'diagram' ? s.svg : viz(s).svg);
+      if (svg) box.appendChild(svg); else box.appendChild(E('p', { class: 'als-muted', text: L.badSvg }));
+      return E('div', { class: 'ls-diagram' }, [box, E('div', { class: 'ls-caption als-rich' })]);
+    },
+    figure: function (s) {
+      var frame = E('div', { class: 'ls-fig-frame' }, [E('img', { src: s.image, alt: s.alt || s.title || '' })]);
+      (s.marks || []).forEach(function (m, k) {
+        frame.appendChild(E('div', { class: 'ls-fig-mark', style: 'left:' + (+m.x) + '%;top:' + (+m.y) + '%;width:' + (+m.w) + '%;height:' + (+m.h) + '%' },
+          [E('span', { class: 'n', text: m.label || String(k + 1) })]));
+      });
+      return E('div', { class: 'ls-diagram' }, [E('div', { class: 'ls-fig' }, [frame]), E('div', { class: 'ls-caption als-rich' })]);
+    },
+    formula: function (s) {
+      var f = E('div', { class: 'ls-formula' });
+      ALS.rich(f, '$$' + s.formula + '$$');
+      var parts = E('div', { class: 'ls-parts' });
+      (s.parts || []).forEach(function (p) {
+        var sym = E('div', { class: 'sym' });
+        ALS.rich(sym, '$' + p.sym + '$', { inline: true });
+        parts.appendChild(stepEl(E('div', { class: 'ls-part' }, [sym, inlineRich('div', p.means, 'means')])));
+      });
+      return E('div', {}, [f, parts, s.note ? rich('div', s.note, 'als-muted ls-formula-note') : null]);
+    },
+    table: function (s) {
+      var t = E('table', { class: 'ls-table' });
+      if (s.columns) t.appendChild(E('thead', {}, [E('tr', {}, s.columns.map(function (c) { return E('th', { html: ALS.md(c, { inline: true }) }); }))]));
+      var body = E('tbody');
+      s.rows.forEach(function (r) {
+        var tr = E('tr', {}, r.map(function (c) { return inlineRich('td', String(c == null ? '' : c)); }));
+        body.appendChild(s.reveal === 'all' ? tr : stepEl(tr));
+      });
+      t.appendChild(body);
+      return E('div', { class: 'ls-table-wrap' }, [t]);
+    },
+    pitfall: function (s) {
+      var kids = [stepEl(rich('div', '**' + L.mistake + '.** ' + s.wrong, 'als-callout als-callout--bad ls-big'))];
+      if (s.why) kids.push(stepEl(rich('div', '**' + L.why + '.** ' + s.why, 'als-callout ls-big')));
+      kids.push(stepEl(rich('div', '**' + L.correct + '.** ' + s.right, 'als-callout als-callout--good ls-big')));
+      return E('div', { class: 'ls-pitfall' }, kids);
+    },
+    recall: function (s) {
+      return E('div', {}, [E('div', { class: 'als-kicker', text: L.recall }), inlineRich('div', s.question, 'ls-big'),
+        E('p', { class: 'als-muted ls-hint', text: L.recallHint }),
+        stepEl(rich('div', '**' + L.answer + '.** ' + s.answer, 'als-callout als-callout--good ls-big'))]);
     },
     code: function (s) {
       var lines = ALS.highlight(s.code, s.lang);
@@ -232,8 +400,8 @@ ALS.boot(function (lesson) {
           onclick: function (e) { e.stopPropagation(); answerCheck(s, k); }
         }));
       });
-      ALS.rich(fb, '**Answer: ' + String.fromCharCode(65 + s.answer) + '.** ' + (s.explain || ''));
-      return E('div', {}, [E('div', { class: 'als-kicker', text: 'Quick check' }), inlineRich('div', s.question, 'ls-big'), opts, fb]);
+      ALS.rich(fb, '**' + L.answer + ': ' + String.fromCharCode(65 + s.answer) + '.** ' + (s.explain || ''));
+      return E('div', {}, [E('div', { class: 'als-kicker', text: L.check }), inlineRich('div', s.question, 'ls-big'), opts, fb]);
     },
     timeline: function (s) {
       var t = E('div', { class: 'ls-timeline' });
@@ -243,11 +411,12 @@ ALS.boot(function (lesson) {
       return t;
     },
     definition: function (s) {
-      var kids = [E('div', { class: 'als-kicker', text: s.kind || 'Definition' }), E('div', { class: 'ls-term', html: ALS.md(s.term, { inline: true }) }), rich('div', s.definition, 'ls-def')];
-      if (s.example) kids.push(stepEl(rich('div', '**Example.** ' + s.example, 'als-callout ls-example')));
+      var kids = [E('div', { class: 'als-kicker', text: s.kind || L.definition }), E('div', { class: 'ls-term', html: ALS.md(s.term, { inline: true }) }), rich('div', s.definition, 'ls-def')];
+      if (s.example) kids.push(stepEl(rich('div', '**' + L.example + '.** ' + s.example, 'als-callout ls-example')));
       return E('div', {}, kids);
     }
   };
+  V.kinds.forEach(function (k) { build[k] = build.diagram; });
 
   function answerCheck(s, k) {
     var node = $('#ls-current');
@@ -260,9 +429,10 @@ ALS.boot(function (lesson) {
     st.step = 1; applySteps();
   }
 
+  var OWN_HEAD = { title: 1, quote: 1, definition: 1, check: 1, recall: 1 };
   function slideNode(s, idx, forPrint) {
     var inner = E('div', { class: 'ls-inner' });
-    if (s.layout !== 'title' && s.layout !== 'quote' && s.layout !== 'definition' && s.layout !== 'check') {
+    if (!OWN_HEAD[s.layout]) {
       inner.appendChild(E('div', { class: 'als-kicker', style: 'margin-bottom:.5rem', text: (lesson.module ? lesson.module + ' · ' : '') + String(idx + 1).padStart(2, '0') }));
       if (s.title) inner.appendChild(E('h2', { class: 'als-h2', html: ALS.md(s.title, { inline: true }) }));
     }
@@ -274,11 +444,47 @@ ALS.boot(function (lesson) {
   }
 
   /* ---------- step application ---------- */
+  function applyDiagram(node, s) {
+    var svg = node.querySelector('.ls-svg svg');
+    var groups = dsteps(s);
+    if (svg) {
+      $$('.ls-drawable', svg).forEach(function (el) { // measured once the SVG is in the page
+        if (el.style.getPropertyValue('--len')) return;
+        try { el.style.setProperty('--len', String(Math.ceil(el.getTotalLength()) + 1)); } catch (e) { el.classList.remove('ls-drawable'); }
+      });
+      var first = {}, state = {}, cur = {}, mark = {};
+      groups.forEach(function (g, k) {
+        g.forEach(function (t) {
+          var p = token(s, t);
+          p.ids.forEach(function (id) {
+            if (p.op === 'mark') { if (k === st.step) mark[id] = 1; return; }
+            if (!(id in first)) first[id] = p.op;
+            if (k <= st.step) state[id] = p.op === 'show';
+            if (k === st.step && p.op === 'show') cur[id] = 1;
+          });
+        });
+      });
+      Object.keys(first).forEach(function (id) {
+        var el = byId(svg, id);
+        if (!el) return;
+        var vis = id in state ? state[id] : first[id] !== 'show';
+        el.classList.add('ls-svg-el');
+        el.setAttribute('data-ls-hidden', vis ? '0' : '1');
+        el.classList.toggle('is-current', !!cur[id]);
+        el.classList.toggle('is-past', vis && !cur[id]);
+      });
+      $$('.is-mark', svg).forEach(function (el) { el.classList.remove('is-mark'); });
+      Object.keys(mark).forEach(function (id) { var el = byId(svg, id); if (el) el.classList.add('is-mark'); });
+    }
+    var cap = $('.ls-caption', node);
+    if (cap) ALS.rich(cap, (s.captions || [])[st.step] || s.caption || '');
+  }
+
   function applySteps() {
     var node = $('#ls-current'); if (!node) return;
     var s = slides[st.i];
     var steps = $$('.ls-step', node);
-    var showUpTo = s.layout === 'check' ? (st.step >= 1 ? steps.length : 0) : (s.layout === 'definition' ? st.step : st.step + 1);
+    var showUpTo = s.layout === 'check' ? (st.step >= 1 ? steps.length : 0) : st.step + 1 - lead(s);
     steps.forEach(function (el, k) {
       el.classList.toggle('is-hidden', k >= showUpTo);
       el.classList.toggle('is-current', k === showUpTo - 1);
@@ -287,20 +493,16 @@ ALS.boot(function (lesson) {
     if (s.layout === 'check' && st.step >= 1) {
       $$('.ls-option', node).forEach(function (b) { b.disabled = true; if (+b.getAttribute('data-k') === s.answer) b.classList.add('is-right'); });
     }
-    if (s.layout === 'diagram') {
-      var groups = s.steps || [];
-      var all = {}; groups.forEach(function (g) { g.forEach(function (id) { all[id] = 1; }); });
-      var visible = {}; groups.slice(0, st.step + 1).forEach(function (g) { g.forEach(function (id) { visible[id] = 1; }); });
-      var current = {}; (groups[st.step] || []).forEach(function (id) { current[id] = 1; });
-      Object.keys(all).forEach(function (id) {
-        var el = node.querySelector('svg [id="' + id.replace(/"/g, '') + '"]');
-        if (!el) return;
-        el.classList.add('ls-svg-el');
-        el.setAttribute('data-ls-hidden', visible[id] ? '0' : '1');
-        el.classList.toggle('is-current', !!current[id]);
+    if (isDiagram(s)) applyDiagram(node, s);
+    if (s.layout === 'figure') {
+      var marks = s.marks || [];
+      $$('.ls-fig-mark', node).forEach(function (m, k) {
+        m.classList.toggle('is-off', k > st.step - 1);
+        m.classList.toggle('is-current', k === st.step - 1);
+        m.classList.toggle('is-past', k < st.step - 1);
       });
-      var cap = $('.ls-caption', node);
-      if (cap) ALS.rich(cap, (s.captions || [])[st.step] || s.caption || '');
+      var fc = $('.ls-caption', node), mk = marks[st.step - 1];
+      if (fc) ALS.rich(fc, mk ? '**' + (mk.label || st.step) + '.** ' + (mk.text || '') : (s.caption || ''));
     }
     if (s.layout === 'code') {
       var pre = $('.als-code', node);
@@ -346,29 +548,53 @@ ALS.boot(function (lesson) {
   function renderStage(animate) {
     var stage = $('#ls-stage');
     stage.innerHTML = '';
+    var notes = $('#ls-notes'), more = $('#ls-more'), moreBtn = $('#ls-more-btn');
     if (st.overview) {
+      if (notes) notes.hidden = true;
+      if (more) more.hidden = true;
       var grid = E('div', { class: 'ls-overview' });
       slides.forEach(function (s, k) {
         grid.appendChild(E('button', { type: 'button', class: 'als-card ls-thumb', 'aria-current': String(k === st.i), onclick: function () { st.overview = false; go(k, 0, 1); } }, [
           E('span', { class: 'n', text: String(k + 1).padStart(2, '0') + ' · ' + s.layout }),
-          E('span', { class: 't', html: ALS.md(s.title || s.term || s.question || s.quote || lesson.title, { inline: true }) })
+          E('span', { class: 't', html: ALS.md(s.title || s.term || s.question || s.quote || (s.formula ? '$' + s.formula + '$' : '') || lesson.title, { inline: true }) }),
+          s.level && s.level !== 'core' ? E('span', { class: 'ls-level', text: L[s.level] || s.level }) : null
         ]));
       });
       stage.appendChild(grid);
       ALS.renderMath(grid);
       return;
     }
-    var node = slideNode(slides[st.i], st.i);
+    var cur = slides[st.i];
+    var node = slideNode(cur, st.i);
     node.id = 'ls-current';
     if (animate) node.classList.add(st.dir < 0 ? 'ls-anim-back' : 'ls-anim-in');
     stage.appendChild(node);
-    var notes = $('#ls-notes');
     if (notes) {
-      var n = slides[st.i].notes;
-      notes.hidden = !(st.notes && n);
-      if (n) ALS.rich(notes, '**Notes.** ' + n);
+      notes.hidden = !(st.notes && cur.notes);
+      if (cur.notes) ALS.rich(notes, '**' + L.notes + '.** ' + cur.notes);
     }
+    if (more) {
+      more.hidden = !(st.more && cur.more);
+      if (cur.more) ALS.rich(more, '**' + L.more + '.** ' + cur.more);
+    }
+    if (moreBtn) { moreBtn.hidden = !cur.more; moreBtn.setAttribute('aria-pressed', String(!!st.more)); }
     applySteps();
+  }
+
+  function depthLabel() { return L.depth + ': ' + L[st.depth]; }
+  function setDepth(d) {
+    var cur = slides[st.i], at = all.indexOf(cur);
+    st.depth = d; ALS.store.set('depth', d); refilter();
+    var k = slides.indexOf(cur);
+    if (k < 0) { k = 0; slides.forEach(function (s, j) { if (all.indexOf(s) <= at) k = j; }); }
+    st.i = k; st.step = 0; st.overview = false;
+    var b = $('#ls-depth'); if (b) b.textContent = depthLabel();
+    renderStage(true);
+    ALS.toast(depthLabel() + ' · ' + slides.length + ' ' + L.slides);
+  }
+  function cycleDepth() {
+    if (depths.length < 2) return ALS.toast(L.oneDepth);
+    setDepth(depths[(depths.indexOf(st.depth) + 1) % depths.length]);
   }
 
   function render() {
@@ -379,12 +605,17 @@ ALS.boot(function (lesson) {
     ]));
     var main = E('main', { class: 'als-shell' }, [E('div', { id: 'ls-stage', class: 'ls-stage' })]);
     app.appendChild(main);
-    app.appendChild(E('div', { class: 'als-shell' }, [E('div', { id: 'ls-notes', class: 'ls-notes als-callout als-rich', hidden: true })]));
+    app.appendChild(E('div', { class: 'als-shell' }, [
+      E('div', { id: 'ls-more', class: 'ls-more als-callout als-callout--info als-rich', hidden: true }),
+      E('div', { id: 'ls-notes', class: 'ls-notes als-callout als-rich', hidden: true })
+    ]));
     var bottom = E('nav', { class: 'ls-bottom als-noprint', 'aria-label': 'Lesson controls' }, [E('div', { class: 'als-shell' }, [
       ALS.iconBtn('left', 'Previous (←)', prev),
       ALS.iconBtn('right', 'Next (→ or Space)', next),
       E('span', { class: 'ls-count' }),
       E('div', { class: 'als-spacer' }),
+      depths.length > 1 ? E('button', { type: 'button', id: 'ls-depth', class: 'als-btn als-btn--ghost als-btn--sm', title: 'Change depth (D)', text: depthLabel(), onclick: cycleDepth }) : null,
+      (function () { var b = ALS.iconBtn('bulb', 'More detail on this slide (E)', toggleMore); b.id = 'ls-more-btn'; b.hidden = true; return b; })(),
       (function () { var b = ALS.iconBtn('play', 'Autoplay (P)', togglePlay); b.id = 'ls-play'; return b; })(),
       ALS.iconBtn('notes', 'Speaker notes (N)', toggleNotes),
       ALS.iconBtn('grid', 'Overview (O)', toggleOverview),
@@ -394,7 +625,8 @@ ALS.boot(function (lesson) {
     renderStage(false);
   }
 
-  function toggleNotes() { st.notes = !st.notes; ALS.store.set('notes', st.notes); renderStage(false); if (st.notes && !slides[st.i].notes) ALS.toast('No notes on this slide'); }
+  function toggleNotes() { st.notes = !st.notes; ALS.store.set('notes', st.notes); renderStage(false); if (st.notes && !slides[st.i].notes) ALS.toast(L.noNotes); }
+  function toggleMore() { st.more = !st.more; ALS.store.set('more', st.more); var keep = st.step; renderStage(false); st.step = keep; applySteps(); if (st.more && !slides[st.i].more) ALS.toast(L.noMore); }
   function toggleOverview() { st.overview = !st.overview; renderStage(true); }
   function fullscreen() {
     try { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
@@ -402,12 +634,18 @@ ALS.boot(function (lesson) {
   }
   function printAll() {
     var stage = $('#ls-stage');
+    var withMore = st.more || new URLSearchParams(location.search).get('more') === '1';
     stage.innerHTML = '';
     slides.forEach(function (s, k) {
       var n = slideNode(s, k, true);
       stage.appendChild(n);
-      if (s.layout === 'diagram' && s.captions) { var cap = $('.ls-caption', n); if (cap) ALS.rich(cap, s.captions.join(' ')); }
+      var cap = $('.ls-caption', n);
+      if (cap && isDiagram(s)) ALS.rich(cap, (s.captions || [s.caption || '']).join(' '));
+      if (cap && s.layout === 'figure') {
+        ALS.rich(cap, [s.caption || ''].concat((s.marks || []).map(function (m, j) { return '**' + (m.label || j + 1) + '.** ' + (m.text || ''); })).join('\n\n'));
+      }
       if (s.layout === 'code' && s.explain) { var ex = $('.ls-explain', n); if (ex) ALS.rich(ex, s.explain.join('\n\n')); }
+      if (withMore && s.more) $('.ls-inner', n).appendChild(rich('div', '**' + L.more + '.** ' + s.more, 'als-callout als-callout--info ls-more'));
     });
     ALS.renderMath(stage);
     if (new URLSearchParams(location.search).get('print') === '1') return; // headless PDF: leave everything revealed
@@ -420,6 +658,7 @@ ALS.boot(function (lesson) {
     'Home': function () { go(0, 0, -1); }, 'End': function () { go(slides.length - 1, 0, 1); },
     'n': toggleNotes, 'N': toggleNotes, 'o': toggleOverview, 'O': toggleOverview,
     'f': fullscreen, 'F': fullscreen, 'p': togglePlay, 'P': togglePlay,
+    'd': cycleDepth, 'D': cycleDepth, 'e': toggleMore, 'E': toggleMore,
     'Escape': function () { if (st.overview) toggleOverview(); }
   });
 
@@ -438,6 +677,8 @@ ALS.boot(function (lesson) {
   });
 
   var params = new URLSearchParams(location.search);
+  var askedDepth = depthName(params.get('depth'));
+  if (depths.indexOf(askedDepth) > -1) { st.depth = askedDepth; refilter(); }
   var start = parseInt((location.hash || '').slice(1), 10);
   st.i = isNaN(start) ? 0 : Math.max(0, Math.min(slides.length - 1, start - 1));
   render();

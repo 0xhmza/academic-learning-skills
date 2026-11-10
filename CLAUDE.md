@@ -12,7 +12,8 @@ commands/als-*.md      thin slash-command wrappers that name a skill and a mode
 hooks/                 SessionStart hook: prints workspace status when a study/ folder exists
 shared/
   scripts/als.py       CLI entry point; logic in shared/scripts/als_lib/
-  templates/           core.js + one HTML template per kind (deck, lesson, quiz, exam, sheet, dashboard)
+  templates/           core.js + one HTML template per kind (deck, lesson, quiz, exam, sheet, dashboard);
+                       viz.js = visual components for lessons (ids mirrored in als_lib/viz_ids.py)
   design-systems/      base.css (component contract), <theme>.css, themes.json (registry + routing)
   schemas/             JSON Schemas per kind + common.md
   starters/            one valid example data file per kind (what Claude copies)
@@ -30,6 +31,8 @@ tests/                 unittest suite
 - **Templates:** only use classes from `base.css` plus template-local classes built on theme tokens. Never
   hard-code colours. Markers `/*ALS:EARLY*/`, `/*ALS:CSS*/`, `/*ALS:CORE*/`, `<!--ALS:DATA-->` and
   `{{title}}`, `{{lang}}`, `{{theme}}`, `{{version}}` are filled by `als_lib/build.py`.
+- **Visual components** (`viz.js`): when ids or auto steps change, change `als_lib/viz_ids.py`, the
+  schema and `skills/visual-lesson/references/components.md` with them.
 - **Rich text** is rendered by `ALS.md` (core.js) and `richtext.py` (Anki); keep them in sync when adding syntax.
 - **Data format changes** need: schema update, starter update, semantic checks in `validate.py` if needed,
   template support, `shared/references/data-formats.md`, and a test.

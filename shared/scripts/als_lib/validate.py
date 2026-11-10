@@ -9,6 +9,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from . import viz_ids
 from .paths import SCHEMAS, read_json
 
 KIND_SCHEMA = {
@@ -101,6 +102,86 @@ BLANK_MARK = re.compile(r"\{\{(\d+)\}\}")
 SVG_ID = re.compile(r"""\bid\s*=\s*["']([^"']+)["']""")
 
 
+NO_SRC_NEEDED = {"title", "summary"}
+LONG_POINT = 220
+
+
+def _step_tokens(p: str, s: dict, known: set[str], errs: list[str], warns: list[str]) -> None:
+    """Check a diagram-like slide's steps: 'id' reveals, '-id' hides, '!id' emphasises for one step."""
+    for g in s.get("steps") or []:
+        for tok in g:
+            name = tok[1:] if tok[:1] in "-!" else tok
+            if s.get("layout") == "grid":
+                cells = viz_ids.grid_expand(s, name)
+                if not cells or any(c not in known for c in cells):
+                    errs.append(f"{p}: step references {tok!r}, which matches no grid or cell")
+            elif name not in known:
+                where = "the SVG" if s.get("layout") == "diagram" else f"this {s.get('layout')} (ids: {', '.join(sorted(known)) or 'none'})"
+                errs.append(f"{p}: step references id {name!r} which is not in {where}")
+    caps = s.get("captions")
+    if caps is not None and s.get("steps") and len(caps) != len(s["steps"]):
+        warns.append(f"{p}: {len(caps)} captions for {len(s['steps'])} steps")
+
+
+def _lesson(data: dict, errs: list[str], warns: list[str]) -> None:
+    strict = data.get("grounding") == "strict"
+    sources = data.get("sources") or []
+    source_ids = [str(x.get("id")) for x in sources if isinstance(x, dict) and x.get("id")]
+    if strict and not sources:
+        errs.append("$.sources: a strict lesson lists the material it is built from, e.g. [{\"id\": \"L3\", \"title\": \"Lecture 3\", \"file\": \"sources/L03.pdf\"}]")
+    for i, s in enumerate(data.get("slides", [])):
+        p = f"$.slides[{i}]"
+        layout = s.get("layout")
+        src = str(s.get("src") or "").strip()
+        if strict:
+            if s.get("grounded") is False:
+                errs.append(f"{p}: 'grounded: false' is not allowed in a strict lesson; remove the added content or ask the student to switch to extended grounding")
+            if layout not in NO_SRC_NEEDED and not src:
+                errs.append(f"{p}: strict grounding needs 'src' (where in the material this slide comes from)")
+            if layout == "steps" and any(isinstance(r, dict) and r.get("grounded") is False for r in s.get("steps", [])):
+                errs.append(f"{p}: a step is marked 'grounded: false' in a strict lesson")
+        if src and source_ids and not any(part.strip().split(" ")[0] in source_ids for part in src.split(";")):
+            warns.append(f"{p}: src {src!r} does not start with a listed source id ({', '.join(source_ids)})")
+        if layout == "check":
+            n = len(s.get("options", []))
+            if isinstance(s.get("answer"), int) and s["answer"] >= n:
+                errs.append(f"{p}: answer index {s['answer']} out of range for {n} options")
+        known: set[str] | None = None
+        if layout == "diagram":
+            svg = s.get("svg", "")
+            if not svg.lstrip().startswith("<svg"):
+                errs.append(f"{p}: 'svg' must start with <svg")
+            if re.search(r"<script|\bon\w+\s*=", svg, re.I):
+                warns.append(f"{p}: scripts and event handlers are stripped from diagrams")
+            known = set(SVG_ID.findall(svg))
+        elif layout in viz_ids.KINDS:
+            known, problems = viz_ids.ids(s)
+            errs.extend(f"{p}: {msg}" for msg in problems)
+        if known is not None:
+            _step_tokens(p, s, known, errs, warns)
+        if layout == "code":
+            lines = len(str(s.get("code", "")).splitlines())
+            for g in s.get("highlight", []):
+                for ln in g:
+                    if ln < 1 or ln > lines:
+                        errs.append(f"{p}: highlight line {ln} outside 1..{lines}")
+        if layout == "table":
+            width = len(s.get("columns") or (s.get("rows") or [[]])[0])
+            for k, row in enumerate(s.get("rows", [])):
+                if len(row) != width:
+                    errs.append(f"{p}: row {k + 1} has {len(row)} cells, expected {width}")
+        if layout == "figure":
+            for k, m in enumerate(s.get("marks", [])):
+                if m.get("x", 0) + m.get("w", 0) > 100.5 or m.get("y", 0) + m.get("h", 0) > 100.5:
+                    errs.append(f"{p}: mark {k + 1} leaves the image (x + w and y + h are percentages and must stay within 100)")
+        if layout in ("points", "summary"):
+            pts = s.get("points", [])
+            if layout == "points" and len(pts) > 6:
+                warns.append(f"{p}: {len(pts)} points on one slide; consider splitting (max ~6)")
+            if any(len(str(x)) > LONG_POINT for x in pts):
+                warns.append(f"{p}: a point is longer than {LONG_POINT} characters; slides hold short claims, move the rest to 'notes' or 'more'")
+
+
 def semantic(data: dict) -> tuple[list[str], list[str]]:
     """Return (errors, warnings) the schema cannot express."""
     errs: list[str] = []
@@ -138,34 +219,7 @@ def semantic(data: dict) -> tuple[list[str], list[str]]:
             if q.get("type") != "text" and not q.get("explain") and not q.get("solution"):
                 warns.append(f"{p}: no explanation or worked solution")
     elif kind == "lesson":
-        for i, s in enumerate(data.get("slides", [])):
-            p = f"$.slides[{i}]"
-            if s.get("layout") == "check":
-                n = len(s.get("options", []))
-                if isinstance(s.get("answer"), int) and s["answer"] >= n:
-                    errs.append(f"{p}: answer index {s['answer']} out of range for {n} options")
-            if s.get("layout") == "diagram":
-                svg = s.get("svg", "")
-                if not svg.lstrip().startswith("<svg"):
-                    errs.append(f"{p}: 'svg' must start with <svg")
-                if re.search(r"<script|\bon\w+\s*=", svg, re.I):
-                    warns.append(f"{p}: scripts and event handlers are stripped from diagrams")
-                ids = set(SVG_ID.findall(svg))
-                for g in s.get("steps", []):
-                    for el in g:
-                        if el not in ids:
-                            errs.append(f"{p}: step references id {el!r} which is not in the SVG")
-                caps = s.get("captions")
-                if caps is not None and s.get("steps") and len(caps) != len(s["steps"]):
-                    warns.append(f"{p}: {len(caps)} captions for {len(s['steps'])} steps")
-            if s.get("layout") == "code":
-                lines = len(str(s.get("code", "")).splitlines())
-                for g in s.get("highlight", []):
-                    for ln in g:
-                        if ln < 1 or ln > lines:
-                            errs.append(f"{p}: highlight line {ln} outside 1..{lines}")
-            if s.get("layout") == "points" and len(s.get("points", [])) > 6:
-                warns.append(f"{p}: {len(s['points'])} points on one slide; consider splitting (max ~6)")
+        _lesson(data, errs, warns)
     elif kind == "exam":
         ids = [q.get("id") for sec in data.get("sections", []) for q in sec.get("questions", [])]
         for d in _dupes(ids):

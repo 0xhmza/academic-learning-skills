@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "shared" / "scripts"))
 
 import als  # noqa: E402
-from als_lib import anki, build, ics, paths, progress, report, themes, workspace  # noqa: E402
+from als_lib import anki, build, extract, ics, paths, progress, report, settings, themes, viz_ids, workspace  # noqa: E402
 from als_lib.validate import validate_data, validate_file  # noqa: E402
 
 STARTERS = sorted((ROOT / "shared" / "starters").glob("*.json"))
@@ -284,6 +284,122 @@ class TestCLI(TempWS):
         self.assertEqual(self.run_cli("dashboard"), 0)
         self.assertTrue((self.ws / "dashboard.html").exists())
         self.assertEqual(self.run_cli("validate", str(ROOT / "README.md")), 1)
+
+
+class TestLessons(TempWS):
+    def lesson(self):
+        return json.loads((ROOT / "shared/starters/lesson.json").read_text(encoding="utf-8"))
+
+    def run_cli(self, *args):
+        return als.main(["--home", str(self.ws), *args])
+
+    def test_strict_grounding_is_enforced(self):
+        d = self.lesson()
+        self.assertEqual(validate_data(d)[0], [])
+        d["slides"][1].pop("src")
+        d["slides"][2]["grounded"] = False
+        d.pop("sources")
+        joined = "\n".join(validate_data(d)[0])
+        self.assertIn("strict grounding needs 'src'", joined)
+        self.assertIn("'grounded: false' is not allowed", joined)
+        self.assertIn("$.sources", joined)
+        d["grounding"] = "extended"
+        self.assertEqual(validate_data(d)[0], [])
+
+    def test_component_ids_and_step_tokens(self):
+        d = self.lesson()
+        by = {s["layout"]: s for s in d["slides"]}
+        self.assertIn("x>h", viz_ids.ids(by["flow"])[0])
+        self.assertEqual(viz_ids.grid_expand(by["grid"], "in.r1c1:r2c2"), ["in.r1c1", "in.r1c2", "in.r2c1", "in.r2c2"])
+        self.assertEqual(viz_ids.grid_expand(by["grid"], "k.col2"), ["k.r1c2", "k.r2c2"])
+        self.assertEqual([i for i, _ in viz_ids.tree_nodes(by["tree"]["root"])], ["n1", "n2", "n3", "n4", "n5"])
+        self.assertIsNone(viz_ids.expr_error("max(0, x) + 2^-x * sin(pi*x) - 1e-3"))
+        by["plot"]["steps"] = [["axes"], ["nope"]]
+        by["plot"]["curves"][0]["fn"] = "evil(x)"
+        by["grid"]["steps"].append(["!in.r9c9"])
+        by["flow"]["edges"].append("x>zzz")
+        by["diagram"]["steps"].append(["-axes", "!curve"])
+        joined = "\n".join(validate_data(d)[0])
+        self.assertIn("id 'nope'", joined)
+        self.assertIn("unknown name 'evil'", joined)
+        self.assertIn("matches no grid or cell", joined)
+        self.assertIn("edge x>zzz", joined)
+        self.assertNotIn("'-axes'", joined)
+
+    def test_settings_resolve_and_save(self):
+        self.assertEqual(settings.resolve(None)["lesson_grounding"]["value"], "strict")
+        workspace.init(self.ws)
+        workspace.new_module(self.ws, "dl", "Deep Learning")
+        settings.save(self.ws, {"depth": "deep"})
+        settings.save(self.ws, {"lesson_depth": "brief", "checks": "many"}, "dl")
+        self.assertEqual(settings.resolve(self.ws)["lesson_depth"]["value"], "deep")
+        mod = settings.resolve(self.ws, "dl")
+        self.assertEqual((mod["lesson_depth"]["value"], mod["lesson_checks"]["value"]), ("brief", "many"))
+        self.assertEqual(mod["lesson_grounding"]["from"], "default")
+        with self.assertRaises(ValueError):
+            settings.save(self.ws, {"depth": "huge"})
+        self.assertEqual(workspace.profile(self.ws)["theme"], "auto")
+        self.assertEqual(workspace.module_info(self.ws, "dl")["title"], "Deep Learning")
+        self.assertEqual(self.run_cli("settings", "visuals=rich", "--module", "dl"), 0)
+        self.assertEqual(settings.resolve(self.ws, "dl")["lesson_visuals"]["value"], "rich")
+        # medium is the default; "standard" is accepted as its older name everywhere
+        self.assertEqual(settings.resolve(None)["lesson_depth"]["value"], "medium")
+        settings.save(self.ws, {"depth": "standard"})
+        self.assertEqual(settings.resolve(self.ws)["lesson_depth"]["value"], "medium")
+        self.assertIn("lesson_depth: medium", (self.ws / "profile.md").read_text(encoding="utf-8"))
+        d = self.lesson()
+        self.assertEqual(d["depth"], "medium")
+        d["depth"] = "standard"
+        d["slides"][1]["level"] = "medium"
+        d["slides"][2]["level"] = "standard"
+        self.assertEqual(validate_data(d)[0], [])
+
+    def test_new_lesson_outline(self):
+        workspace.init(self.ws)
+        settings.save(self.ws, {"depth": "deep"})
+        out = self.tmp / "lesson-x.json"
+        self.assertEqual(self.run_cli("new", "lesson", str(out), "--title", "X", "--outline", "title,formula,plot,check,summary", "--source", "L3=sources/L03.pdf"), 0)
+        d = json.loads(out.read_text(encoding="utf-8"))
+        self.assertEqual([s["layout"] for s in d["slides"]], ["title", "formula", "plot", "check", "summary"])
+        self.assertEqual((d["grounding"], d["depth"], d["sources"]), ("strict", "deep", [{"id": "L3", "file": "sources/L03.pdf"}]))
+        self.assertEqual(len(validate_data(d)[0]), 3)  # the three content slides still need their src
+        for s in d["slides"][1:4]:
+            s["src"] = "L3 s.1"
+        self.assertEqual(validate_data(d), ([], []))
+        self.assertEqual(self.run_cli("new", "lesson", str(out), "--force", "--outline", "title,nonsense"), 1)
+
+    def test_build_embeds_components_and_images(self):
+        d = self.lesson()
+        fig = next(s for s in d["slides"] if s["layout"] == "figure")
+        fig["image"] = "fig.png"
+        (self.tmp / "fig.png").write_bytes(b"\x89PNG\r\n\x1a\n" + b"0" * 32)
+        src = self.tmp / "lesson.json"
+        src.write_text(json.dumps(d), encoding="utf-8")
+        out, _, _, _ = build.build_file(src, ws=None)
+        page = out.read_text(encoding="utf-8")
+        self.assertIn("data:image/png;base64,iVBORw0KGgo", page)
+        self.assertIn("ALS.viz", page)
+        self.assertNotIn("/*ALS:VIZ*/", page)
+        fig["image"] = "missing.png"
+        src.write_text(json.dumps(d), encoding="utf-8")
+        with self.assertRaises(build.BuildError):
+            build.build_file(src, ws=None)
+
+    def test_build_and_validate_accept_folders(self):
+        folder = self.tmp / "data"
+        folder.mkdir()
+        for name in ("lesson-a.json", "lesson-b.json"):
+            shutil.copy(ROOT / "shared/starters/lesson.json", folder / name)
+        self.assertEqual(self.run_cli("validate", str(folder)), 0)
+        self.assertEqual(self.run_cli("build", str(folder / "lesson-*.json")), 0)
+        self.assertTrue((folder / "lesson-b.html").exists())
+
+    def test_extract_helpers(self):
+        self.assertEqual(extract.parse_pages("1-3,7,9-", 10), [1, 2, 3, 7, 9, 10])
+        pages = ["Title\nA\n1 / 9", "Title\nA\nB\n2 / 9", "Title\nA\nB\nC\n3 / 9", "Other", ""]
+        self.assertEqual(extract.build_ups(pages), {1: 3, 2: 3})
+        self.assertEqual(extract.ranges([1, 2, 3, 7]), "1-3, 7")
+        self.assertEqual(extract.clean("a   b \n\n\n\n c\n"), "a b\n\nc")
 
 
 class TestPluginLayout(unittest.TestCase):

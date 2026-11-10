@@ -15,14 +15,14 @@ paper writing). This toolkit covers the other half of university life: **learnin
 | `study-coach` | "help me study", "what next?", "remember that I…" | onboarding, learner profile, recommendations, dashboard, results import |
 | `module-setup` | "here are my lectures" | module folder, source catalogue, topic map with objectives and exam weights |
 | `explain` | "I don't get X", "summarise lecture 4", "cheat sheet" | Socratic or direct teaching, Feynman checks, themed summary / cheat-sheet pages (HTML/PDF) |
-| `visual-lesson` | "show me step by step" | animated HTML lesson: progressive reveal, SVG diagrams that build up, derivations, code focus, quick checks |
+| `visual-lesson` | "show me step by step" | animated HTML lesson built strictly from your slides or script: plots, flow charts, grids and the lecturer's own figures that build up, derivations, formulas symbol by symbol, quick checks, a depth switch (brief, medium, deep); settings via `als.py settings` |
 | `flashcards` | "make cards from lecture 3" | interactive HTML deck (flip, grade, relearn, due today) + Anki `.apkg` + Quizlet/CSV |
 | `practice` | "quiz me", "mock exam" | interactive trainer (6 question types, graded hints, step-by-step solutions, timed tests) or printable exam with marking scheme; error log |
 | `planner` | "I have an exam in 3 weeks" | backward plan with spaced reviews and interleaving, `.ics` export |
 | `lms-connect` | "get my deadlines from Moodle" | Moodle calendar import, course files downloaded into your module (you sign in yourself) |
 | `resources` | "a good video on…" | 3–7 verified books, papers, videos and courses matched to your level |
 
-Slash commands for quick access: `/als-start`, `/als-setup`, `/als-learn`, `/als-summary`, `/als-lesson`,
+Slash commands for quick access: `/als-start`, `/als-setup`, `/als-learn`, `/als-summary`, `/als-lesson`, `/als-settings`,
 `/als-cards`, `/als-practice`, `/als-exam`, `/als-mark`, `/als-plan`, `/als-moodle`, `/als-resources`,
 `/als-remember`, `/als-note`, `/als-status`, `/als-review`.
 

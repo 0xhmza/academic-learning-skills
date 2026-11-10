@@ -12,13 +12,16 @@ Full contracts: `shared/schemas/*.schema.json` and `shared/schemas/common.md`. T
 - **Envelope:** `als: "1"`, `kind`, `title`; optional `subtitle`, `module`, `subject`, `theme`, `lang`, `sources`.
 - **Rich text** fields accept `**bold**`, `*italic*`, `` `code` ``, links, `- lists`, `$maths$`, `$$display$$`.
   In JSON, escape backslashes in LaTeX: `"$\\frac{a}{b}$"`.
-- **Provenance:** `src` ("L3 s.12") and `grounded: false` on any item.
+- **Provenance:** `src` ("L3 s.12") and `grounded: false` on any item. A lesson with `"grounding": "strict"` must list
+  `sources`, cite `src` on every slide except title and summary, and may not contain `grounded: false`.
+- **Lesson scaffolds:** `ALS new lesson <out.json> --outline "title,points,formula,plot,check,summary" --source "L3=sources/L03.pdf"`
+  writes one skeleton slide per layout, with the student's depth and grounding settings filled in.
 - **Topics:** `topic` on cards/questions = topic id from `topics.json` (drives mastery).
 
 | Kind | Items | Notes |
 |---|---|---|
 | `deck` | `cards[]`: `basic` (front/back), `reverse` (also back→front), `cloze` (`text` with `{{c1::answer::hint}}`) | ids stable across edits; they key the review schedule |
-| `lesson` | `slides[]` with `layout`: title, points, steps, diagram, code, compare, quote, check, summary, timeline, definition | each point/step/column/event is revealed one at a time |
+| `lesson` | `slides[]` with `layout`: title, points, definition, formula, steps, table, compare, timeline, code, quote, pitfall, recall, check, summary, and the visuals plot, flow, grid, layers, tree, bars, figure, diagram | each point/step/row/element is revealed one at a time; `grounding`, `depth`, `macros`, per-slide `level` and `more` (see the visual-lesson skill) |
 | `quiz` | `questions[]` with `type`: mcq, multi, numeric (`tolerance`, `unit`), text (`answer`, `keywords`), cloze (`text` with `{{1}}` + `blanks`), order (`items` in correct order) | `hints[]` graded; `solution[]` revealed step by step; `difficulty` 1–3 |
 | `exam` | `sections[].questions[]` with `points`, `space`, `solution`, `marking[]`, `parts[]` | printable; solutions hidden / inline / at the end |
 | `sheet` | `blocks[]`: section, definition, formula, keypoints, example, warning, table, quote; `layout` notes or cheatsheet | notes get a contents list from 4 sections |

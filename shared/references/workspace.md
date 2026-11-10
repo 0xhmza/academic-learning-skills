@@ -41,6 +41,8 @@ theme: auto                # auto | blueprint | folio | clinic | ledger
 session_minutes: 45
 weekly_hours: 12
 lms_url: https://moodle.example.edu
+lesson_depth: medium        # brief | medium | deep
+lesson_grounding: strict    # strict | extended
 ---
 
 ## Goals
@@ -61,6 +63,9 @@ Rules for skills:
 
 - **Read `profile.md` before producing anything.** Respect `theme`, language, session length and the
   Remember/Avoid lists.
+- **Lesson settings** (`lesson_depth`, `lesson_audience`, `lesson_grounding`, `lesson_order`, `lesson_ask`, `lesson_checks`,
+  `lesson_visuals`, `lesson_notes`, `lesson_language`) live in the front matter here, or in a module's
+  `module.md` to override them for that module. Read and change them with `als.py settings`.
 - **Append, never rewrite**, when the student says "remember that…": add a dated bullet under
   `## Remember` (or `## Avoid`). Use `als.py remember "<text>"` so the format stays consistent.
 - Never store passwords, tokens or the private Moodle calendar URL in the profile. Those stay in the

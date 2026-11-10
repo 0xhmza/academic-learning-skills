@@ -11,7 +11,9 @@ Study material is most useful when it matches what the lecturer actually taught 
    `"N 2026-11-03"` (student note). Source ids are listed in the data file's `sources` array and in
    `module.md`.
 3. **Flag additions.** Content Claude adds from general knowledge gets `"grounded": false`. Use it for
-   helpful context, never to override the lecturer.
+   helpful context, never to override the lecturer. Lessons are strict by default (`lesson_grounding`):
+   in a strict lesson nothing is added at all, and the build rejects `grounded: false`.
+   When the material is unclear, ask the student; do not fill the gap.
 4. **Terminology and notation follow the course.** Use the lecturer's symbols (e.g. `T` vs `A` for a
    linear map), language and naming, even when another convention is more common. Mention the common
    alternative once if it helps the student read other texts.

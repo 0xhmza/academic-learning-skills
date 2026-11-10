@@ -1,8 +1,10 @@
 """Assemble a self-contained HTML page from a template, the design systems and a JSON data file."""
 from __future__ import annotations
 
+import base64
 import html
 import json
+import re
 from pathlib import Path
 
 from . import progress, themes, workspace
@@ -69,10 +71,38 @@ def render(data: dict, theme: str) -> str:
         if marker not in out:
             raise BuildError(f"template {tpl_name} is missing marker {marker}")
         out = out.replace(marker, value, 1)
+    if "/*ALS:VIZ*/" in out:
+        out = out.replace("/*ALS:VIZ*/", (TEMPLATES / "viz.js").read_text(encoding="utf-8"), 1)
     if "<!--ALS:DATA-->" not in out:
         raise BuildError(f"template {tpl_name} is missing the data marker")
     out = out.replace("<!--ALS:DATA-->", '<script type="application/json" id="als-data">' + _safe_json(data) + "</script>", 1)
     return out
+
+
+IMAGE_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".gif": "image/gif", ".webp": "image/webp", ".svg": "image/svg+xml"}
+IMAGE_WARN_BYTES = 1_500_000
+
+
+def embed_images(data: dict, base: Path) -> list[str]:
+    """Inline `figure` slide images as data URIs so the page stays self-contained. Returns warnings."""
+    warns: list[str] = []
+    if data.get("kind") != "lesson":
+        return warns
+    for i, s in enumerate(data.get("slides", [])):
+        img = s.get("image") if s.get("layout") == "figure" else None
+        if not img or re.match(r"^(data:|https?://)", img):
+            continue
+        path = (base / img).resolve()
+        mime = IMAGE_TYPES.get(path.suffix.lower())
+        if not mime:
+            raise BuildError(f"$.slides[{i}].image: unsupported image type {path.suffix!r}; use png, jpg, gif, webp or svg")
+        if not path.is_file():
+            raise BuildError(f"$.slides[{i}].image: file not found: {path}")
+        raw = path.read_bytes()
+        if len(raw) > IMAGE_WARN_BYTES:
+            warns.append(f"$.slides[{i}].image: {len(raw) // 1024} KB; render the page at a lower dpi to keep the lesson small")
+        s["image"] = f"data:{mime};base64," + base64.b64encode(raw).decode("ascii")
+    return warns
 
 
 def default_output(src: Path) -> Path:
@@ -94,6 +124,7 @@ def build_file(src: Path, out: Path | None = None, theme: str | None = None, ws:
         known = {c["id"] for c in data["cards"]}
         data["_due"] = [i for i in ids if i in known]
     chosen, reason = choose_theme(data, ws, theme)
+    warns = warns + embed_images(data, Path(src).resolve().parent)
     page = render(data, chosen)
     out = (out or default_output(src)).resolve()
     out.parent.mkdir(parents=True, exist_ok=True)

@@ -16,6 +16,7 @@ theme: auto
 session_minutes: 45
 weekly_hours: 10
 lms_url:
+lesson_depth: medium        # brief | medium | deep (all lesson settings: als.py settings)
 ---
 
 ## Goals

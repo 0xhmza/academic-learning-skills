@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import glob
 import json
 import os
 import sys
@@ -17,7 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from als_lib import anki, build, ics, paths, progress, report, themes, workspace  # noqa: E402
+from als_lib import anki, build, extract, ics, paths, progress, report, settings, themes, workspace  # noqa: E402
 from als_lib.validate import validate_file  # noqa: E402
 
 for stream in (sys.stdout, sys.stderr):
@@ -34,6 +35,20 @@ def ws_of(args) -> Path:
 def fail(msg: str, code: int = 1) -> int:
     print(f"error: {msg}", file=sys.stderr)
     return code
+
+
+def expand(files: list[str]) -> list[str]:
+    """Accept folders and glob patterns as well as files (PowerShell and cmd do not expand `*`)."""
+    out: list[str] = []
+    for f in files:
+        path = Path(f)
+        if path.is_dir():
+            out += [str(x) for x in sorted(path.glob("*.json")) if x.name != "topics.json"]
+        elif any(ch in f for ch in "*?["):
+            out += sorted(glob.glob(f)) or [f]
+        else:
+            out.append(f)
+    return out
 
 
 # ---------------------------------------------------------------- commands
@@ -108,7 +123,7 @@ def cmd_theme(args) -> int:
 
 def cmd_validate(args) -> int:
     bad = 0
-    for f in args.files:
+    for f in expand(args.files):
         errs, warns = validate_file(Path(f))
         status = "FAIL" if errs else "ok"
         print(f"{status:<4} {f}")
@@ -123,9 +138,10 @@ def cmd_validate(args) -> int:
 def cmd_build(args) -> int:
     ws = ws_of(args)
     rc = 0
-    for f in args.files:
+    files = expand(args.files)
+    for f in files:
         try:
-            out, theme, why, warns = build.build_file(Path(f), Path(args.out) if args.out and len(args.files) == 1 else None, args.theme, ws, not args.no_due)
+            out, theme, why, warns = build.build_file(Path(f), Path(args.out) if args.out and len(files) == 1 else None, args.theme, ws, not args.no_due)
         except (build.BuildError, ValueError, OSError) as exc:
             print(f"FAIL {f}\n  {exc}", file=sys.stderr)
             rc = 1
@@ -330,9 +346,111 @@ def cmd_new(args) -> int:
         data["module"] = args.module
     if args.subject:
         data["subject"] = args.subject
+    if args.kind == "lesson":
+        try:
+            _lesson_scaffold(data, args)
+        except ValueError as exc:
+            return fail(str(exc))
+    elif args.outline or args.source or args.depth or args.grounding:
+        return fail("--outline, --source, --depth and --grounding only apply to lessons")
     paths.write_json(out, data)
     print(f"wrote {out}")
+    if args.kind == "lesson":
+        print(f"  grounding {data['grounding']}, depth {data['depth']}, {len(data['slides'])} slides: {', '.join(s['layout'] for s in data['slides'])}")
     return 0
+
+
+def _lesson_scaffold(data: dict, args) -> None:
+    """Apply the student's lesson settings and, with --outline, keep one skeleton slide per named layout."""
+    ws = ws_of(args)
+    cfg = settings.resolve(ws if ws.exists() else None, args.module)
+    data["grounding"] = args.grounding or cfg["lesson_grounding"]["value"]
+    data["depth"] = settings.normalise("lesson_depth", args.depth or cfg["lesson_depth"]["value"])
+    if args.lang:
+        data["lang"] = args.lang
+    sources = []
+    for item in args.source or []:
+        sid, sep, rest = item.partition("=")
+        if not sep or not sid.strip():
+            raise ValueError(f"--source expects ID=path-or-title, got {item!r}")
+        entry = {"id": sid.strip()}
+        entry["file" if Path(rest).suffix else "title"] = rest.strip()
+        sources.append(entry)
+    if sources:
+        data["sources"] = sources
+    if args.outline:
+        by_layout = {}
+        for s in data["slides"]:
+            by_layout.setdefault(s["layout"], s)
+        slides = []
+        for name in (x.strip() for x in args.outline.split(",")):
+            if not name:
+                continue
+            if name not in by_layout:
+                raise ValueError(f"unknown layout {name!r} in --outline; choose from {', '.join(by_layout)}")
+            slide = json.loads(json.dumps(by_layout[name]))
+            for key in ("notes", "more", "level"):
+                slide.pop(key, None)
+            if name not in ("title", "summary"):
+                slide["src"] = ""  # must be filled in: a strict lesson does not build without it
+            slides.append(slide)
+        data["slides"] = slides
+    if data["grounding"] != "strict":
+        return
+    for slide in data["slides"]:
+        slide.pop("grounded", None)
+
+
+def cmd_settings(args) -> int:
+    ws = ws_of(args)
+    if args.pairs:
+        pairs = {}
+        for item in args.pairs:
+            key, sep, value = item.partition("=")
+            if not sep:
+                return fail(f"use key=value, got {item!r}")
+            pairs[key] = value
+        target = settings.save(ws, pairs, args.module)
+        print(f"saved to {target}")
+    cfg = settings.resolve(ws if ws.exists() else None, args.module)
+    if args.json:
+        print(json.dumps({k: v["value"] for k, v in cfg.items()}, indent=2))
+        return 0
+    for key, info in cfg.items():
+        print(f"{key:<17} {info['value']:<13} ({info['from']})  {info['help']}")
+    return 0
+
+
+def cmd_extract(args) -> int:
+    ws = ws_of(args)
+    if args.out:
+        out_dir = Path(args.out)
+    elif args.module:
+        out_dir = paths.module_dir(ws, args.module) / "sources" / "text"
+    else:
+        out_dir = ws / "extract"
+    rc = 0
+    for f in args.pdfs:
+        try:
+            rep = extract.extract(Path(f), out_dir, args.pages, args.images, args.dpi, args.keep_builds, args.layout)
+        except (RuntimeError, OSError, ValueError) as exc:
+            print(f"FAIL {f}: {exc}", file=sys.stderr)
+            rc = 1
+            continue
+        print(f"text {rep['text']}")
+        print(f"  {rep['pages']} pages, {rep['written']} written, {rep['chars']} characters ({rep['engine']})")
+        if rep["merged"]:
+            print(f"  build-up pages left out (their content is on a later page): {extract.ranges(list(rep['merged']))}")
+        if rep["thin"]:
+            print(f"  pages without text, probably figures: {extract.ranges(rep['thin'])}")
+            if not rep["images"]:
+                print("    re-run with --images thin to render them, then look at the PNGs before writing about them")
+        for n, path in sorted(rep["images"].items()):
+            print(f"  image p.{n}: {path}")
+        if args.toc:
+            for n, first, chars in rep["toc"]:
+                print(f"  p.{n:<4} {chars:>5}  {first}")
+    return rc
 
 
 # ---------------------------------------------------------------- parser
@@ -411,7 +529,24 @@ def parser() -> argparse.ArgumentParser:
     s = sub.add_parser("new", help="start a data file from a valid starter")
     s.add_argument("kind", choices=["deck", "lesson", "quiz", "exam", "sheet", "events"]); s.add_argument("out")
     s.add_argument("--title"); s.add_argument("--module"); s.add_argument("--subject"); s.add_argument("--force", action="store_true")
+    s.add_argument("--outline", help="lesson: comma-separated layouts, one skeleton slide each, e.g. title,points,formula,plot,check,summary")
+    s.add_argument("--source", action="append", help="lesson: ID=file-or-title of the material (repeatable), e.g. L3=sources/L03.pdf")
+    s.add_argument("--depth", choices=settings.LESSON["lesson_depth"][0] + ["standard"], help="lesson: default from `als.py settings` (medium unless changed)")
+    s.add_argument("--grounding", choices=settings.LESSON["lesson_grounding"][0], help="lesson: default from `als.py settings`")
+    s.add_argument("--lang", help="lesson: language code for built-in labels (en, de)")
     s.set_defaults(fn=cmd_new)
+
+    s = sub.add_parser("settings", help="show or change lesson settings (depth, grounding, checks, visuals, ...)")
+    s.add_argument("pairs", nargs="*", help="key=value to save, e.g. depth=deep checks=many"); s.add_argument("--module", help="read or save for one module")
+    s.add_argument("--json", action="store_true")
+    s.set_defaults(fn=cmd_settings)
+
+    s = sub.add_parser("extract", help="lecture PDFs to page-numbered text (and page images) for citing")
+    s.add_argument("pdfs", nargs="+"); s.add_argument("-o", "--out", help="output folder"); s.add_argument("--module", help="write to modules/<id>/sources/text")
+    s.add_argument("--pages", help="e.g. 1-20,25"); s.add_argument("--images", choices=["none", "thin", "all"], default="none", help="render pages as PNG: those without text, or all")
+    s.add_argument("--dpi", type=int, default=80); s.add_argument("--toc", action="store_true", help="list the first line of every page")
+    s.add_argument("--keep-builds", action="store_true", help="keep slides that only add a line to the previous one"); s.add_argument("--layout", action="store_true", help="keep the page layout (wider text)")
+    s.set_defaults(fn=cmd_extract)
     return p
 
 

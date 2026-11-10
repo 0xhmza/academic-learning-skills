@@ -164,7 +164,7 @@
     }
     nodes.forEach(function (n) {
       try {
-        window.katex.render(n.getAttribute('data-tex'), n, { displayMode: n.getAttribute('data-display') === '1', throwOnError: false, strict: 'ignore' });
+        window.katex.render(n.getAttribute('data-tex'), n, { displayMode: n.getAttribute('data-display') === '1', throwOnError: false, strict: 'ignore', macros: ALS.macros });
         n.classList.remove('als-math-raw');
         n.setAttribute('data-done', '1');
       } catch (e) { n.classList.add('als-math-raw'); }
@@ -405,6 +405,7 @@
       return;
     }
     ALS.pageKey = ALS.slug((ALS.data.module || '') + '-' + ALS.data.kind + '-' + ALS.data.title);
+    ALS.macros = Object.assign({}, ALS.data.macros || {}); // LaTeX shorthands defined once per data file
     ALS.setTheme(ALS.store.get('theme', root.getAttribute('data-als-theme')));
     ALS.applyMode();
     if (ALS.hasMath(node.textContent)) ALS.loadKatex();
