@@ -1,0 +1,73 @@
+/* Clinic: biology, medicine, chemistry, health, environment, psychology.
+   Calm, airy and diagram-first: IBM Plex, teal accent with violet secondary, soft rounded cards,
+   faint dot lattice. */
+
+[data-als-theme="clinic"] {
+  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-display: "IBM Plex Sans", ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --display-weight: 600;
+  --display-tracking: -0.015em;
+  --kicker-font: var(--font-body);
+  --kicker-tracking: .1em;
+  --radius: 1rem;
+  --radius-sm: .6rem;
+  --radius-btn: .6rem;
+
+  --bg: #f4f8f8;
+  --bg-elev: #ffffff;
+  --bg-sunken: #edf4f4;
+  --text: #0f2a2e;
+  --text-strong: #08201f;
+  --text-muted: #4a6366;
+  --text-faint: #8aa1a3;
+  --border: #dce8e8;
+  --border-strong: #c3d5d6;
+  --accent: #0f766e;
+  --accent-hover: #115e59;
+  --accent-contrast: #ffffff;
+  --accent-text: #0f766e;
+  --accent-soft: rgb(20 184 166 / .12);
+  --accent-2: #7c3aed;
+  --good: #15803d;   --good-text: #166534;  --good-soft: rgb(34 197 94 / .12);
+  --bad: #dc2626;    --bad-text: #b91c1c;   --bad-soft: rgb(239 68 68 / .10);
+  --warn: #ca8a04;   --warn-text: #a16207;  --warn-soft: rgb(234 179 8 / .14);
+  --shadow: 0 1px 3px rgb(15 42 46 / .05), 0 10px 28px -16px rgb(15 42 46 / .18);
+  --pattern: radial-gradient(rgb(15 118 110 / .08) 1px, transparent 1.3px);
+  --pattern-size: 22px 22px;
+  --code-bg: #0f2a2e;
+  --code-text: #d5ecea;
+  --code-keyword: #5eead4;
+  --code-string: #c4b5fd;
+  --code-number: #fcd34d;
+}
+
+[data-als-theme="clinic"][data-als-mode="dark"] {
+  --bg: #0a1a1c;
+  --bg-elev: #102427;
+  --bg-sunken: #0c1f21;
+  --text: #e6f2f1;
+  --text-strong: #ffffff;
+  --text-muted: #9db8b7;
+  --text-faint: #5f7c7c;
+  --border: #1d3639;
+  --border-strong: #2a4a4d;
+  --accent: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-contrast: #052e2b;
+  --accent-text: #5eead4;
+  --accent-soft: rgb(45 212 191 / .14);
+  --accent-2: #a78bfa;
+  --good: #4ade80;   --good-text: #86efac;  --good-soft: rgb(74 222 128 / .13);
+  --bad: #f87171;    --bad-text: #fca5a5;   --bad-soft: rgb(248 113 113 / .13);
+  --warn: #facc15;   --warn-text: #fde047;  --warn-soft: rgb(250 204 21 / .12);
+  --shadow: none;
+  --pattern: radial-gradient(rgb(45 212 191 / .06) 1px, transparent 1.3px);
+  --code-bg: #071416;
+}
+
+/* Motif: pill kicker, accent ring on cards when focused, soft section tint. */
+[data-als-theme="clinic"] .als-kicker { display: inline-block; background: var(--accent-soft); color: var(--accent-text); padding: .2rem .65rem; border-radius: 999px; font-weight: 600; }
+[data-als-theme="clinic"] .als-card:focus-within { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+[data-als-theme="clinic"] .als-grad { color: var(--accent); }
+[data-als-theme="clinic"] .als-callout { border-left-width: 0; border-radius: var(--radius-sm); }

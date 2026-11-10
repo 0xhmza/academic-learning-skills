@@ -1,0 +1,24 @@
+{
+  "als": "1",
+  "kind": "deck",
+  "title": "Eigenvalues",
+  "subtitle": "Lecture 7",
+  "module": "linear-algebra",
+  "subject": "Linear algebra",
+  "sources": [{ "id": "L7", "title": "Lecture 7: Eigenvalues", "locator": "slides 1-34" }],
+  "cards": [
+    { "id": "l7-01", "type": "basic", "front": "(Linear algebra) Definition: $\\mathbf v$ is an eigenvector of $A$ with eigenvalue $\\lambda$ when …", "back": "$A\\mathbf v = \\lambda\\mathbf v$ and $\\mathbf v \\neq \\mathbf 0$.", "extra": "The zero vector is excluded: it would satisfy the equation for every $\\lambda$.", "tags": ["definition"], "topic": "eigen", "src": "L7 s.5" },
+    { "id": "l7-02", "type": "basic", "front": "Which equation do the eigenvalues of $A$ solve?", "back": "The characteristic equation $\\det(A - \\lambda I) = 0$.", "tags": ["method"], "topic": "eigen", "src": "L7 s.12" },
+    { "id": "l7-03", "type": "basic", "front": "Why does $\\det(A - \\lambda I) = 0$ characterise eigenvalues?", "back": "$(A-\\lambda I)\\mathbf v = \\mathbf 0$ has a non-zero solution exactly when $A - \\lambda I$ is singular, i.e. its determinant is 0.", "topic": "eigen", "src": "L7 s.13" },
+    { "id": "l7-04", "type": "cloze", "text": "The sum of the eigenvalues equals the {{c1::trace}}; their product equals the {{c2::determinant}}.", "tags": ["formula"], "topic": "eigen", "src": "L7 s.20" },
+    { "id": "l7-05", "type": "basic", "front": "Eigenvalues of a triangular matrix?", "back": "Its diagonal entries.", "extra": "$\\det(A-\\lambda I)$ of a triangular matrix is the product of $(a_{ii} - \\lambda)$.", "topic": "eigen", "src": "L7 s.21" },
+    { "id": "l7-06", "type": "basic", "front": "$A$ is singular. Which eigenvalue must it have?", "back": "$0$, because $A\\mathbf v = \\mathbf 0 = 0\\cdot\\mathbf v$ for some $\\mathbf v \\neq \\mathbf 0$.", "topic": "eigen", "src": "L7 s.22" },
+    { "id": "l7-07", "type": "basic", "front": "If $A\\mathbf v = \\lambda\\mathbf v$, what is $A^k\\mathbf v$?", "back": "$\\lambda^k \\mathbf v$: same eigenvector, eigenvalue $\\lambda^k$.", "topic": "eigen", "src": "L7 s.24" },
+    { "id": "l7-08", "type": "basic", "front": "$A$ is invertible with eigenpair $(\\lambda, \\mathbf v)$. An eigenpair of $A^{-1}$?", "back": "$(1/\\lambda, \\mathbf v)$.", "topic": "eigen", "src": "L7 s.24" },
+    { "id": "l7-09", "type": "reverse", "front": "Eigenspace $E_\\lambda$", "back": "$\\ker(A - \\lambda I)$: all eigenvectors for $\\lambda$ together with $\\mathbf 0$", "tags": ["definition"], "topic": "eigen", "src": "L7 s.16" },
+    { "id": "l7-10", "type": "cloze", "text": "{{c1::Algebraic}} multiplicity counts $\\lambda$ as a root of the characteristic polynomial; {{c2::geometric}} multiplicity is $\\dim E_\\lambda$.", "tags": ["definition"], "topic": "diagonalisation", "src": "L7 s.26" },
+    { "id": "l7-11", "type": "basic", "front": "When is an $n\\times n$ matrix diagonalisable?", "back": "Exactly when it has $n$ linearly independent eigenvectors (equivalently, geometric = algebraic multiplicity for every eigenvalue).", "topic": "diagonalisation", "src": "L7 s.27" },
+    { "id": "l7-12", "type": "basic", "front": "Standard example of a non-diagonalisable $2\\times 2$ matrix?", "back": "The shear $\\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$: eigenvalue 1 twice, but only one eigenvector direction.", "topic": "diagonalisation", "src": "L7 s.28" },
+    { "id": "l7-13", "type": "basic", "front": "Two facts about the eigen-structure of a real symmetric matrix?", "back": "All eigenvalues are real, and there is an orthonormal basis of eigenvectors (spectral theorem).", "topic": "spectral", "grounded": false }
+  ]
+}

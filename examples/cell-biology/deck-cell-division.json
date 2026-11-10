@@ -1,0 +1,23 @@
+{
+  "als": "1",
+  "kind": "deck",
+  "title": "Mitosis and meiosis",
+  "subtitle": "Cell biology, lecture 6",
+  "module": "cell-biology",
+  "subject": "Cell biology",
+  "sources": [{ "id": "L6", "title": "Lecture 6: Cell division", "locator": "slides 1-40" }],
+  "cards": [
+    { "id": "l6-01", "type": "basic", "front": "Mitosis vs meiosis: number and ploidy of daughter cells?", "back": "Mitosis: 2 diploid cells, genetically identical. Meiosis: 4 haploid cells, genetically different.", "tags": ["compare"], "topic": "division-overview", "src": "L6 s.3" },
+    { "id": "l6-02", "type": "cloze", "text": "Crossing over between homologous chromosomes happens in {{c1::prophase I}} of meiosis, at sites called {{c2::chiasmata}}.", "topic": "meiosis", "src": "L6 s.18" },
+    { "id": "l6-03", "type": "basic", "front": "In which phase do **homologous chromosomes** separate?", "back": "Anaphase I of meiosis.", "extra": "Sister chromatids stay together until anaphase II.", "topic": "meiosis", "src": "L6 s.22" },
+    { "id": "l6-04", "type": "basic", "front": "In which phases do **sister chromatids** separate?", "back": "Anaphase of mitosis and anaphase II of meiosis.", "topic": "division-overview", "src": "L6 s.11" },
+    { "id": "l6-05", "type": "reverse", "front": "Synapsis", "back": "Pairing of homologous chromosomes along their length in prophase I (via the synaptonemal complex)", "tags": ["definition"], "topic": "meiosis", "src": "L6 s.17" },
+    { "id": "l6-06", "type": "basic", "front": "Two sources of genetic variation produced by meiosis itself?", "back": "Crossing over (prophase I) and independent assortment of homologues (metaphase I).", "extra": "Random fertilisation adds a third, but it is not part of meiosis.", "topic": "meiosis", "src": "L6 s.24" },
+    { "id": "l6-07", "type": "cloze", "text": "The {{c1::kinetochore}} is the protein complex on the centromere where spindle microtubules attach.", "topic": "mitosis", "src": "L6 s.8" },
+    { "id": "l6-08", "type": "basic", "front": "What does the spindle assembly checkpoint control?", "back": "The metaphase → anaphase transition: anaphase waits until every kinetochore is attached to the spindle.", "topic": "regulation", "src": "L6 s.30" },
+    { "id": "l6-09", "type": "basic", "front": "Which enzyme cleaves cohesin to start anaphase, and what activates it?", "back": "Separase, activated when the APC/C triggers degradation of securin.", "topic": "regulation", "src": "L6 s.31" },
+    { "id": "l6-10", "type": "basic", "front": "Nondisjunction: what is it and one clinical consequence?", "back": "Failure of chromosomes to separate correctly in meiosis I or II, giving aneuploid gametes; e.g. trisomy 21 (Down syndrome).", "topic": "errors", "src": "L6 s.35" },
+    { "id": "l6-11", "type": "cloze", "text": "Mitosis order: {{c1::prophase}}, {{c2::prometaphase}}, metaphase, {{c3::anaphase}}, telophase.", "topic": "mitosis", "src": "L6 s.6" },
+    { "id": "l6-12", "type": "basic", "front": "Why is meiosis called a *reduction* division?", "back": "Meiosis I halves the chromosome number (2n → n) by separating homologues; meiosis II then separates sister chromatids like mitosis.", "topic": "meiosis", "src": "L6 s.15" }
+  ]
+}

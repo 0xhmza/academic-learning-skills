@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="{{lang}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="generator" content="academic-learning-skills {{version}} · sheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script>/*ALS:EARLY*/</script>
+<style>/*ALS:CSS*/</style>
+<style>
+  .sh-head { max-width: 46rem; margin: 0 auto 2rem; }
+  .sh-notes { max-width: 46rem; margin: 0 auto; }
+  .sh-notes .sh-block { margin: 0 0 1.5rem; }
+  .sh-layout { display: grid; gap: 2rem; }
+  @media (min-width: 1100px) { .sh-layout.has-toc { grid-template-columns: 13rem minmax(0, 46rem); justify-content: center; } }
+  .sh-toc { position: sticky; top: 4.5rem; align-self: start; font-size: .875rem; display: none; }
+  @media (min-width: 1100px) { .sh-toc { display: block; } }
+  .sh-toc a { display: block; color: var(--text-muted); text-decoration: none; padding: .25rem 0 .25rem .75rem; border-left: 2px solid var(--border); }
+  .sh-toc a:hover { color: var(--text); border-left-color: var(--accent); }
+  .sh-section-title { scroll-margin-top: 5rem; }
+  .sh-def { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: .9rem 1.1rem; background: var(--bg-elev); }
+  .sh-def .term { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.1rem; margin-bottom: .2rem; }
+  .sh-def .term::after { content: " ·"; color: var(--accent); }
+  .sh-formula { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: .75rem 1rem; background: var(--bg-elev); }
+  .sh-formula .t { font-size: .8125rem; color: var(--text-muted); font-weight: 600; }
+  .sh-formula .note { font-size: .875rem; color: var(--text-muted); }
+  .sh-kp ul { margin: .25rem 0 0; padding-left: 1.2rem; }
+  .sh-example .sol { margin-top: .6rem; }
+  .sh-table { width: 100%; border-collapse: collapse; font-size: .9rem; font-variant-numeric: tabular-nums; }
+  .sh-table th, .sh-table td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .sh-table th { font-weight: 600; border-bottom: 2px solid var(--border-strong); background: var(--bg-sunken); }
+  .sh-table-wrap { overflow-x: auto; }
+  .sh-quote { margin: 0; padding: .25rem 0 .25rem 1.1rem; border-left: 3px solid var(--accent); font-family: var(--font-display); font-size: 1.2rem; font-style: italic; }
+  .sh-quote figcaption { font-family: var(--font-body); font-style: normal; font-size: .875rem; color: var(--text-muted); margin-top: .35rem; }
+  .sh-block-title { font-weight: 600; margin-bottom: .35rem; }
+
+  /* cheat sheet: dense columns */
+  .sh-cheat { columns: 1; column-gap: 1.25rem; font-size: .875rem; line-height: 1.45; }
+  @media (min-width: 720px) { .sh-cheat { columns: 2; } }
+  @media (min-width: 1100px) { .sh-cheat { columns: 3; } }
+  .sh-cheat .sh-block { break-inside: avoid; margin: 0 0 .9rem; display: inline-block; width: 100%; }
+  .sh-cheat .als-h2 { font-size: 1.05rem; margin: 0 0 .35rem; padding-top: .35rem; }
+  .sh-cheat .sh-def, .sh-cheat .sh-formula { padding: .5rem .65rem; }
+  .sh-cheat .sh-def .term { font-size: .95rem; }
+  .sh-cheat .als-callout { padding: .5rem .7rem; }
+  .sh-cheat .als-rich p { margin-bottom: .4em; }
+  @media print {
+    .sh-toc { display: none !important; }
+    .sh-layout { display: block; }
+    .sh-cheat { columns: 3; font-size: 8.5pt; column-gap: 6mm; }
+    .sh-head { margin-bottom: 4mm; }
+    .sh-block { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<!--ALS:DATA-->
+<script>/*ALS:CORE*/</script>
+<script>
+ALS.boot(function (sh) {
+  var E = ALS.el, $ = ALS.$;
+  var app = $('#app');
+  var layout = ALS.store.get('layout', sh.layout || 'notes');
+
+  function richDiv(text, cls) { var d = E('div', { class: cls || '' }); ALS.rich(d, text); return d; }
+
+  function block(b, k) {
+    var wrap = E('div', { class: 'sh-block' });
+    switch (b.type) {
+      case 'section':
+        if (b.title) wrap.appendChild(E('h2', { class: 'als-h2 sh-section-title', id: 'sec-' + k, html: ALS.md(b.title, { inline: true }) }));
+        if (b.body) wrap.appendChild(richDiv(b.body, k === 0 && layout === 'notes' ? 'als-dropcap' : ''));
+        break;
+      case 'definition':
+        wrap.appendChild(E('div', { class: 'sh-def' }, [E('div', { class: 'term', html: ALS.md(b.term, { inline: true }) }), richDiv(b.body)]));
+        break;
+      case 'formula':
+        var f = E('div', { class: 'sh-formula' });
+        if (b.title) f.appendChild(E('div', { class: 't', html: ALS.md(b.title, { inline: true }) }));
+        f.appendChild(richDiv('$$' + b.math + '$$'));
+        if (b.note) f.appendChild(richDiv(b.note, 'note'));
+        wrap.appendChild(f);
+        break;
+      case 'keypoints':
+        var kp = E('div', { class: 'als-callout als-callout--info sh-kp' });
+        if (b.title) kp.appendChild(E('div', { class: 'sh-block-title', html: ALS.md(b.title, { inline: true }) }));
+        var ul = E('ul'); b.points.forEach(function (p) { var li = E('li'); ALS.rich(li, p, { inline: true }); ul.appendChild(li); });
+        kp.appendChild(ul); wrap.appendChild(kp);
+        break;
+      case 'example':
+        var ex = E('div', { class: 'als-card als-card--flat sh-example' });
+        ex.appendChild(E('div', { class: 'als-kicker', text: b.title || 'Example' }));
+        if (b.body) ex.appendChild(richDiv(b.body));
+        if (b.solution) {
+          var det = E('details', { class: 'sol', open: layout === 'cheatsheet' || null }, [E('summary', { style: 'cursor:pointer;color:var(--accent);font-weight:500', text: 'Solution' })]);
+          det.appendChild(richDiv(b.solution));
+          ex.appendChild(det);
+        }
+        wrap.appendChild(ex);
+        break;
+      case 'warning':
+        var w = E('div', { class: 'als-callout als-callout--warn' });
+        w.appendChild(E('div', { class: 'sh-block-title', text: b.title || 'Common mistake' }));
+        if (b.body) w.appendChild(richDiv(b.body));
+        wrap.appendChild(w);
+        break;
+      case 'table':
+        if (b.title) wrap.appendChild(E('div', { class: 'sh-block-title', html: ALS.md(b.title, { inline: true }) }));
+        var t = E('table', { class: 'sh-table' });
+        var thead = E('thead', {}, [E('tr', {}, b.headers.map(function (h) { return E('th', { html: ALS.md(h, { inline: true }) }); }))]);
+        var tbody = E('tbody', {}, b.rows.map(function (r) { return E('tr', {}, r.map(function (c) { return E('td', { html: ALS.md(String(c), { inline: true }) }); })); }));
+        t.appendChild(thead); t.appendChild(tbody);
+        wrap.appendChild(E('div', { class: 'sh-table-wrap' }, [t]));
+        break;
+      case 'quote':
+        wrap.appendChild(E('figure', { class: 'sh-quote' }, [E('blockquote', { style: 'margin:0', html: ALS.md(b.quote, { inline: true }) }), b.by ? E('figcaption', { html: '— ' + ALS.md(b.by, { inline: true }) }) : null]));
+        if (b.body) wrap.appendChild(richDiv(b.body, 'als-muted'));
+        break;
+    }
+    var prov = ALS.provenance(b); if (prov) { prov.style.marginTop = '.35rem'; wrap.appendChild(prov); }
+    return wrap;
+  }
+
+  function render() {
+    app.innerHTML = '';
+    var seg = E('div', { class: 'als-seg als-noprint', role: 'group', 'aria-label': 'Layout' }, [['notes', 'Notes'], ['cheatsheet', 'Cheat sheet']].map(function (o) {
+      return E('button', { type: 'button', 'aria-pressed': String(layout === o[0]), text: o[1], onclick: function () { layout = o[0]; ALS.store.set('layout', layout); render(); } });
+    }));
+    app.appendChild(ALS.topbar([seg, ALS.iconBtn('print', 'Print or save as PDF', function () { window.print(); }, 'als-noprint')]));
+    var main = E('main', { class: 'als-shell als-frame' });
+    var head = E('header', { class: 'sh-head' + (layout === 'cheatsheet' ? '' : '') , style: layout === 'cheatsheet' ? 'max-width:none' : '' }, [
+      E('div', { class: 'als-kicker', text: [sh.module, layout === 'cheatsheet' ? 'Cheat sheet' : 'Study notes'].filter(Boolean).join(' · ') }),
+      E('h1', { class: 'als-h1', text: sh.title }),
+      sh.subtitle ? E('p', { class: 'als-sub', text: sh.subtitle }) : null
+    ]);
+    main.appendChild(head);
+    var sections = [];
+    sh.blocks.forEach(function (b, k) { if (b.type === 'section' && b.title) sections.push({ k: k, title: b.title }); });
+    var body = E('div', { class: layout === 'cheatsheet' ? 'sh-cheat' : 'sh-notes' });
+    sh.blocks.forEach(function (b, k) { body.appendChild(block(b, k)); });
+    if (layout === 'notes' && sections.length >= 4) {
+      var toc = E('nav', { class: 'sh-toc', 'aria-label': 'Contents' }, [E('div', { class: 'als-kicker', style: 'margin-bottom:.5rem', text: 'Contents' })].concat(sections.map(function (s) {
+        return E('a', { href: '#sec-' + s.k, html: ALS.md(s.title, { inline: true }) });
+      })));
+      main.appendChild(E('div', { class: 'sh-layout has-toc' }, [toc, body]));
+    } else main.appendChild(body);
+    if (sh.sources && sh.sources.length) {
+      var src = E('footer', { class: layout === 'cheatsheet' ? '' : 'sh-notes', style: 'margin-top:2.5rem;font-size:.8125rem;color:var(--text-muted)' }, [E('hr', { class: 'als-divider' }), E('div', { class: 'als-kicker', text: 'Sources' })]);
+      var ul = E('ul', { style: 'padding-left:1.1rem' });
+      sh.sources.forEach(function (s) { ul.appendChild(E('li', { html: '<span class="als-mono">' + ALS.esc(s.id) + '</span> ' + ALS.esc(s.title) + (s.locator ? ', ' + ALS.esc(s.locator) : '') })); });
+      src.appendChild(ul);
+      main.appendChild(src);
+    }
+    app.appendChild(main);
+    ALS.applyMode();
+    ALS.renderMath(app);
+  }
+  render();
+});
+</script>
+</body>
+</html>

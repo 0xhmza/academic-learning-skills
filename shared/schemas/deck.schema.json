@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ALS flashcard deck",
+  "type": "object",
+  "required": ["als", "kind", "title", "cards"],
+  "properties": {
+    "als": { "const": "1" },
+    "kind": { "const": "deck" },
+    "title": { "type": "string", "minLength": 1 },
+    "subtitle": { "type": "string" },
+    "module": { "type": "string" },
+    "subject": { "type": "string" },
+    "theme": { "enum": ["blueprint", "folio", "clinic", "ledger"] },
+    "lang": { "type": "string" },
+    "sources": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+    "cards": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["basic", "reverse", "cloze"] },
+          "front": { "type": "string" },
+          "back": { "type": "string" },
+          "text": { "type": "string" },
+          "extra": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "topic": { "type": "string" },
+          "src": { "type": "string" },
+          "grounded": { "type": "boolean" }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "type": { "const": "cloze" } } },
+            "then": { "required": ["text"] },
+            "else": { "required": ["front", "back"] }
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["id", "title"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "locator": { "type": "string" },
+        "url": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,0 +1,82 @@
+/* Folio: philosophy, literature, history, languages, arts.
+   Editorial book typography: Garamond body, Cormorant display, paper tones, oxblood ink,
+   small-caps labels, ornamented dividers, square corners. */
+
+[data-als-theme="folio"] {
+  --font-body: "EB Garamond", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-display: "Cormorant Garamond", "EB Garamond", "Palatino Linotype", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --font-size: 18.5px;
+  --font-features: "kern", "liga", "onum";
+  --display-weight: 600;
+  --display-tracking: -0.005em;
+  --kicker-font: var(--font-body);
+  --kicker-transform: lowercase;
+  --kicker-variant: small-caps;
+  --kicker-tracking: .14em;
+  --radius: 4px;
+  --radius-sm: 3px;
+  --radius-btn: 3px;
+  --shell-max: 64rem;
+
+  --bg: #f7f3ea;
+  --bg-elev: #fbf8f1;
+  --bg-sunken: #efe8d9;
+  --text: #2a241e;
+  --text-strong: #1c1712;
+  --text-muted: #6b5e50;
+  --text-faint: #9c8f7f;
+  --border: #e3d9c6;
+  --border-strong: #cdbfa5;
+  --accent: #8c2f2b;
+  --accent-hover: #74231f;
+  --accent-contrast: #fbf8f1;
+  --accent-text: #7a2622;
+  --accent-soft: rgb(140 47 43 / .09);
+  --accent-2: #a0712a;
+  --good: #4d7a3a;   --good-text: #3f6630;  --good-soft: rgb(77 122 58 / .12);
+  --bad: #a33a2e;    --bad-text: #8e2f24;   --bad-soft: rgb(163 58 46 / .10);
+  --warn: #a8741a;   --warn-text: #8a5f12;  --warn-soft: rgb(168 116 26 / .12);
+  --shadow: 0 1px 0 rgb(80 60 30 / .06);
+  --pattern: radial-gradient(rgb(90 60 20 / .035) 1px, transparent 1.2px);
+  --pattern-size: 5px 5px;
+  --code-bg: #efe8d9;
+}
+
+[data-als-theme="folio"][data-als-mode="dark"] {
+  --bg: #1a1613;
+  --bg-elev: #221d19;
+  --bg-sunken: #15110f;
+  --text: #ece3d3;
+  --text-strong: #f7efe1;
+  --text-muted: #b3a691;
+  --text-faint: #7d715f;
+  --border: #352d26;
+  --border-strong: #4a3f35;
+  --accent: #d88a6c;
+  --accent-hover: #e8a487;
+  --accent-contrast: #1a1613;
+  --accent-text: #e9a588;
+  --accent-soft: rgb(216 138 108 / .14);
+  --accent-2: #d4a95a;
+  --good: #9cc27f;   --good-text: #b5d69c;  --good-soft: rgb(156 194 127 / .13);
+  --bad: #e08a7a;    --bad-text: #eba597;   --bad-soft: rgb(224 138 122 / .13);
+  --warn: #e0b25e;   --warn-text: #ecc884;  --warn-soft: rgb(224 178 94 / .13);
+  --shadow: none;
+  --pattern: radial-gradient(rgb(255 240 210 / .025) 1px, transparent 1.2px);
+  --code-bg: #15110f;
+}
+
+/* Motif: italic subtitles, ornamented dividers, drop caps, hanging quotes. */
+[data-als-theme="folio"] .als-sub { font-style: italic; font-size: 1.125rem; }
+[data-als-theme="folio"] .als-h1 { font-weight: 600; line-height: 1.05; }
+[data-als-theme="folio"] .als-divider { border: 0; text-align: center; margin: 2rem 0; height: auto; }
+[data-als-theme="folio"] .als-divider::before { content: "\2766"; color: var(--accent); font-size: 1.1rem; letter-spacing: 1rem; }
+[data-als-theme="folio"] .als-dropcap > p:first-child::first-letter {
+  float: left; font-family: var(--font-display); font-size: 3.6em; line-height: .82; padding: .06em .08em 0 0; color: var(--accent); font-weight: 600;
+}
+[data-als-theme="folio"] .als-card { border-color: var(--border); }
+[data-als-theme="folio"] .als-btn { font-family: var(--font-body); letter-spacing: .02em; }
+[data-als-theme="folio"] .als-btn--primary { font-variant: small-caps; letter-spacing: .08em; }
+[data-als-theme="folio"] .als-grad { color: var(--accent); font-style: italic; }
+[data-als-theme="folio"] .als-kicker::before, [data-als-theme="folio"] .als-kicker::after { content: "\2014"; margin: 0 .4em; opacity: .6; }

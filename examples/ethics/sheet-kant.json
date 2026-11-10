@@ -1,0 +1,36 @@
+{
+  "als": "1",
+  "kind": "sheet",
+  "title": "Kantian ethics",
+  "subtitle": "Summary of lecture 4 and Groundwork II",
+  "module": "ethics",
+  "subject": "Philosophy: ethics",
+  "layout": "notes",
+  "sources": [
+    { "id": "G", "title": "Kant, Groundwork of the Metaphysic of Morals (1785), tr. T. K. Abbott (1895)", "locator": "4:389-445" },
+    { "id": "L4", "title": "Lecture 4: Kantian ethics", "locator": "slides 1-28" }
+  ],
+  "blocks": [
+    { "type": "section", "title": "The question", "body": "Kant asks what makes an action *morally* good. His answer: not its consequences and not the inclinations behind it, but the **will** that acts from duty, that is, out of respect for a law reason gives itself.\n\nThe supreme principle of that law is the **categorical imperative**.", "src": "G 4:393-403" },
+    { "type": "definition", "term": "Good will", "body": "The only thing good without qualification: a will that acts from duty, whatever it achieves.", "src": "G 4:393" },
+    { "type": "definition", "term": "Maxim", "body": "The subjective principle of an action: *in situation S I will do A to achieve E*.", "src": "G 4:421n" },
+    { "type": "section", "title": "Hypothetical and categorical imperatives", "body": "A **hypothetical** imperative commands an action as a means to something one wants (\"If you want X, do Y\"). A **categorical** imperative commands unconditionally, for every rational being.", "src": "G 4:414-416" },
+    { "type": "quote", "quote": "Act only on that maxim whereby thou canst at the same time will that it should become a universal law.", "by": "Groundwork 4:421 (Abbott tr.)", "body": "The Formula of Universal Law (FUL)." },
+    { "type": "keypoints", "title": "Applying the FUL", "points": [
+      "State the maxim with the agent's real reasons.",
+      "Imagine it as a universal law of nature.",
+      "Can the world with that law be **conceived**? If not: violation of a perfect duty.",
+      "Could a rational agent **will** that world? If not: violation of an imperfect duty."
+    ], "src": "L4 s.10-14" },
+    { "type": "table", "title": "The four examples (G 4:421-423)", "headers": ["Example", "Fails by", "Duty"], "rows": [
+      ["Suicide from self-love", "contradiction in conception", "perfect, to oneself"],
+      ["False promise", "contradiction in conception", "perfect, to others"],
+      ["Neglecting one's talents", "contradiction in the will", "imperfect, to oneself"],
+      ["Refusing to help others", "contradiction in the will", "imperfect, to others"]
+    ] },
+    { "type": "section", "title": "The Formula of Humanity", "body": "\"So act as to treat humanity, whether in thine own person or in that of any other, in every case as an end withal, never as means only.\" (4:429)\n\nUsing someone as a means is fine (the baker sells you bread); using them **merely** as a means, in a way they could not consent to, is not.", "src": "G 4:429" },
+    { "type": "warning", "title": "Common mistake", "body": "The FUL is **not** a consequence test (\"what if everyone did it? That would be bad\"). The problem is a *contradiction*: the universalised maxim undermines itself or cannot be rationally willed. Writing the consequentialist version in an exam loses most of the marks.", "src": "L4 s.12" },
+    { "type": "section", "title": "Objections", "body": "- **Rigorism**: the murderer at the door. Kant (1797) holds that lying is wrong even then; many Kantians instead refine the maxim or appeal to the Formula of Humanity.\n- **Empty formalism** (Hegel): the test seems to accept or reject maxims depending on how they are described.\n- **Conflicts of duty**: the theory gives little guidance when duties clash.", "src": "L4 s.22-26" },
+    { "type": "example", "title": "Exam-style question", "body": "Does the Formula of Universal Law forbid lying to the murderer at the door? Discuss.", "solution": "Outline: (1) reconstruct the maxim and the FUL test; (2) Kant's own answer in *On a Supposed Right to Lie*; (3) the redescription strategy and its risk of formalism; (4) Korsgaard-style reply via the Formula of Humanity or a two-level reading; (5) your verdict with a reason." }
+  ]
+}

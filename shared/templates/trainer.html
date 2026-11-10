@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="{{lang}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="generator" content="academic-learning-skills {{version}} · trainer">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script>/*ALS:EARLY*/</script>
+<style>/*ALS:CSS*/</style>
+<style>
+  .tr-wrap { max-width: 48rem; margin: 0 auto; }
+  .tr-meta { display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: .6rem; font-size: .8125rem; color: var(--text-muted); }
+  .tr-q { padding: 1.5rem; }
+  .tr-prompt { font-size: 1.125rem; margin: .5rem 0 1.25rem; }
+  .tr-opts { display: grid; gap: .55rem; }
+  .tr-opt { display: grid; grid-template-columns: 1.75rem 1fr; gap: .6rem; align-items: start; text-align: left; padding: .75rem .9rem; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--bg-elev); cursor: pointer; transition: border-color .15s, background-color .15s; }
+  .tr-opt:hover { border-color: var(--text-faint); }
+  .tr-opt[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); }
+  .tr-opt .k { font-family: var(--font-mono); font-size: .75rem; color: var(--text-faint); width: 1.5rem; height: 1.5rem; border: 1px solid var(--border-strong); border-radius: 50%; display: grid; place-items: center; }
+  .tr-opt[data-multi] .k { border-radius: 4px; }
+  .tr-opt[aria-checked="true"] .k { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+  .tr-opt.is-right { border-color: var(--good); background: var(--good-soft); }
+  .tr-opt.is-wrong { border-color: var(--bad); background: var(--bad-soft); }
+  .tr-opt[disabled] { cursor: default; }
+  .tr-num { display: flex; gap: .5rem; align-items: center; max-width: 22rem; }
+  .tr-unit { color: var(--text-muted); font-family: var(--font-mono); white-space: nowrap; }
+  .tr-cloze { line-height: 2.4; font-size: 1.08rem; }
+  .tr-cloze input { display: inline-block; width: auto; min-width: 7rem; max-width: 100%; min-height: 2.1rem; padding: .2rem .5rem; margin: 0 .15rem; vertical-align: baseline; }
+  .tr-cloze input.is-right { border-color: var(--good); background: var(--good-soft); }
+  .tr-cloze input.is-wrong { border-color: var(--bad); background: var(--bad-soft); }
+  .tr-order { list-style: none; padding: 0; margin: 0; display: grid; gap: .45rem; }
+  .tr-order li { display: grid; grid-template-columns: 1.75rem 1fr auto; gap: .5rem; align-items: center; padding: .5rem .5rem .5rem .8rem; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--bg-elev); }
+  .tr-order li .n { font-family: var(--font-mono); font-size: .75rem; color: var(--text-faint); }
+  .tr-order li.is-right { border-color: var(--good); background: var(--good-soft); }
+  .tr-order li.is-wrong { border-color: var(--bad); background: var(--bad-soft); }
+  .tr-order .mv { display: flex; gap: .15rem; }
+  .tr-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.25rem; align-items: center; }
+  .tr-feedback { margin-top: 1.25rem; }
+  .tr-feedback > * + * { margin-top: .75rem; }
+  .tr-solution ol { margin: .25rem 0 0; padding-left: 1.3rem; }
+  .tr-solution li { margin: .4rem 0; }
+  .tr-hints .als-callout + .als-callout { margin-top: .5rem; }
+  .tr-kw { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .tr-start { display: grid; gap: 1.25rem; }
+  .tr-settings { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+  .tr-settings label { display: block; font-size: .8125rem; color: var(--text-muted); margin-bottom: .35rem; }
+  .tr-score { font-family: var(--font-display); font-size: clamp(3rem, 10vw, 5rem); font-weight: var(--display-weight); line-height: 1; letter-spacing: var(--display-tracking); font-variant-numeric: tabular-nums; }
+  .tr-topics { display: grid; gap: .6rem; }
+  .tr-topic { display: grid; grid-template-columns: minmax(0, 10rem) 1fr 3rem; gap: .75rem; align-items: center; font-size: .875rem; }
+  .tr-topic .als-progress { height: .5rem; }
+  .tr-review { display: grid; gap: .75rem; }
+  .tr-timer { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .tr-timer.is-low { color: var(--bad); }
+  .tr-dots { display: flex; flex-wrap: wrap; gap: .3rem; margin-bottom: 1rem; }
+  .tr-dot { width: 1.75rem; height: 1.75rem; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--bg-elev); font-size: .7rem; font-family: var(--font-mono); cursor: pointer; color: var(--text-muted); }
+  .tr-dot.is-answered { background: var(--accent-soft); border-color: var(--accent); color: var(--text); }
+  .tr-dot[aria-current="true"] { outline: 2px solid var(--accent); outline-offset: 1px; }
+  @media print { .tr-actions, .tr-dots { display: none !important; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<!--ALS:DATA-->
+<script>/*ALS:CORE*/</script>
+<script>
+ALS.boot(function (quiz) {
+  var E = ALS.el, $ = ALS.$, $$ = ALS.$$;
+  var app = $('#app');
+  var settings = Object.assign({ mode: 'practice', shuffle: true, passMark: 0.7 }, quiz.settings || {});
+  var topics = {}; quiz.questions.forEach(function (q) { if (q.topic) topics[q.topic] = (topics[q.topic] || 0) + 1; });
+
+  var S = { phase: 'start', mode: settings.mode, topic: 'all', level: 'all', list: [], i: 0, answers: {}, graded: {}, hints: {}, steps: {}, t0: 0, qt0: 0, timer: null, remaining: null };
+
+  /* ---------- checking ---------- */
+  function norm(s) { return String(s == null ? '' : s).trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.,;:!?]+$/, ''); }
+  function parseNum(s) {
+    s = String(s || '').trim().replace(/\s/g, '').replace(/,(?=\d{1,}$)/, '.').replace(/[−–]/g, '-');
+    var fr = s.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);
+    if (fr) return parseFloat(fr[1]) / parseFloat(fr[2]);
+    var v = Number(s.replace(/×10\^/i, 'e').replace(/\*10\^/i, 'e'));
+    return isNaN(v) ? null : v;
+  }
+  function check(q, a) {
+    switch (q.type) {
+      case 'mcq': return a === q.answer;
+      case 'multi':
+        if (!Array.isArray(a)) return false;
+        var want = q.answer.slice().sort().join(','), got = a.slice().sort().join(',');
+        return want === got;
+      case 'numeric':
+        var v = parseNum(a); if (v == null) return false;
+        var tol = q.tolerance != null ? q.tolerance : Math.max(1e-9, Math.abs(q.answer) * 1e-6);
+        return Math.abs(v - q.answer) <= tol;
+      case 'cloze':
+        if (!Array.isArray(a)) return false;
+        return q.blanks.every(function (alts, k) { return alts.some(function (x) { return norm(x) === norm(a[k]); }); });
+      case 'order':
+        return Array.isArray(a) && a.join('\u0001') === q.items.join('\u0001');
+      case 'text':
+        return a && a.self ? a.self === 'yes' : null;
+    }
+    return false;
+  }
+  function blankOk(q, k, v) { return q.blanks[k].some(function (x) { return norm(x) === norm(v); }); }
+
+  /* ---------- start ---------- */
+  function startView() {
+    var levels = [['all', 'All levels'], ['1', 'Warm-up'], ['2', 'Core'], ['3', 'Challenge']]; // ordered: numeric object keys would sort first
+    var topicSel = E('select', { class: 'als-select', id: 'tr-topic' }, [E('option', { value: 'all', text: 'All topics (' + quiz.questions.length + ')' })].concat(Object.keys(topics).sort().map(function (t) { return E('option', { value: t, text: t + ' (' + topics[t] + ')' }); })));
+    var levelSel = E('select', { class: 'als-select', id: 'tr-level' }, levels.map(function (l) { return E('option', { value: l[0], text: l[1] }); }));
+    var modeSeg = E('div', { class: 'als-seg', role: 'group', 'aria-label': 'Mode' }, ['practice', 'test'].map(function (m) {
+      return E('button', { type: 'button', 'aria-pressed': String(S.mode === m), text: m === 'practice' ? 'Practice: feedback each step' : 'Test: feedback at the end', onclick: function () { S.mode = m; render(); } });
+    }));
+    var last = ALS.store.get('last', null);
+    return E('div', { class: 'tr-wrap tr-start als-rise' }, [
+      E('div', {}, [
+        E('div', { class: 'als-kicker', text: (quiz.module ? quiz.module + ' · ' : '') + quiz.questions.length + ' questions' }),
+        E('h1', { class: 'als-h1', text: quiz.title }),
+        quiz.subtitle ? E('p', { class: 'als-sub', text: quiz.subtitle }) : null
+      ]),
+      E('div', { class: 'als-card tr-settings' }, [
+        E('div', {}, [E('label', { for: 'tr-topic', text: 'Topic' }), topicSel]),
+        E('div', {}, [E('label', { for: 'tr-level', text: 'Difficulty' }), levelSel]),
+        E('div', { style: 'grid-column: 1 / -1' }, [E('label', { text: 'Mode' }), modeSeg])
+      ]),
+      last ? E('p', { class: 'als-muted', style: 'margin:0', text: 'Last attempt: ' + last.score + '% on ' + last.date }) : null,
+      E('div', { class: 'als-row' }, [
+        E('button', { type: 'button', class: 'als-btn als-btn--primary', text: 'Start', onclick: function () { begin(topicSel.value, levelSel.value); } }),
+        settings.timeLimitMin ? E('span', { class: 'als-chip', text: 'Test mode time limit: ' + settings.timeLimitMin + ' min' }) : null
+      ])
+    ]);
+  }
+
+  function begin(topic, level, onlyIds) {
+    var pool = quiz.questions.filter(function (q) {
+      if (onlyIds) return onlyIds.indexOf(q.id) > -1;
+      return (topic === 'all' || q.topic === topic) && (level === 'all' || String(q.difficulty || 2) === level);
+    });
+    if (!pool.length) { ALS.toast('No questions match these filters'); return; }
+    S.list = settings.shuffle && !onlyIds ? ALS.shuffle(pool) : pool;
+    S.i = 0; S.answers = {}; S.graded = {}; S.hints = {}; S.steps = {}; S.times = {};
+    S.phase = 'question'; S.t0 = Date.now(); S.qt0 = Date.now();
+    clearInterval(S.timer);
+    if (S.mode === 'test' && settings.timeLimitMin) {
+      S.remaining = settings.timeLimitMin * 60;
+      S.timer = setInterval(function () {
+        S.remaining--; var t = $('.tr-timer');
+        if (t) { t.textContent = fmt(S.remaining); t.classList.toggle('is-low', S.remaining < 60); }
+        if (S.remaining <= 0) { clearInterval(S.timer); ALS.toast('Time is up'); finish(); }
+      }, 1000);
+    }
+    render();
+  }
+  function fmt(sec) { sec = Math.max(0, sec); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
+
+  /* ---------- question rendering ---------- */
+  function inputFor(q, locked) {
+    var a = S.answers[q.id];
+    var g = S.graded[q.id];
+    if (q.type === 'mcq' || q.type === 'multi') {
+      var multi = q.type === 'multi';
+      var box = E('div', { class: 'tr-opts', role: multi ? 'group' : 'radiogroup' });
+      q.options.forEach(function (o, k) {
+        var sel = multi ? (a || []).indexOf(k) > -1 : a === k;
+        var btn = E('button', { type: 'button', class: 'tr-opt', role: multi ? 'checkbox' : 'radio', 'aria-checked': String(sel), 'data-multi': multi || null, disabled: locked || null }, [
+          E('span', { class: 'k', text: String(k + 1) }), E('span', { class: 'als-rich', html: ALS.md(o, { inline: true }) })
+        ]);
+        if (g != null) {
+          var right = multi ? q.answer.indexOf(k) > -1 : q.answer === k;
+          if (right) btn.classList.add('is-right'); else if (sel) btn.classList.add('is-wrong');
+        }
+        btn.addEventListener('click', function () { choose(q, k); });
+        box.appendChild(btn);
+      });
+      return box;
+    }
+    if (q.type === 'numeric') {
+      var inp = E('input', { class: 'als-input', type: 'text', inputmode: 'decimal', autocomplete: 'off', placeholder: 'Your answer', value: a == null ? '' : a, disabled: locked || null, 'aria-label': 'Numeric answer' });
+      inp.addEventListener('input', function () { S.answers[q.id] = inp.value; });
+      inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') primary(); });
+      if (g != null) inp.classList.add(g ? 'is-right' : 'is-wrong');
+      return E('div', { class: 'tr-num' }, [inp, q.unit ? E('span', { class: 'tr-unit', text: q.unit }) : null]);
+    }
+    if (q.type === 'text') {
+      var ta = E('textarea', { class: 'als-textarea', placeholder: 'Write your answer, then compare it with the model answer.', disabled: locked || null, 'aria-label': 'Your answer' });
+      ta.value = (a && a.text) || '';
+      ta.addEventListener('input', function () { S.answers[q.id] = Object.assign({}, S.answers[q.id], { text: ta.value }); });
+      return ta;
+    }
+    if (q.type === 'cloze') {
+      var parts = String(q.text).split(/\{\{(\d+)\}\}/);
+      var div = E('div', { class: 'tr-cloze als-rich' });
+      var vals = a || [];
+      var html = '';
+      parts.forEach(function (p, k) { html += k % 2 === 0 ? ALS.md(p, { inline: true }) : '<span data-blank="' + (parseInt(p, 10) - 1) + '"></span>'; });
+      div.innerHTML = html;
+      $$('[data-blank]', div).forEach(function (slot) {
+        var bi = +slot.getAttribute('data-blank');
+        var inp = E('input', { class: 'als-input', type: 'text', autocomplete: 'off', 'aria-label': 'Blank ' + (bi + 1), value: vals[bi] || '', disabled: locked || null, size: String(Math.max(6, (q.blanks[bi] && q.blanks[bi][0] || '').length + 2)) });
+        inp.addEventListener('input', function () { var v = (S.answers[q.id] || []).slice(); v[bi] = inp.value; S.answers[q.id] = v; });
+        inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') primary(); });
+        if (g != null) inp.classList.add(blankOk(q, bi, vals[bi]) ? 'is-right' : 'is-wrong');
+        slot.replaceWith(inp);
+      });
+      return div;
+    }
+    if (q.type === 'order') {
+      if (!a) { a = ALS.shuffle(q.items); if (a.join() === q.items.join() && a.length > 1) a.reverse(); S.answers[q.id] = a; }
+      var ol = E('ol', { class: 'tr-order', 'aria-label': 'Put the items in the correct order' });
+      a.forEach(function (item, k) {
+        var li = E('li', {}, [
+          E('span', { class: 'n', text: String(k + 1) }), E('span', { class: 'als-rich', html: ALS.md(item, { inline: true }) }),
+          E('span', { class: 'mv' }, [
+            E('button', { type: 'button', class: 'als-btn als-btn--sm als-btn--ghost', 'aria-label': 'Move up', text: '↑', disabled: locked || k === 0 || null, onclick: function () { move(q, k, -1); } }),
+            E('button', { type: 'button', class: 'als-btn als-btn--sm als-btn--ghost', 'aria-label': 'Move down', text: '↓', disabled: locked || k === a.length - 1 || null, onclick: function () { move(q, k, 1); } })
+          ])
+        ]);
+        if (g != null) li.classList.add(item === q.items[k] ? 'is-right' : 'is-wrong');
+        ol.appendChild(li);
+      });
+      return ol;
+    }
+    return E('p', { text: 'Unsupported question type: ' + q.type });
+  }
+
+  function choose(q, k) {
+    if (S.graded[q.id] != null && S.mode === 'practice') return;
+    if (q.type === 'multi') {
+      var cur = (S.answers[q.id] || []).slice(); var at = cur.indexOf(k);
+      if (at > -1) cur.splice(at, 1); else cur.push(k);
+      S.answers[q.id] = cur;
+    } else S.answers[q.id] = k;
+    render();
+  }
+  function move(q, k, d) {
+    var a = S.answers[q.id].slice(); var t = a[k]; a[k] = a[k + d]; a[k + d] = t; S.answers[q.id] = a; render();
+  }
+
+  function answered(q) {
+    var a = S.answers[q.id];
+    if (q.type === 'mcq') return a != null;
+    if (q.type === 'multi') return a && a.length > 0;
+    if (q.type === 'numeric') return a != null && String(a).trim() !== '';
+    if (q.type === 'text') return a && a.text && a.text.trim().length > 0;
+    if (q.type === 'cloze') return Array.isArray(a) && a.some(function (x) { return x && x.trim(); });
+    if (q.type === 'order') return true;
+    return false;
+  }
+
+  function feedback(q) {
+    var g = S.graded[q.id];
+    var box = E('div', { class: 'tr-feedback' });
+    if (q.type === 'text') {
+      var a = S.answers[q.id] || {};
+      var model = E('div', { class: 'als-callout als-callout--info' }); ALS.rich(model, '**Model answer.** ' + q.answer);
+      box.appendChild(model);
+      if (q.keywords && q.keywords.length) {
+        var txt = norm(a.text);
+        box.appendChild(E('div', {}, [E('div', { class: 'als-muted', style: 'font-size:.8125rem;margin-bottom:.35rem', text: 'Key ideas a full answer mentions' }),
+          E('div', { class: 'tr-kw' }, q.keywords.map(function (k) { var hit = txt.indexOf(norm(k)) > -1; return E('span', { class: 'als-chip ' + (hit ? 'als-chip--good' : 'als-chip--warn'), text: (hit ? '✓ ' : '○ ') + k }); }))]));
+      }
+      if (!a.self) {
+        box.appendChild(E('div', {}, [E('div', { style: 'font-weight:600;margin-bottom:.4rem', text: 'How did you do?' }), E('div', { class: 'als-row' }, [
+          E('button', { type: 'button', class: 'als-btn als-btn--good', text: 'Got it', onclick: function () { selfGrade(q, 'yes'); } }),
+          E('button', { type: 'button', class: 'als-btn als-btn--warn', text: 'Partly', onclick: function () { selfGrade(q, 'partly'); } }),
+          E('button', { type: 'button', class: 'als-btn als-btn--bad', text: 'Missed it', onclick: function () { selfGrade(q, 'no'); } })
+        ])]));
+        return box;
+      }
+    } else {
+      var verdict = E('div', { class: 'als-callout ' + (g ? 'als-callout--good' : 'als-callout--bad') });
+      var right = '';
+      if (!g) {
+        if (q.type === 'mcq') right = ' Correct answer: **' + (q.answer + 1) + '.** ' + q.options[q.answer];
+        else if (q.type === 'multi') right = ' Correct: ' + q.answer.map(function (k) { return '**' + (k + 1) + '**'; }).join(', ') + '.';
+        else if (q.type === 'numeric') right = ' Expected **' + q.answer + (q.unit ? ' ' + q.unit : '') + '**' + (q.tolerance ? ' (± ' + q.tolerance + ')' : '') + '.';
+        else if (q.type === 'cloze') right = ' Expected: ' + q.blanks.map(function (b) { return '**' + b[0] + '**'; }).join(', ') + '.';
+        else if (q.type === 'order') right = ' Correct order: ' + q.items.map(function (x, k) { return (k + 1) + '. ' + x; }).join(' · ');
+      }
+      ALS.rich(verdict, (g ? '**Correct.**' : '**Not quite.**') + right);
+      box.appendChild(verdict);
+    }
+    if (q.explain) { var ex = E('div', { class: 'als-rich' }); ALS.rich(ex, q.explain); box.appendChild(ex); }
+    if (q.solution && q.solution.length) box.appendChild(solutionBlock(q, true));
+    return box;
+  }
+
+  /* Worked solution, revealed one step at a time (faded worked example). */
+  function solutionBlock(q, afterAnswer) {
+    var n = S.steps[q.id] || 0;
+    if (afterAnswer && !S.graded[q.id] && n === 0) n = 0;
+    var wrap = E('div', { class: 'tr-solution als-card als-card--sunken als-card--flat' });
+    wrap.appendChild(E('div', { class: 'als-kicker', text: 'Worked solution' }));
+    var ol = E('ol');
+    q.solution.slice(0, n).forEach(function (s) { var li = E('li', { class: 'als-rise' }); ALS.rich(li, s); ol.appendChild(li); });
+    wrap.appendChild(ol);
+    if (n < q.solution.length) {
+      wrap.appendChild(E('div', { class: 'als-row', style: 'margin-top:.5rem' }, [
+        E('button', { type: 'button', class: 'als-btn als-btn--sm', text: n === 0 ? 'Show first step' : 'Next step (' + n + '/' + q.solution.length + ')', onclick: function () { S.steps[q.id] = n + 1; render(); } }),
+        n > 0 ? E('button', { type: 'button', class: 'als-btn als-btn--sm als-btn--ghost', text: 'Show all', onclick: function () { S.steps[q.id] = q.solution.length; render(); } }) : null
+      ]));
+    }
+    return wrap;
+  }
+
+  function selfGrade(q, v) {
+    S.answers[q.id] = Object.assign({}, S.answers[q.id], { self: v });
+    S.graded[q.id] = v === 'yes';
+    render();
+  }
+
+  function primary() {
+    var q = S.list[S.i];
+    if (S.mode === 'practice') {
+      if (S.graded[q.id] == null && !(q.type === 'text' && S.answers[q.id] && S.answers[q.id].checked)) {
+        if (!answered(q)) { ALS.toast('Answer first, or use a hint'); return; }
+        S.times[q.id] = Math.round((Date.now() - S.qt0) / 1000);
+        if (q.type === 'text') { S.answers[q.id] = Object.assign({}, S.answers[q.id], { checked: true }); }
+        else S.graded[q.id] = check(q, S.answers[q.id]);
+        render(); return;
+      }
+      if (q.type === 'text' && S.graded[q.id] == null) { ALS.toast('Rate your answer first'); return; }
+      advance(1);
+    } else advance(1);
+  }
+
+  function advance(d) {
+    var j = S.i + d;
+    if (j >= S.list.length) { if (S.mode === 'test') confirmFinish(); else finish(); return; }
+    if (j < 0) return;
+    S.i = j; S.qt0 = Date.now(); render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function confirmFinish() {
+    var open = S.list.filter(function (q) { return !answered(q); }).length;
+    if (open && !window.confirm(open + ' question(s) unanswered. Finish anyway?')) return;
+    finish();
+  }
+
+  function questionView() {
+    var q = S.list[S.i];
+    var locked = S.mode === 'practice' && (S.graded[q.id] != null || (q.type === 'text' && S.answers[q.id] && S.answers[q.id].checked));
+    var wrap = E('div', { class: 'tr-wrap' });
+    wrap.appendChild(E('div', { class: 'tr-meta' }, [
+      E('span', { text: 'Question ' + (S.i + 1) + ' of ' + S.list.length + (q.topic ? ' · ' + q.topic : '') }),
+      S.remaining != null ? E('span', { class: 'tr-timer', text: fmt(S.remaining) }) : E('span', { text: ['', 'Warm-up', 'Core', 'Challenge'][q.difficulty || 2] })
+    ]));
+    wrap.appendChild(E('div', { class: 'als-progress', style: 'margin-bottom:1rem' }, [E('span', { style: 'width:' + Math.round(S.i / S.list.length * 100) + '%' })]));
+    if (S.mode === 'test') {
+      wrap.appendChild(E('div', { class: 'tr-dots', role: 'navigation', 'aria-label': 'Jump to question' }, S.list.map(function (qq, k) {
+        return E('button', { type: 'button', class: 'tr-dot' + (answered(qq) ? ' is-answered' : ''), 'aria-current': String(k === S.i), text: String(k + 1), onclick: function () { S.i = k; render(); } });
+      })));
+    }
+    var card = E('div', { class: 'als-card tr-q als-rise' });
+    card.appendChild(E('div', { class: 'als-kicker', text: { mcq: 'Choose one', multi: 'Choose all that apply', numeric: 'Calculate', text: 'Explain', cloze: 'Fill the gaps', order: 'Put in order' }[q.type] }));
+    var prompt = E('div', { class: 'tr-prompt' }); ALS.rich(prompt, q.prompt); card.appendChild(prompt);
+    card.appendChild(inputFor(q, locked));
+
+    var used = S.hints[q.id] || 0;
+    if (used && q.hints) {
+      var hb = E('div', { class: 'tr-hints', style: 'margin-top:1rem' });
+      q.hints.slice(0, used).forEach(function (h, k) { var c = E('div', { class: 'als-callout als-callout--warn' }); ALS.rich(c, '**Hint ' + (k + 1) + '.** ' + h); hb.appendChild(c); });
+      card.appendChild(hb);
+    }
+    var actions = E('div', { class: 'tr-actions' });
+    var isGraded = S.graded[q.id] != null;
+    var label = S.mode === 'test' ? (S.i === S.list.length - 1 ? 'Finish test' : 'Next') : (locked ? (S.i === S.list.length - 1 ? 'See results' : 'Next question') : 'Check');
+    actions.appendChild(E('button', { type: 'button', class: 'als-btn als-btn--primary', text: label, onclick: primary }));
+    if (S.mode === 'test' && S.i > 0) actions.appendChild(E('button', { type: 'button', class: 'als-btn', text: 'Back', onclick: function () { advance(-1); } }));
+    if (q.hints && used < q.hints.length && !isGraded) actions.appendChild(E('button', { type: 'button', class: 'als-btn als-btn--ghost', html: ALS.icon('bulb') + ' Hint (' + (q.hints.length - used) + ' left)', onclick: function () { S.hints[q.id] = used + 1; render(); } }));
+    if (S.mode === 'practice' && !locked && q.solution && q.solution.length && !S.steps[q.id]) actions.appendChild(E('button', { type: 'button', class: 'als-btn als-btn--ghost', text: 'Stuck? Walk me through it', onclick: function () { S.steps[q.id] = 1; S.hints[q.id] = (q.hints || []).length; render(); } }));
+    actions.appendChild(E('div', { class: 'als-spacer' }));
+    actions.appendChild(E('span', { class: 'als-faint', style: 'font-size:.75rem', html: '<span class="als-kbd">Enter</span> ' + (locked ? 'next' : 'check') }));
+    card.appendChild(actions);
+    if (S.mode === 'practice' && !locked && S.steps[q.id]) card.appendChild(solutionBlock(q, false));
+    if (S.mode === 'practice' && locked) card.appendChild(feedback(q));
+    var prov = ALS.provenance(q); if (prov) { prov.style.marginTop = '1rem'; card.appendChild(prov); }
+    wrap.appendChild(card);
+    return wrap;
+  }
+
+  /* ---------- results ---------- */
+  function finish() {
+    clearInterval(S.timer);
+    S.list.forEach(function (q) {
+      if (S.graded[q.id] == null && q.type !== 'text') S.graded[q.id] = answered(q) ? check(q, S.answers[q.id]) : false;
+    });
+    S.phase = 'results';
+    render();
+  }
+
+  function resultItems() {
+    return S.list.map(function (q) {
+      var g = S.graded[q.id];
+      var a = S.answers[q.id];
+      return { id: q.id, topic: q.topic || null, type: q.type, correct: g === true, partial: q.type === 'text' && a && a.self === 'partly', hintsUsed: S.hints[q.id] || 0, stepsViewed: S.steps[q.id] || 0, timeSec: S.times[q.id] || null, unanswered: !answered(q) };
+    });
+  }
+
+  function resultsView() {
+    var items = resultItems();
+    var pending = S.list.filter(function (q) { return q.type === 'text' && S.graded[q.id] == null; });
+    var gradedN = items.length - pending.length;
+    var right = items.filter(function (r) { return r.correct; }).length + items.filter(function (r) { return r.partial; }).length * 0.5;
+    var pct = gradedN ? Math.round(right / gradedN * 100) : 0;
+    ALS.store.set('last', { score: pct, date: ALS.today() });
+    var byTopic = {};
+    items.forEach(function (r) { var t = r.topic || 'general'; byTopic[t] = byTopic[t] || { n: 0, ok: 0 }; byTopic[t].n++; byTopic[t].ok += r.correct ? 1 : r.partial ? .5 : 0; });
+    var wrap = E('div', { class: 'tr-wrap als-stack' });
+    var pass = pct / 100 >= settings.passMark;
+    wrap.appendChild(E('div', { class: 'als-card als-rise' }, [
+      E('div', { class: 'als-kicker', text: S.mode === 'test' ? 'Test results' : 'Practice results' }),
+      E('div', { class: 'tr-score', text: pct + '%' }),
+      E('p', { class: 'als-muted', text: right + ' of ' + gradedN + ' correct' + (pending.length ? ' · ' + pending.length + ' written answers still to self-check below' : '') + ' · ' + Math.round((Date.now() - S.t0) / 60000) + ' min' }),
+      E('span', { class: 'als-chip ' + (pass ? 'als-chip--good' : 'als-chip--warn'), text: pass ? 'Above your pass mark' : 'Below your pass mark of ' + Math.round(settings.passMark * 100) + '%' })
+    ]));
+    var tp = E('div', { class: 'als-card tr-topics' }, [E('h3', { class: 'als-h3', text: 'By topic' })]);
+    Object.keys(byTopic).sort(function (a, b) { return byTopic[a].ok / byTopic[a].n - byTopic[b].ok / byTopic[b].n; }).forEach(function (t) {
+      var v = Math.round(byTopic[t].ok / byTopic[t].n * 100);
+      tp.appendChild(E('div', { class: 'tr-topic' }, [E('span', { text: t }), E('div', { class: 'als-progress' }, [E('span', { style: 'width:' + v + '%;background:' + (v >= 80 ? 'var(--good)' : v >= 50 ? 'var(--warn)' : 'var(--bad)') })]), E('span', { class: 'als-mono', text: v + '%' })]));
+    });
+    wrap.appendChild(tp);
+    var missed = S.list.filter(function (q) { return !S.graded[q.id]; });
+    wrap.appendChild(E('div', { class: 'als-row' }, [
+      E('button', { type: 'button', class: 'als-btn als-btn--primary', html: ALS.icon('download') + ' Save results', onclick: function () { ALS.exportResults('quiz', resultItems(), { score: pct, mode: S.mode }); } }),
+      missed.length ? E('button', { type: 'button', class: 'als-btn', text: 'Retry ' + missed.length + ' missed', onclick: function () { S.mode = 'practice'; begin('all', 'all', missed.map(function (q) { return q.id; })); } }) : null,
+      E('button', { type: 'button', class: 'als-btn', text: 'New round', onclick: function () { S.phase = 'start'; render(); } })
+    ]));
+    var rev = E('div', { class: 'tr-review' }, [E('h3', { class: 'als-h3', style: 'margin-top:1rem', text: 'Review' })]);
+    S.list.forEach(function (q, k) {
+      var c = E('details', { class: 'als-card', open: (!S.graded[q.id] && k < 12) || null });
+      var g = S.graded[q.id];
+      c.appendChild(E('summary', { style: 'cursor:pointer;list-style:none' }, [E('span', { class: 'als-row' }, [
+        E('span', { class: 'als-chip ' + (g === true ? 'als-chip--good' : g == null ? 'als-chip--warn' : 'als-chip--bad'), text: g === true ? 'Correct' : g == null ? 'Self-check' : 'Review' }),
+        E('span', { class: 'als-rich', html: ALS.md((k + 1) + '. ' + String(q.prompt).split('\n')[0].slice(0, 140), { inline: true }) })
+      ])]));
+      var body = E('div', { style: 'margin-top:1rem' });
+      body.appendChild(inputFor(q, true));
+      body.appendChild(feedback(q));
+      c.appendChild(body);
+      rev.appendChild(c);
+    });
+    wrap.appendChild(rev);
+    return wrap;
+  }
+
+  function render() {
+    app.innerHTML = '';
+    app.appendChild(ALS.topbar([]));
+    var main = E('main', { class: 'als-shell als-frame' });
+    main.appendChild(S.phase === 'start' ? startView() : S.phase === 'question' ? questionView() : resultsView());
+    app.appendChild(main);
+    ALS.applyMode();
+    ALS.renderMath(app);
+  }
+
+  ALS.onKey({
+    'Enter': function () { if (S.phase === 'question') primary(); },
+    'ArrowRight': function () { if (S.phase === 'question' && S.mode === 'test') advance(1); },
+    'ArrowLeft': function () { if (S.phase === 'question' && S.mode === 'test') advance(-1); },
+    'h': function () { var q = S.list[S.i]; if (S.phase === 'question' && q.hints && (S.hints[q.id] || 0) < q.hints.length) { S.hints[q.id] = (S.hints[q.id] || 0) + 1; render(); } }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (S.phase !== 'question' || /INPUT|TEXTAREA|SELECT/.test((e.target || {}).tagName || '')) return;
+    var q = S.list[S.i];
+    if ((q.type === 'mcq' || q.type === 'multi') && /^[1-9]$/.test(e.key) && +e.key <= q.options.length) { e.preventDefault(); choose(q, +e.key - 1); }
+  });
+
+  render();
+});
+</script>
+</body>
+</html>

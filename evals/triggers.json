@@ -1,0 +1,41 @@
+{
+  "description": "Prompts that should (and should not) trigger each skill. Use with the skill-creator description optimiser or for manual spot checks.",
+  "skills": {
+    "study-coach": {
+      "should": ["Help me get started studying for this semester", "What should I study today?", "Remember that I prefer worked examples before theory", "Save this note: eigenvectors are directions that only get stretched", "How am I doing in linear algebra?", "Here is my results file from the flashcards"],
+      "should_not": ["Write the introduction of my thesis", "Fix this Python bug"]
+    },
+    "module-setup": {
+      "should": ["Here are my 12 lecture PDFs for Thermodynamics, organise them", "Make a topic map for my Ethics course from the syllabus", "Add lecture 8 to my biology module"],
+      "should_not": ["Explain entropy to me"]
+    },
+    "explain": {
+      "should": ["I don't understand Kant's categorical imperative", "Summarise lecture 4 of microeconomics", "Make me a cheat sheet for the statistics exam", "Check my explanation of photosynthesis", "ELI5 Fourier transforms"],
+      "should_not": ["Make flashcards for lecture 4"]
+    },
+    "visual-lesson": {
+      "should": ["Show me step by step how Dijkstra's algorithm works", "Make an animated presentation on the Krebs cycle", "Walk me through the derivation of the Schrödinger equation visually"],
+      "should_not": ["Make a PowerPoint for my company pitch"]
+    },
+    "flashcards": {
+      "should": ["Turn this lecture into flashcards", "Make an Anki deck from my notes on the French Revolution", "What cards are due for review?", "Export my deck to Quizlet"],
+      "should_not": ["Quiz me with 10 exam-style problems"]
+    },
+    "practice": {
+      "should": ["Quiz me on eigenvalues", "Give me a mock exam for Microeconomics I", "Make a problem sheet with solutions as PDF", "Mark my answer to question 3", "Why do I keep getting these integrals wrong?"],
+      "should_not": ["Solve my assignment that is due tomorrow and I will submit it"]
+    },
+    "planner": {
+      "should": ["I have an exam in 3 weeks, make me a plan", "Plan my study week", "Put my study sessions in my Google Calendar", "Export my revision timetable as .ics"],
+      "should_not": ["Plan my holiday in Spain"]
+    },
+    "lms-connect": {
+      "should": ["Get my deadlines from Moodle", "Download the lecture slides from my Moodle course", "Import my university calendar", "What's due this week on Moodle?"],
+      "should_not": ["Write a Moodle plugin in PHP"]
+    },
+    "resources": {
+      "should": ["Recommend a good book on real analysis", "Is there a short video explaining the Krebs cycle?", "Reading list for Kant's ethics", "Where can I find practice problems for organic chemistry?"],
+      "should_not": ["Do a systematic literature review for my paper"]
+    }
+  }
+}

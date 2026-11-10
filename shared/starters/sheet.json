@@ -1,0 +1,20 @@
+{
+  "als": "1",
+  "kind": "sheet",
+  "title": "Sheet title",
+  "subtitle": "Summary of lectures 1-3",
+  "module": "module-id",
+  "subject": "Subject name",
+  "layout": "notes",
+  "sources": [ { "id": "L1", "title": "Lecture 1", "locator": "slides 1-40" } ],
+  "blocks": [
+    { "type": "section", "title": "Overview", "body": "A paragraph in rich text.\n\nA second paragraph." },
+    { "type": "definition", "term": "Term", "body": "Definition.", "src": "L1 s.3" },
+    { "type": "formula", "title": "Key formula", "math": "E = mc^2", "note": "What each symbol means." },
+    { "type": "keypoints", "title": "Key points", "points": ["One", "Two", "Three"] },
+    { "type": "example", "title": "Worked example", "body": "The problem.", "solution": "The solution." },
+    { "type": "warning", "title": "Common mistake", "body": "What students often get wrong, and how to avoid it." },
+    { "type": "table", "title": "Comparison", "headers": ["", "A", "B"], "rows": [["Speed", "fast", "slow"], ["Cost", "high", "low"]] },
+    { "type": "quote", "quote": "A quotation worth knowing.", "by": "Author", "body": "Why it matters." }
+  ]
+}

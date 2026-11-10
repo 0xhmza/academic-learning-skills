@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ALS animated lesson",
+  "type": "object",
+  "required": ["als", "kind", "title", "slides"],
+  "properties": {
+    "als": { "const": "1" },
+    "kind": { "const": "lesson" },
+    "title": { "type": "string", "minLength": 1 },
+    "subtitle": { "type": "string" },
+    "module": { "type": "string" },
+    "subject": { "type": "string" },
+    "theme": { "enum": ["blueprint", "folio", "clinic", "ledger"] },
+    "lang": { "type": "string" },
+    "sources": { "type": "array" },
+    "slides": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["layout"],
+        "properties": {
+          "layout": {
+            "enum": ["title", "points", "steps", "diagram", "code", "compare", "quote", "check", "summary", "timeline", "definition"]
+          },
+          "title": { "type": "string" },
+          "notes": { "type": "string" },
+          "src": { "type": "string" },
+          "grounded": { "type": "boolean" }
+        },
+        "allOf": [
+          { "if": { "properties": { "layout": { "const": "points" } } }, "then": { "required": ["points"], "properties": { "points": { "type": "array", "minItems": 1, "items": { "type": "string" } } } } },
+          { "if": { "properties": { "layout": { "const": "summary" } } }, "then": { "required": ["points"], "properties": { "points": { "type": "array", "minItems": 1, "items": { "type": "string" } } } } },
+          { "if": { "properties": { "layout": { "const": "steps" } } }, "then": { "required": ["steps"], "properties": { "steps": { "type": "array", "minItems": 1, "items": { "type": "object", "properties": { "text": { "type": "string" }, "math": { "type": "string" } } } } } } },
+          { "if": { "properties": { "layout": { "const": "diagram" } } }, "then": { "required": ["svg"], "properties": { "svg": { "type": "string" }, "steps": { "type": "array", "items": { "type": "array", "items": { "type": "string" } } }, "captions": { "type": "array", "items": { "type": "string" } } } } },
+          { "if": { "properties": { "layout": { "const": "code" } } }, "then": { "required": ["code"], "properties": { "code": { "type": "string" }, "lang": { "type": "string" }, "highlight": { "type": "array", "items": { "type": "array", "items": { "type": "integer" } } }, "explain": { "type": "array", "items": { "type": "string" } } } } },
+          { "if": { "properties": { "layout": { "const": "compare" } } }, "then": { "required": ["columns"], "properties": { "columns": { "type": "array", "minItems": 2, "items": { "type": "object", "required": ["heading", "points"], "properties": { "heading": { "type": "string" }, "points": { "type": "array", "items": { "type": "string" } } } } } } } },
+          { "if": { "properties": { "layout": { "const": "quote" } } }, "then": { "required": ["quote"] } },
+          { "if": { "properties": { "layout": { "const": "check" } } }, "then": { "required": ["question", "options", "answer"], "properties": { "options": { "type": "array", "minItems": 2, "items": { "type": "string" } }, "answer": { "type": "integer", "minimum": 0 } } } },
+          { "if": { "properties": { "layout": { "const": "timeline" } } }, "then": { "required": ["events"], "properties": { "events": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["when", "what"] } } } } },
+          { "if": { "properties": { "layout": { "const": "definition" } } }, "then": { "required": ["term", "definition"] } }
+        ]
+      }
+    }
+  }
+}

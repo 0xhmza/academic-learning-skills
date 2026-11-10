@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "academic-learning-skills",
+  "description": "Study toolkit for students, built as Claude skills.",
+  "owner": {
+    "name": "Hamza"
+  },
+  "plugins": [
+    {
+      "name": "academic-learning-skills",
+      "description": "Module setup, explanations, animated lessons, flashcards (HTML + Anki), practice and mock exams, study plans (.ics), Moodle sync, resources and a persistent learner profile.",
+      "version": "0.1.0",
+      "source": "./",
+      "category": "education"
+    }
+  ]
+}

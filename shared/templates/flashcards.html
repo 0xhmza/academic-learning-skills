@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="{{lang}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="generator" content="academic-learning-skills {{version}} · flashcards">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script>/*ALS:EARLY*/</script>
+<style>/*ALS:CSS*/</style>
+<style>
+  .fc-head { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: flex-end; justify-content: space-between; margin-bottom: 1.25rem; }
+  .fc-controls { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+  .fc-filters { display: flex; flex-wrap: wrap; gap: .35rem; margin: .25rem 0 1.25rem; }
+  .fc-filters button { cursor: pointer; }
+  .fc-filters button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent-text, var(--accent)); border-color: transparent; }
+  .fc-meta { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: .6rem; font-size: .8125rem; color: var(--text-muted); }
+  .fc-stage { perspective: 1800px; max-width: 46rem; margin: 0 auto; }
+  .fc-card { display: grid; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.3,.7,.2,1); cursor: pointer; outline: none; }
+  .fc-card.is-flipped { transform: rotateY(180deg); }
+  .fc-face {
+    grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    min-height: clamp(15rem, 42vh, 24rem); display: flex; flex-direction: column;
+    background: var(--bg-elev); border: 1px solid var(--border-strong); border-radius: var(--radius);
+    box-shadow: var(--shadow, none), 0 18px 40px -28px rgb(0 0 0 / .45); padding: 1.5rem 1.5rem 1.1rem;
+  }
+  .fc-back { transform: rotateY(180deg); }
+  .fc-label { font-family: var(--kicker-font, var(--font-mono)); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text-faint); }
+  .fc-body { flex: 1; display: flex; flex-direction: column; justify-content: center; font-size: clamp(1.1rem, 2.4vw, 1.4rem); line-height: 1.5; padding: 1rem 0; text-align: center; }
+  .fc-body.is-long { font-size: 1.05rem; text-align: left; }
+  .fc-extra { font-size: .9375rem; color: var(--text-muted); border-top: 1px dashed var(--border-strong); padding-top: .75rem; margin-top: .25rem; }
+  .fc-foot { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; justify-content: space-between; min-height: 1.5rem; }
+  .fc-hint { font-size: .75rem; color: var(--text-faint); }
+  .cloze-blank { display: inline-block; min-width: 3.5em; padding: 0 .4em; border-bottom: 2px solid var(--accent); color: var(--accent-text, var(--accent)); font-weight: 600; }
+  .cloze-answer { background: var(--accent-soft); color: var(--accent-text, var(--accent)); border-radius: 4px; padding: 0 .25em; font-weight: 600; }
+  .fc-grades { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; max-width: 46rem; margin: 1rem auto 0; }
+  .fc-grades .als-btn { flex-direction: column; gap: 0; min-height: 3.25rem; line-height: 1.2; }
+  .fc-grades small { font-size: .6875rem; opacity: .75; font-weight: 400; }
+  .fc-flipbar { display: flex; justify-content: center; margin-top: 1rem; }
+  .fc-browse { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
+  .fc-mini { perspective: 1200px; }
+  .fc-mini .fc-face { min-height: 11rem; padding: 1rem; }
+  .fc-mini .fc-body { font-size: 1rem; }
+  .fc-done { max-width: 34rem; margin: 2rem auto; text-align: center; }
+  .fc-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; margin: 1.25rem 0; }
+  .fc-stat { background: var(--bg-sunken); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: .65rem .25rem; }
+  .fc-stat b { display: block; font-size: 1.5rem; font-family: var(--font-display); font-variant-numeric: tabular-nums; }
+  .fc-stat span { font-size: .75rem; color: var(--text-muted); }
+  .fc-keys { text-align: center; margin-top: 1.25rem; font-size: .75rem; color: var(--text-faint); }
+  .fc-keys .als-kbd { margin: 0 .15rem; }
+  @media (max-width: 560px) { .fc-grades small { display: none; } .fc-face { padding: 1.1rem 1rem .9rem; } }
+  @media print {
+    .fc-stage, .fc-grades, .fc-flipbar, .fc-keys, .fc-controls, .fc-filters { display: none !important; }
+    .fc-browse { display: block !important; }
+    .fc-mini { break-inside: avoid; margin-bottom: 6mm; }
+    .fc-mini .fc-card { transform: none !important; display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    .fc-mini .fc-face { grid-area: auto; transform: none !important; backface-visibility: visible; min-height: 0; box-shadow: none; border-radius: 0; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<!--ALS:DATA-->
+<script>/*ALS:CORE*/</script>
+<script>
+ALS.boot(function (deck) {
+  var E = ALS.el, $ = ALS.$;
+  var app = $('#app');
+
+  /* ---- expand source cards into study cards (cloze -> one per cN, reverse -> two) ---- */
+  var CLOZE = /\{\{c(\d+)::([\s\S]*?)(?:::([\s\S]*?))?\}\}/g;
+  function clozeNums(text) { var s = {}, m; CLOZE.lastIndex = 0; while ((m = CLOZE.exec(text))) s[m[1]] = 1; return Object.keys(s).sort(function (a, b) { return a - b; }); }
+  function clozeSide(text, n, reveal) {
+    return text.replace(CLOZE, function (_, num, ans, hint) {
+      if (num !== n) return ans;
+      return reveal ? '\u0001A' + ans + '\u0001Z' : '\u0001B' + (hint || '…') + '\u0001Z';
+    });
+  }
+  function clozeHtml(s) {
+    return ALS.md(s).replace(/\u0001A([\s\S]*?)\u0001Z/g, '<span class="cloze-answer">$1</span>')
+      .replace(/\u0001B([\s\S]*?)\u0001Z/g, '<span class="cloze-blank">$1</span>');
+  }
+
+  var cards = [];
+  deck.cards.forEach(function (c) {
+    var base = { src: c.src, grounded: c.grounded, tags: c.tags || [], topic: c.topic, extra: c.extra, origin: c.id };
+    if (c.type === 'cloze') {
+      clozeNums(c.text).forEach(function (n) {
+        cards.push(Object.assign({}, base, { id: c.id + ':c' + n, front: clozeHtml(clozeSide(c.text, n, false)), back: clozeHtml(clozeSide(c.text, n, true)), html: true, kind: 'Cloze' }));
+      });
+    } else {
+      cards.push(Object.assign({}, base, { id: c.id, front: c.front, back: c.back, kind: 'Card' }));
+      if (c.type === 'reverse') cards.push(Object.assign({}, base, { id: c.id + ':r', front: c.back, back: c.front, kind: 'Reverse' }));
+    }
+  });
+
+  var due = Array.isArray(deck._due) ? deck._due : null;
+  var tags = {};
+  cards.forEach(function (c) { (c.tags || []).forEach(function (t) { tags[t] = (tags[t] || 0) + 1; }); if (c.topic) tags['#' + c.topic] = (tags['#' + c.topic] || 0) + 1; });
+
+  var state = {
+    view: new URLSearchParams(location.search).get('print') === '1' ? 'browse' : ALS.store.get('view', 'study'),
+    filter: due && due.length ? '@due' : 'all',
+    shuffle: ALS.store.get('shuffle', true),
+    flipped: false, queue: [], pos: 0, results: [], counts: { again: 0, hard: 0, good: 0, easy: 0 }
+  };
+
+  function inFilter(c) {
+    if (state.filter === 'all') return true;
+    if (state.filter === '@due') return due.indexOf(c.origin) > -1 || due.indexOf(c.id) > -1;
+    if (state.filter.charAt(0) === '#') return c.topic === state.filter.slice(1);
+    return (c.tags || []).indexOf(state.filter) > -1;
+  }
+
+  function startSession(onlyIds) {
+    var pool = cards.filter(function (c) { return onlyIds ? onlyIds.indexOf(c.id) > -1 : inFilter(c); });
+    state.queue = state.shuffle ? ALS.shuffle(pool) : pool;
+    state.pos = 0; state.flipped = false; state.results = []; state.counts = { again: 0, hard: 0, good: 0, easy: 0 };
+    render();
+  }
+
+  /* ---- face rendering ---- */
+  function face(card, side) {
+    var isBack = side === 'back';
+    var text = isBack ? card.back : card.front;
+    var body = E('div', { class: 'fc-body' });
+    if (card.html) { body.innerHTML = text; body.classList.add('als-rich'); }
+    else ALS.rich(body, text);
+    if (String(text || '').length > 220) body.classList.add('is-long');
+    var foot = E('div', { class: 'fc-foot' });
+    var prov = ALS.provenance(card);
+    foot.appendChild(prov || E('span'));
+    if (!isBack) foot.appendChild(E('span', { class: 'fc-hint', text: 'Tap or press Space to flip' }));
+    var kids = [E('div', { class: 'fc-label', text: isBack ? 'Answer' : (card.kind === 'Cloze' ? 'Fill the gap' : card.kind === 'Reverse' ? 'Reverse' : 'Question') }), body];
+    if (isBack && card.extra) { var ex = E('div', { class: 'fc-extra' }); ALS.rich(ex, card.extra); kids.push(ex); }
+    kids.push(foot);
+    return E('div', { class: 'fc-face fc-' + side }, kids);
+  }
+
+  function flip() {
+    var el = $('#fc-card'); if (!el) return;
+    state.flipped = !state.flipped;
+    el.classList.toggle('is-flipped', state.flipped);
+    el.setAttribute('aria-label', state.flipped ? 'Answer side. Press 1 to 4 to grade.' : 'Question side. Press Space to show the answer.');
+    var g = $('#fc-grades'); if (g) g.hidden = !state.flipped;
+    var fb = $('#fc-flipbar'); if (fb) fb.hidden = state.flipped;
+  }
+
+  function grade(g) {
+    if (!state.flipped || state.view !== 'study') return;
+    var card = state.queue[state.pos];
+    state.results.push({ id: card.origin, card: card.id, topic: card.topic || null, grade: g, correct: g !== 'again', at: new Date().toISOString() });
+    state.counts[g]++;
+    if (g === 'again') {
+      // relearn: re-insert a few cards later in this session
+      var at = Math.min(state.queue.length, state.pos + 4);
+      state.queue.splice(at, 0, card);
+    }
+    state.pos++; state.flipped = false;
+    ALS.store.set('last', { date: ALS.today(), counts: state.counts });
+    render();
+  }
+
+  /* ---- views ---- */
+  function header() {
+    var seg = E('div', { class: 'als-seg', role: 'group', 'aria-label': 'View' }, ['study', 'browse'].map(function (v) {
+      return E('button', { type: 'button', 'aria-pressed': String(state.view === v), text: v === 'study' ? 'Study' : 'Browse all', onclick: function () { state.view = v; ALS.store.set('view', v); render(); } });
+    }));
+    var shuf = E('button', { type: 'button', class: 'als-btn als-btn--sm', 'aria-pressed': String(state.shuffle), html: ALS.icon('shuffle') + (state.shuffle ? ' Shuffled' : ' In order'), onclick: function () { state.shuffle = !state.shuffle; ALS.store.set('shuffle', state.shuffle); startSession(); } });
+    shuf.querySelector('svg').style.width = '1rem';
+    return E('div', { class: 'fc-head' }, [
+      E('div', {}, [
+        E('div', { class: 'als-kicker', text: (deck.module ? deck.module + ' · ' : '') + cards.length + ' cards' }),
+        E('h1', { class: 'als-h1', text: deck.title }),
+        deck.subtitle ? E('p', { class: 'als-sub', text: deck.subtitle }) : null
+      ]),
+      E('div', { class: 'fc-controls als-noprint' }, [seg, shuf])
+    ]);
+  }
+
+  function filters() {
+    var keys = Object.keys(tags).sort();
+    if (!keys.length && !due) return null;
+    var mk = function (val, label, count) {
+      return E('button', { type: 'button', class: 'als-chip', 'aria-pressed': String(state.filter === val), text: label + (count != null ? ' · ' + count : ''), onclick: function () { state.filter = val; startSession(); } });
+    };
+    var row = [mk('all', 'All', cards.length)];
+    if (due) row.push(mk('@due', 'Due today', cards.filter(function (c) { return due.indexOf(c.origin) > -1 || due.indexOf(c.id) > -1; }).length));
+    keys.forEach(function (k) { row.push(mk(k, k.charAt(0) === '#' ? k.slice(1) : k, tags[k])); });
+    return E('div', { class: 'fc-filters als-noprint', role: 'group', 'aria-label': 'Filter cards' }, row);
+  }
+
+  function studyView() {
+    var wrap = E('div');
+    if (state.pos >= state.queue.length) return doneView();
+    var card = state.queue[state.pos];
+    var total = state.queue.length;
+    var pct = Math.round(state.pos / total * 100);
+    wrap.appendChild(E('div', { class: 'fc-meta' }, [
+      E('span', { text: 'Card ' + (state.pos + 1) + ' of ' + total }),
+      E('span', { text: state.counts.again + ' again · ' + (state.counts.good + state.counts.easy + state.counts.hard) + ' recalled' })
+    ]));
+    var bar = E('div', { class: 'als-progress', style: 'margin-bottom:1rem' }, [E('span', { style: 'width:' + pct + '%' })]);
+    wrap.appendChild(bar);
+    var cardEl = E('div', { id: 'fc-card', class: 'fc-card als-rise', tabindex: '0', role: 'button', 'aria-label': 'Question side. Press Space to show the answer.', onclick: flip }, [face(card, 'front'), face(card, 'back')]);
+    wrap.appendChild(E('div', { class: 'fc-stage' }, [cardEl]));
+    wrap.appendChild(E('div', { id: 'fc-flipbar', class: 'fc-flipbar als-noprint' }, [
+      E('button', { type: 'button', class: 'als-btn als-btn--primary', html: ALS.icon('rotate') + ' Show answer', onclick: flip })
+    ]));
+    var g = E('div', { id: 'fc-grades', class: 'fc-grades als-noprint', hidden: true }, [
+      E('button', { type: 'button', class: 'als-btn als-btn--bad', onclick: function () { grade('again'); }, html: 'Again<small>forgot · 1</small>' }),
+      E('button', { type: 'button', class: 'als-btn als-btn--warn', onclick: function () { grade('hard'); }, html: 'Hard<small>struggled · 2</small>' }),
+      E('button', { type: 'button', class: 'als-btn als-btn--good', onclick: function () { grade('good'); }, html: 'Good<small>recalled · 3</small>' }),
+      E('button', { type: 'button', class: 'als-btn', onclick: function () { grade('easy'); }, html: 'Easy<small>instant · 4</small>' })
+    ]);
+    wrap.appendChild(g);
+    wrap.appendChild(E('div', { class: 'fc-keys als-noprint', html: '<span class="als-kbd">Space</span> flip &nbsp; <span class="als-kbd">1</span><span class="als-kbd">2</span><span class="als-kbd">3</span><span class="als-kbd">4</span> grade' }));
+    return wrap;
+  }
+
+  function doneView() {
+    var c = state.counts, n = state.results.length;
+    var againIds = {}; state.results.forEach(function (r) { if (r.grade === 'again') againIds[r.card] = 1; });
+    var again = Object.keys(againIds);
+    var box = E('div', { class: 'fc-done als-card als-rise' }, [
+      E('div', { class: 'als-kicker', text: 'Session complete' }),
+      E('h2', { class: 'als-h2', text: n ? 'Nice work.' : 'Nothing to review here.' }),
+      E('p', { class: 'als-muted', text: n ? 'Save your results and ask Claude to import them; it schedules each card for its next review.' : 'Pick another filter or browse all cards.' }),
+      E('div', { class: 'fc-stats' }, [['again', 'Again'], ['hard', 'Hard'], ['good', 'Good'], ['easy', 'Easy']].map(function (p) {
+        return E('div', { class: 'fc-stat' }, [E('b', { text: String(c[p[0]]) }), E('span', { text: p[1] })]);
+      })),
+      E('div', { class: 'als-row', style: 'justify-content:center' }, [
+        n ? E('button', { type: 'button', class: 'als-btn als-btn--primary', html: ALS.icon('download') + ' Save results', onclick: function () { ALS.exportResults('deck', state.results); } }) : null,
+        again.length ? E('button', { type: 'button', class: 'als-btn', text: 'Review ' + again.length + ' missed', onclick: function () { startSession(again); } }) : null,
+        E('button', { type: 'button', class: 'als-btn', text: 'Restart', onclick: function () { startSession(); } })
+      ])
+    ]);
+    return box;
+  }
+
+  function browseView() {
+    var grid = E('div', { class: 'fc-browse' });
+    cards.filter(inFilter).forEach(function (card) {
+      var el = E('div', { class: 'fc-card', tabindex: '0', role: 'button', 'aria-label': 'Flashcard, press Enter to flip' }, [face(card, 'front'), face(card, 'back')]);
+      var toggle = function () { el.classList.toggle('is-flipped'); };
+      el.addEventListener('click', toggle);
+      el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); toggle(); } });
+      grid.appendChild(E('div', { class: 'fc-mini' }, [el]));
+    });
+    return grid;
+  }
+
+  function render() {
+    app.innerHTML = '';
+    var printBtn = ALS.iconBtn('print', 'Print all cards', function () { state.view = 'browse'; render(); setTimeout(function () { window.print(); }, 150); }, 'als-noprint');
+    app.appendChild(ALS.topbar([printBtn]));
+    var main = E('main', { class: 'als-shell als-frame' });
+    main.appendChild(header());
+    var f = filters(); if (f) main.appendChild(f);
+    main.appendChild(state.view === 'study' ? studyView() : browseView());
+    app.appendChild(main);
+    ALS.applyMode();
+    ALS.renderMath(app);
+  }
+
+  ALS.onKey({
+    ' ': function () { if (state.view === 'study') flip(); },
+    'Enter': function () { if (state.view === 'study') flip(); },
+    '1': function () { grade('again'); }, '2': function () { grade('hard'); },
+    '3': function () { grade('good'); }, '4': function () { grade('easy'); }
+  });
+
+  startSession();
+});
+</script>
+</body>
+</html>

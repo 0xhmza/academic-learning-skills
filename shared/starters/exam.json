@@ -1,0 +1,41 @@
+{
+  "als": "1",
+  "kind": "exam",
+  "title": "Mock exam title",
+  "subtitle": "Problem set or mock exam",
+  "module": "module-id",
+  "subject": "Subject name",
+  "meta": {
+    "course": "Course name (code)",
+    "duration": "90 minutes",
+    "allowed": "One handwritten A4 sheet",
+    "instructions": ["Answer all questions.", "Show your working."]
+  },
+  "sections": [
+    {
+      "title": "Part A: Short questions",
+      "intro": "Optional section instructions.",
+      "questions": [
+        {
+          "id": "a1", "points": 4, "space": "small", "topic": "topic-id", "src": "L2 s.8",
+          "prompt": "A short question.",
+          "solution": "The model solution.",
+          "marking": ["2 pts: correct method", "2 pts: correct result"]
+        }
+      ]
+    },
+    {
+      "title": "Part B: Problems",
+      "questions": [
+        {
+          "id": "b1", "topic": "topic-id",
+          "prompt": "A multi-part problem with context.",
+          "parts": [
+            { "label": "a", "prompt": "First part.", "points": 3, "space": "medium", "solution": "Solution for (a)." },
+            { "label": "b", "prompt": "Second part.", "points": 5, "space": "large", "solution": "Solution for (b)." }
+          ]
+        }
+      ]
+    }
+  ]
+}

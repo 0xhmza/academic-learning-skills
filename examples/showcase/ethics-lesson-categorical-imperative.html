@@ -1,0 +1,1388 @@
+<!doctype html>
+<html lang="en" data-als-theme="folio" data-als-default="folio" data-als-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kant's categorical imperative</title>
+<meta name="generator" content="academic-learning-skills 0.1.0 · lesson">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script>(function(){try{var m=localStorage.getItem('als:mode')||'auto';var d=m==='dark'||(m==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-als-mode',d?'dark':'light');}catch(e){}})();</script>
+<style>/* ALS component contract.
+   Every template uses only these classes plus template-specific classes built on the same tokens.
+   A theme file defines the tokens (and optional motif overrides) under [data-als-theme="<name>"]. */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html, body { margin: 0; padding: 0; }
+body {
+  background-color: var(--bg);
+  background-image: var(--pattern, none);
+  background-size: var(--pattern-size, auto);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--font-size, 16px);
+  line-height: 1.6;
+  font-feature-settings: var(--font-features, normal);
+  min-height: 100vh;
+  transition: background-color .25s ease, color .25s ease;
+}
+img, svg { max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--accent); text-underline-offset: 3px; }
+::selection { background: var(--accent-soft); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius-sm); }
+
+/* ---------- layout ---------- */
+.als-shell { width: 100%; max-width: var(--shell-max, 72rem); margin: 0 auto; padding: 0 16px; }
+@media (min-width: 720px) { .als-shell { padding: 0 32px; } }
+.als-stack > * + * { margin-top: var(--stack-gap, 1rem); }
+.als-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.als-spacer { flex: 1 1 auto; }
+.als-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); }
+.als-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* ---------- top bar ---------- */
+.als-topbar {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.als-topbar .als-shell { display: flex; align-items: center; gap: .75rem; min-height: 3.5rem; }
+.als-brand { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.als-brand-title { font-family: var(--font-display); font-weight: var(--display-weight, 600); font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: var(--display-tracking, normal); }
+.als-brand-sub { color: var(--text-muted); font-size: .75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- type ---------- */
+.als-kicker {
+  font-family: var(--kicker-font, var(--font-mono));
+  text-transform: var(--kicker-transform, uppercase);
+  letter-spacing: var(--kicker-tracking, .08em);
+  font-size: .75rem; font-weight: 500; color: var(--accent);
+  font-variant: var(--kicker-variant, normal);
+}
+.als-h1 { font-family: var(--font-display); font-weight: var(--display-weight, 600); letter-spacing: var(--display-tracking, -0.02em); line-height: 1.1; font-size: clamp(1.9rem, 5vw, 3.25rem); margin: .25rem 0 .5rem; text-wrap: balance; }
+.als-h2 { font-family: var(--font-display); font-weight: var(--display-weight, 600); letter-spacing: var(--display-tracking, -0.01em); line-height: 1.2; font-size: clamp(1.35rem, 3vw, 2rem); margin: 0 0 .5rem; text-wrap: balance; }
+.als-h3 { font-family: var(--font-display); font-weight: var(--display-weight, 600); font-size: 1.125rem; margin: 0 0 .35rem; }
+.als-sub { color: var(--text-muted); font-size: 1.0625rem; margin: 0; max-width: 46rem; }
+.als-muted { color: var(--text-muted); }
+.als-faint { color: var(--text-faint); }
+.als-mono { font-family: var(--font-mono); }
+
+/* ---------- surfaces ---------- */
+.als-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow, none);
+  padding: 1.25rem;
+}
+.als-card--flat { box-shadow: none; }
+.als-card--sunken { background: var(--bg-sunken); }
+.als-divider { border: 0; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+/* ---------- controls ---------- */
+.als-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+  min-height: 2.5rem; padding: .45rem 1rem;
+  border-radius: var(--radius-btn, var(--radius-sm));
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elev); color: var(--text);
+  font-weight: 500; font-size: .9375rem; cursor: pointer; text-decoration: none;
+  transition: background-color .15s, border-color .15s, transform .08s, color .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.als-btn:hover { border-color: var(--text-faint); background: var(--bg-sunken); }
+.als-btn:active { transform: translateY(1px); }
+.als-btn[disabled] { opacity: .45; cursor: not-allowed; }
+.als-btn--primary { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+.als-btn--primary:hover { background: var(--accent-hover, var(--accent)); border-color: var(--accent-hover, var(--accent)); filter: brightness(1.05); }
+.als-btn--ghost { background: transparent; border-color: transparent; }
+.als-btn--ghost:hover { background: var(--bg-sunken); border-color: transparent; }
+.als-btn--good { background: var(--good-soft); border-color: color-mix(in srgb, var(--good) 45%, transparent); color: var(--good-text, var(--good)); }
+.als-btn--bad { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 45%, transparent); color: var(--bad-text, var(--bad)); }
+.als-btn--warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 45%, transparent); color: var(--warn-text, var(--warn)); }
+.als-btn--sm { min-height: 2rem; padding: .25rem .65rem; font-size: .8125rem; }
+.als-iconbtn { width: 2.5rem; height: 2.5rem; padding: 0; min-height: 0; }
+.als-iconbtn svg { width: 1.15rem; height: 1.15rem; }
+
+.als-input, .als-select, .als-textarea {
+  width: 100%; min-height: 2.75rem; padding: .55rem .8rem;
+  background: var(--bg-elev); border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  transition: border-color .15s, box-shadow .15s;
+}
+.als-textarea { min-height: 7rem; resize: vertical; line-height: 1.5; }
+.als-input:focus, .als-select:focus, .als-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+.als-seg { display: inline-flex; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); overflow: hidden; }
+.als-seg button { border: 0; background: transparent; padding: .35rem .75rem; cursor: pointer; font-size: .8125rem; color: var(--text-muted); }
+.als-seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--text); font-weight: 600; }
+
+.als-chip {
+  display: inline-flex; align-items: center; gap: .3rem;
+  padding: .15rem .55rem; border-radius: 999px;
+  background: var(--bg-sunken); border: 1px solid var(--border);
+  font-size: .75rem; color: var(--text-muted); white-space: nowrap;
+}
+.als-chip--accent { background: var(--accent-soft); color: var(--accent-text, var(--accent)); border-color: transparent; }
+.als-chip--good { background: var(--good-soft); color: var(--good-text, var(--good)); border-color: transparent; }
+.als-chip--bad { background: var(--bad-soft); color: var(--bad-text, var(--bad)); border-color: transparent; }
+.als-chip--warn { background: var(--warn-soft); color: var(--warn-text, var(--warn)); border-color: transparent; }
+.als-src { font-family: var(--font-mono); font-size: .6875rem; color: var(--text-faint); }
+.als-beyond { font-size: .6875rem; color: var(--warn-text, var(--warn)); border: 1px dashed color-mix(in srgb, var(--warn) 55%, transparent); border-radius: 999px; padding: .05rem .45rem; }
+
+.als-kbd { font-family: var(--font-mono); font-size: .7rem; padding: .05rem .35rem; border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: 4px; background: var(--bg-elev); color: var(--text-muted); }
+
+.als-progress { height: .375rem; background: var(--bg-sunken); border-radius: 999px; overflow: hidden; }
+.als-progress > span { display: block; height: 100%; width: 0; background: var(--accent); border-radius: inherit; transition: width .35s ease; }
+
+.als-callout { border: 1px solid var(--border); border-left: 3px solid var(--accent); background: var(--bg-elev); border-radius: var(--radius-sm); padding: .75rem 1rem; }
+.als-callout--good { border-left-color: var(--good); background: var(--good-soft); }
+.als-callout--bad { border-left-color: var(--bad); background: var(--bad-soft); }
+.als-callout--warn { border-left-color: var(--warn); background: var(--warn-soft); }
+.als-callout--info { border-left-color: var(--accent); background: var(--accent-soft); }
+
+/* ---------- menu (theme picker) ---------- */
+.als-menu { position: relative; }
+.als-menu-panel {
+  position: absolute; right: 0; top: calc(100% + .4rem); z-index: 30; min-width: 14rem;
+  background: var(--bg-elev); border: 1px solid var(--border-strong); border-radius: var(--radius);
+  box-shadow: 0 12px 32px -12px rgba(0,0,0,.35); padding: .4rem; display: none;
+}
+.als-menu[data-open="true"] .als-menu-panel { display: block; }
+.als-menu-item { display: flex; align-items: center; gap: .6rem; width: 100%; text-align: left; border: 0; background: transparent; padding: .5rem .6rem; border-radius: var(--radius-sm); cursor: pointer; }
+.als-menu-item:hover, .als-menu-item[aria-checked="true"] { background: var(--bg-sunken); }
+.als-menu-item small { display: block; color: var(--text-muted); font-size: .72rem; }
+.als-swatch { width: 1.1rem; height: 1.1rem; border-radius: 50%; flex: none; border: 1px solid var(--border-strong); }
+
+/* ---------- toast ---------- */
+.als-toast {
+  position: fixed; left: 50%; bottom: 1.25rem; transform: translate(-50%, 1rem); z-index: 50;
+  max-width: calc(100vw - 32px); padding: .6rem 1rem; border-radius: var(--radius-sm);
+  background: var(--text-strong, var(--text)); color: var(--bg); font-size: .875rem;
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,.4); opacity: 0; pointer-events: none;
+  transition: opacity .2s, transform .2s;
+}
+.als-toast[data-show="true"] { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- frame (motif hook, styled by themes) ---------- */
+.als-frame { min-height: calc(100vh - 3.5rem); padding-top: 2rem; padding-bottom: 4rem; }
+
+/* ---------- rich text ---------- */
+.als-rich { overflow-wrap: anywhere; }
+.als-rich > :first-child { margin-top: 0; }
+.als-rich > :last-child { margin-bottom: 0; }
+.als-rich p { margin: 0 0 .75em; }
+.als-rich ul, .als-rich ol { margin: 0 0 .75em; padding-left: 1.35em; }
+.als-rich li + li { margin-top: .25em; }
+.als-rich code { font-family: var(--font-mono); font-size: .875em; background: var(--bg-sunken); border: 1px solid var(--border); border-radius: 4px; padding: .05em .3em; }
+.als-rich strong { font-weight: 650; color: var(--text-strong, var(--text)); }
+.als-math-display { display: block; margin: .6em 0; overflow-x: auto; overflow-y: hidden; padding: .2em 0; text-align: center; }
+.als-math-raw { font-family: var(--font-mono); font-size: .9em; color: var(--accent-text, var(--accent)); }
+.katex { font-size: 1.08em; }
+.katex-display { margin: 0 !important; }
+
+/* ---------- code blocks ---------- */
+.als-code {
+  font-family: var(--font-mono); font-size: .875rem; line-height: 1.65;
+  background: var(--code-bg, var(--bg-sunken)); color: var(--code-text, var(--text));
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: .9rem 0; overflow-x: auto; margin: 0;
+}
+.als-code .ln { display: block; padding: 0 1rem; border-left: 3px solid transparent; transition: background-color .25s, opacity .25s, border-color .25s; white-space: pre; }
+.als-code.has-focus .ln { opacity: .4; }
+.als-code.has-focus .ln.is-focus { opacity: 1; background: var(--accent-soft); border-left-color: var(--accent); }
+.tok-k { color: var(--code-keyword, var(--accent)); font-weight: 500; }
+.tok-s { color: var(--code-string, var(--good)); }
+.tok-c { color: var(--text-faint); font-style: italic; }
+.tok-n { color: var(--code-number, var(--accent-2)); }
+
+/* ---------- motion ---------- */
+@keyframes als-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes als-fade { from { opacity: 0; } to { opacity: 1; } }
+.als-rise { animation: als-rise .45s cubic-bezier(.2,.7,.2,1) both; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- print ---------- */
+@media print {
+  @page { margin: 16mm 14mm; }
+  body { background: #fff !important; background-image: none !important; color: #000; font-size: 11pt; }
+  .als-noprint, .als-topbar { display: none !important; }
+  .als-card { box-shadow: none; break-inside: avoid; }
+  a { color: inherit; }
+}
+
+/* Blueprint: maths, physics, CS, engineering.
+   Inspired by the look of tailwindcss.com: near-black / white, sky accent, Inter + mono labels,
+   hairline grid lines, dark code blocks, pill-shaped primary buttons. Colour values come from the
+   MIT-licensed Tailwind palette (gray, sky, indigo, emerald, rose, amber). */
+
+[data-als-theme="blueprint"] {
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-features: "cv11", "ss01";
+  --display-weight: 600;
+  --display-tracking: -0.03em;
+  --kicker-tracking: .12em;
+  --radius: .75rem;
+  --radius-sm: .5rem;
+  --radius-btn: 999px;
+
+  --bg: #ffffff;
+  --bg-elev: #ffffff;
+  --bg-sunken: #f9fafb;
+  --text: #030712;
+  --text-strong: #030712;
+  --text-muted: #4b5563;
+  --text-faint: #9ca3af;
+  --border: rgb(3 7 18 / .08);
+  --border-strong: rgb(3 7 18 / .16);
+  --accent: #0284c7;
+  --accent-hover: #0369a1;
+  --accent-contrast: #ffffff;
+  --accent-text: #0369a1;
+  --accent-soft: rgb(14 165 233 / .12);
+  --accent-2: #6366f1;
+  --good: #059669;   --good-text: #047857;  --good-soft: rgb(16 185 129 / .12);
+  --bad: #e11d48;    --bad-text: #be123c;   --bad-soft: rgb(244 63 94 / .10);
+  --warn: #d97706;   --warn-text: #b45309;  --warn-soft: rgb(245 158 11 / .13);
+  --shadow: 0 1px 2px rgb(3 7 18 / .05);
+  --pattern:
+    linear-gradient(to right, rgb(3 7 18 / .035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(3 7 18 / .035) 1px, transparent 1px);
+  --pattern-size: 40px 40px;
+
+  --code-bg: #0f172a;
+  --code-text: #e2e8f0;
+  --code-keyword: #f472b6;
+  --code-string: #7dd3fc;
+  --code-number: #fbbf24;
+}
+
+[data-als-theme="blueprint"][data-als-mode="dark"] {
+  --bg: #030712;
+  --bg-elev: #0b1120;
+  --bg-sunken: #111827;
+  --text: #f3f4f6;
+  --text-strong: #ffffff;
+  --text-muted: #9ca3af;
+  --text-faint: #6b7280;
+  --border: rgb(255 255 255 / .08);
+  --border-strong: rgb(255 255 255 / .16);
+  --accent: #38bdf8;
+  --accent-hover: #7dd3fc;
+  --accent-contrast: #030712;
+  --accent-text: #7dd3fc;
+  --accent-soft: rgb(56 189 248 / .14);
+  --accent-2: #818cf8;
+  --good: #34d399;   --good-text: #6ee7b7;  --good-soft: rgb(52 211 153 / .13);
+  --bad: #fb7185;    --bad-text: #fda4af;   --bad-soft: rgb(251 113 133 / .13);
+  --warn: #fbbf24;   --warn-text: #fcd34d;  --warn-soft: rgb(251 191 36 / .13);
+  --shadow: none;
+  --pattern:
+    linear-gradient(to right, rgb(255 255 255 / .03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / .03) 1px, transparent 1px);
+  --code-bg: #0b1120;
+}
+
+/* Motif: primary actions are inverted pills, like the "Get started" button. */
+[data-als-theme="blueprint"] .als-btn--primary { background: var(--text-strong); border-color: var(--text-strong); color: var(--bg); }
+[data-als-theme="blueprint"] .als-btn--primary:hover { background: var(--text-muted); border-color: var(--text-muted); filter: none; }
+/* Motif: hairline frame around the main column on wide screens. */
+@media (min-width: 900px) {
+  [data-als-theme="blueprint"] .als-frame { border-inline: 1px solid var(--border); background: color-mix(in srgb, var(--bg) 70%, transparent); }
+}
+/* Motif: gradient display headings. */
+[data-als-theme="blueprint"] .als-h1 .als-grad, [data-als-theme="blueprint"] .als-grad {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+[data-als-theme="blueprint"] .als-kicker::before { content: "// "; opacity: .55; }
+
+/* Folio: philosophy, literature, history, languages, arts.
+   Editorial book typography: Garamond body, Cormorant display, paper tones, oxblood ink,
+   small-caps labels, ornamented dividers, square corners. */
+
+[data-als-theme="folio"] {
+  --font-body: "EB Garamond", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-display: "Cormorant Garamond", "EB Garamond", "Palatino Linotype", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --font-size: 18.5px;
+  --font-features: "kern", "liga", "onum";
+  --display-weight: 600;
+  --display-tracking: -0.005em;
+  --kicker-font: var(--font-body);
+  --kicker-transform: lowercase;
+  --kicker-variant: small-caps;
+  --kicker-tracking: .14em;
+  --radius: 4px;
+  --radius-sm: 3px;
+  --radius-btn: 3px;
+  --shell-max: 64rem;
+
+  --bg: #f7f3ea;
+  --bg-elev: #fbf8f1;
+  --bg-sunken: #efe8d9;
+  --text: #2a241e;
+  --text-strong: #1c1712;
+  --text-muted: #6b5e50;
+  --text-faint: #9c8f7f;
+  --border: #e3d9c6;
+  --border-strong: #cdbfa5;
+  --accent: #8c2f2b;
+  --accent-hover: #74231f;
+  --accent-contrast: #fbf8f1;
+  --accent-text: #7a2622;
+  --accent-soft: rgb(140 47 43 / .09);
+  --accent-2: #a0712a;
+  --good: #4d7a3a;   --good-text: #3f6630;  --good-soft: rgb(77 122 58 / .12);
+  --bad: #a33a2e;    --bad-text: #8e2f24;   --bad-soft: rgb(163 58 46 / .10);
+  --warn: #a8741a;   --warn-text: #8a5f12;  --warn-soft: rgb(168 116 26 / .12);
+  --shadow: 0 1px 0 rgb(80 60 30 / .06);
+  --pattern: radial-gradient(rgb(90 60 20 / .035) 1px, transparent 1.2px);
+  --pattern-size: 5px 5px;
+  --code-bg: #efe8d9;
+}
+
+[data-als-theme="folio"][data-als-mode="dark"] {
+  --bg: #1a1613;
+  --bg-elev: #221d19;
+  --bg-sunken: #15110f;
+  --text: #ece3d3;
+  --text-strong: #f7efe1;
+  --text-muted: #b3a691;
+  --text-faint: #7d715f;
+  --border: #352d26;
+  --border-strong: #4a3f35;
+  --accent: #d88a6c;
+  --accent-hover: #e8a487;
+  --accent-contrast: #1a1613;
+  --accent-text: #e9a588;
+  --accent-soft: rgb(216 138 108 / .14);
+  --accent-2: #d4a95a;
+  --good: #9cc27f;   --good-text: #b5d69c;  --good-soft: rgb(156 194 127 / .13);
+  --bad: #e08a7a;    --bad-text: #eba597;   --bad-soft: rgb(224 138 122 / .13);
+  --warn: #e0b25e;   --warn-text: #ecc884;  --warn-soft: rgb(224 178 94 / .13);
+  --shadow: none;
+  --pattern: radial-gradient(rgb(255 240 210 / .025) 1px, transparent 1.2px);
+  --code-bg: #15110f;
+}
+
+/* Motif: italic subtitles, ornamented dividers, drop caps, hanging quotes. */
+[data-als-theme="folio"] .als-sub { font-style: italic; font-size: 1.125rem; }
+[data-als-theme="folio"] .als-h1 { font-weight: 600; line-height: 1.05; }
+[data-als-theme="folio"] .als-divider { border: 0; text-align: center; margin: 2rem 0; height: auto; }
+[data-als-theme="folio"] .als-divider::before { content: "\2766"; color: var(--accent); font-size: 1.1rem; letter-spacing: 1rem; }
+[data-als-theme="folio"] .als-dropcap > p:first-child::first-letter {
+  float: left; font-family: var(--font-display); font-size: 3.6em; line-height: .82; padding: .06em .08em 0 0; color: var(--accent); font-weight: 600;
+}
+[data-als-theme="folio"] .als-card { border-color: var(--border); }
+[data-als-theme="folio"] .als-btn { font-family: var(--font-body); letter-spacing: .02em; }
+[data-als-theme="folio"] .als-btn--primary { font-variant: small-caps; letter-spacing: .08em; }
+[data-als-theme="folio"] .als-grad { color: var(--accent); font-style: italic; }
+[data-als-theme="folio"] .als-kicker::before, [data-als-theme="folio"] .als-kicker::after { content: "\2014"; margin: 0 .4em; opacity: .6; }
+
+/* Clinic: biology, medicine, chemistry, health, environment, psychology.
+   Calm, airy and diagram-first: IBM Plex, teal accent with violet secondary, soft rounded cards,
+   faint dot lattice. */
+
+[data-als-theme="clinic"] {
+  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-display: "IBM Plex Sans", ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --display-weight: 600;
+  --display-tracking: -0.015em;
+  --kicker-font: var(--font-body);
+  --kicker-tracking: .1em;
+  --radius: 1rem;
+  --radius-sm: .6rem;
+  --radius-btn: .6rem;
+
+  --bg: #f4f8f8;
+  --bg-elev: #ffffff;
+  --bg-sunken: #edf4f4;
+  --text: #0f2a2e;
+  --text-strong: #08201f;
+  --text-muted: #4a6366;
+  --text-faint: #8aa1a3;
+  --border: #dce8e8;
+  --border-strong: #c3d5d6;
+  --accent: #0f766e;
+  --accent-hover: #115e59;
+  --accent-contrast: #ffffff;
+  --accent-text: #0f766e;
+  --accent-soft: rgb(20 184 166 / .12);
+  --accent-2: #7c3aed;
+  --good: #15803d;   --good-text: #166534;  --good-soft: rgb(34 197 94 / .12);
+  --bad: #dc2626;    --bad-text: #b91c1c;   --bad-soft: rgb(239 68 68 / .10);
+  --warn: #ca8a04;   --warn-text: #a16207;  --warn-soft: rgb(234 179 8 / .14);
+  --shadow: 0 1px 3px rgb(15 42 46 / .05), 0 10px 28px -16px rgb(15 42 46 / .18);
+  --pattern: radial-gradient(rgb(15 118 110 / .08) 1px, transparent 1.3px);
+  --pattern-size: 22px 22px;
+  --code-bg: #0f2a2e;
+  --code-text: #d5ecea;
+  --code-keyword: #5eead4;
+  --code-string: #c4b5fd;
+  --code-number: #fcd34d;
+}
+
+[data-als-theme="clinic"][data-als-mode="dark"] {
+  --bg: #0a1a1c;
+  --bg-elev: #102427;
+  --bg-sunken: #0c1f21;
+  --text: #e6f2f1;
+  --text-strong: #ffffff;
+  --text-muted: #9db8b7;
+  --text-faint: #5f7c7c;
+  --border: #1d3639;
+  --border-strong: #2a4a4d;
+  --accent: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-contrast: #052e2b;
+  --accent-text: #5eead4;
+  --accent-soft: rgb(45 212 191 / .14);
+  --accent-2: #a78bfa;
+  --good: #4ade80;   --good-text: #86efac;  --good-soft: rgb(74 222 128 / .13);
+  --bad: #f87171;    --bad-text: #fca5a5;   --bad-soft: rgb(248 113 113 / .13);
+  --warn: #facc15;   --warn-text: #fde047;  --warn-soft: rgb(250 204 21 / .12);
+  --shadow: none;
+  --pattern: radial-gradient(rgb(45 212 191 / .06) 1px, transparent 1.3px);
+  --code-bg: #071416;
+}
+
+/* Motif: pill kicker, accent ring on cards when focused, soft section tint. */
+[data-als-theme="clinic"] .als-kicker { display: inline-block; background: var(--accent-soft); color: var(--accent-text); padding: .2rem .65rem; border-radius: 999px; font-weight: 600; }
+[data-als-theme="clinic"] .als-card:focus-within { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+[data-als-theme="clinic"] .als-grad { color: var(--accent); }
+[data-als-theme="clinic"] .als-callout { border-left-width: 0; border-radius: var(--radius-sm); }
+
+/* Ledger: economics, business, law, politics, social science, education.
+   Sober and structured: Libre Franklin body, Source Serif display, navy and burgundy,
+   tabular figures, strong horizontal rules, nearly square corners. */
+
+[data-als-theme="ledger"] {
+  --font-body: "Libre Franklin", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --font-features: "tnum", "lnum";
+  --display-weight: 650;
+  --display-tracking: -0.012em;
+  --kicker-font: var(--font-body);
+  --kicker-tracking: .16em;
+  --radius: 3px;
+  --radius-sm: 2px;
+  --radius-btn: 2px;
+
+  --bg: #fafaf8;
+  --bg-elev: #ffffff;
+  --bg-sunken: #f2f2ee;
+  --text: #161b26;
+  --text-strong: #0b0f17;
+  --text-muted: #525a6a;
+  --text-faint: #8b92a0;
+  --border: #e3e3dd;
+  --border-strong: #c9c9c0;
+  --accent: #1f3a5f;
+  --accent-hover: #162b47;
+  --accent-contrast: #ffffff;
+  --accent-text: #1f3a5f;
+  --accent-soft: rgb(31 58 95 / .08);
+  --accent-2: #9b2c2c;
+  --good: #2f6b3a;   --good-text: #285c31;  --good-soft: rgb(47 107 58 / .10);
+  --bad: #a61b1b;    --bad-text: #8f1717;   --bad-soft: rgb(166 27 27 / .08);
+  --warn: #9a6700;   --warn-text: #7d5400;  --warn-soft: rgb(154 103 0 / .10);
+  --shadow: none;
+  --pattern: none;
+  --code-bg: #f2f2ee;
+}
+
+[data-als-theme="ledger"][data-als-mode="dark"] {
+  --bg: #0f141c;
+  --bg-elev: #151c27;
+  --bg-sunken: #0c1118;
+  --text: #e7e9ee;
+  --text-strong: #ffffff;
+  --text-muted: #a2aab8;
+  --text-faint: #687183;
+  --border: #232c3a;
+  --border-strong: #334055;
+  --accent: #8fb3e8;
+  --accent-hover: #b0caf0;
+  --accent-contrast: #0f141c;
+  --accent-text: #a9c5ee;
+  --accent-soft: rgb(143 179 232 / .13);
+  --accent-2: #e59a9a;
+  --good: #7cc48a;   --good-text: #9dd6a8;  --good-soft: rgb(124 196 138 / .12);
+  --bad: #f08a8a;    --bad-text: #f5a8a8;   --bad-soft: rgb(240 138 138 / .12);
+  --warn: #e8b85a;   --warn-text: #f0cc84;  --warn-soft: rgb(232 184 90 / .12);
+  --code-bg: #0c1118;
+}
+
+/* Motif: heavy top rules on headings and cards, uppercase muted labels, tabular data feel. */
+[data-als-theme="ledger"] .als-h2 { border-top: 2px solid var(--text-strong); padding-top: .6rem; }
+[data-als-theme="ledger"] .als-card { border-top: 2px solid var(--text-strong); }
+[data-als-theme="ledger"] .als-kicker { color: var(--accent-2); font-weight: 600; }
+[data-als-theme="ledger"] .als-chip { border-radius: 2px; }
+[data-als-theme="ledger"] .als-grad { color: var(--accent); }
+[data-als-theme="ledger"] .als-callout { border-left-width: 4px; }
+[data-als-theme="ledger"] .als-btn--primary { text-transform: uppercase; letter-spacing: .08em; font-size: .8125rem; font-weight: 600; }
+</style>
+<style>
+  html, body { overflow-x: clip; } /* slide-in animation must never cause a horizontal scrollbar */
+  .ls-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 40; background: transparent; }
+  .ls-progress span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .4s ease; }
+  .ls-stage { min-height: calc(100vh - 3.5rem - 4rem); display: flex; align-items: center; justify-content: center; padding: 2rem 0 1rem; }
+  .ls-slide { width: 100%; }
+  .ls-inner { width: 100%; max-width: 60rem; margin: 0 auto; }
+  .ls-slide .als-h2 { font-size: clamp(1.6rem, 4vw, 2.6rem); margin-bottom: 1.25rem; }
+  .ls-big { font-size: clamp(1.1rem, 2.2vw, 1.45rem); line-height: 1.55; }
+
+  /* step reveal */
+  .ls-step { transition: opacity .5s ease, transform .5s cubic-bezier(.2,.7,.2,1), filter .5s ease; }
+  .ls-step.is-hidden { opacity: 0; transform: translateY(14px); pointer-events: none; }
+  .ls-step.is-past { opacity: .55; }
+  .ls-step.is-current { opacity: 1; }
+
+  /* title */
+  .ls-title { text-align: left; }
+  .ls-title .als-h1 { font-size: clamp(2.3rem, 7vw, 4.75rem); max-width: 18ch; }
+  .ls-title .als-sub { font-size: clamp(1.05rem, 2.2vw, 1.35rem); margin-top: 1rem; }
+  .ls-title-meta { margin-top: 2.5rem; display: flex; gap: .5rem; flex-wrap: wrap; }
+
+  /* points / summary */
+  .ls-points { list-style: none; padding: 0; margin: 0; display: grid; gap: .9rem; }
+  .ls-points li { display: grid; grid-template-columns: 2rem 1fr; gap: .75rem; align-items: start; }
+  .ls-points .n { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); padding-top: .35rem; }
+  .ls-summary li .n { color: var(--good); }
+
+  /* derivation steps */
+  .ls-deriv { display: grid; gap: .5rem; }
+  .ls-deriv-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: .25rem; padding: .7rem 1rem; border-radius: var(--radius-sm); border: 1px solid transparent; }
+  .ls-deriv-row.is-current { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+  .ls-deriv-row .t { color: var(--text-muted); font-size: .98rem; }
+  .ls-deriv-row .m { font-size: 1.2rem; overflow-x: auto; }
+
+  /* diagram */
+  .ls-diagram { display: grid; gap: 1rem; }
+  .ls-svg { background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; display: flex; justify-content: center; }
+  .ls-svg svg { width: 100%; height: auto; max-height: 58vh; color: var(--text); font-family: var(--font-body); }
+  .ls-svg [data-ls-hidden="1"] { opacity: 0; }
+  .ls-svg .ls-svg-el { transition: opacity .55s ease; }
+  .ls-svg .ls-svg-el.is-current { animation: ls-pulse 1.2s ease 1; }
+  @keyframes ls-pulse { 0% { opacity: .2; } 100% { opacity: 1; } }
+  .ls-caption { min-height: 3.2rem; font-size: 1.05rem; }
+  /* diagram colour classes that follow the theme */
+  .ls-svg .d-line { stroke: var(--text); fill: none; }
+  .ls-svg .d-muted { stroke: var(--text-faint); fill: none; }
+  .ls-svg .d-accent { stroke: var(--accent); fill: none; }
+  .ls-svg .d-accent2 { stroke: var(--accent-2); fill: none; }
+  .ls-svg .d-good { stroke: var(--good); fill: none; }
+  .ls-svg .d-bad { stroke: var(--bad); fill: none; }
+  .ls-svg .d-fill { fill: var(--bg-sunken); stroke: var(--border-strong); }
+  .ls-svg .d-fill-accent { fill: var(--accent-soft); stroke: var(--accent); }
+  .ls-svg .d-solid-accent { fill: var(--accent); stroke: none; }
+  .ls-svg .d-solid-accent2 { fill: var(--accent-2); stroke: none; }
+  .ls-svg .d-solid-muted { fill: var(--text-faint); stroke: none; }
+  .ls-svg .d-solid-line { fill: var(--text); stroke: none; }
+  .ls-svg .d-solid-good { fill: var(--good); stroke: none; }
+  .ls-svg .d-solid-bad { fill: var(--bad); stroke: none; }
+  .ls-svg .d-text { fill: var(--text); stroke: none; font-size: 14px; }
+  .ls-svg .d-text-muted { fill: var(--text-muted); stroke: none; font-size: 12px; }
+  .ls-svg .d-text-accent { fill: var(--accent); stroke: none; font-size: 14px; font-weight: 600; }
+
+  /* code */
+  .ls-code { display: grid; gap: 1rem; }
+  @media (min-width: 900px) { .ls-code.has-explain { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: start; } }
+  .ls-explain { font-size: 1.05rem; }
+
+  /* compare */
+  .ls-compare { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+  .ls-compare .als-card ul { margin: 0; padding-left: 1.1rem; }
+  .ls-compare .als-card li + li { margin-top: .4rem; }
+
+  /* quote */
+  .ls-quote { font-family: var(--font-display); font-size: clamp(1.5rem, 4vw, 2.6rem); line-height: 1.3; margin: 0; max-width: 32ch; text-wrap: balance; }
+  .ls-quote::before { content: "\201C"; display: block; font-size: 4rem; line-height: .6; color: var(--accent); margin-bottom: .5rem; }
+  .ls-quote-by { margin-top: 1.25rem; color: var(--text-muted); font-size: 1.05rem; }
+
+  /* check */
+  .ls-options { display: grid; gap: .6rem; margin-top: 1rem; }
+  .ls-option { text-align: left; justify-content: flex-start; min-height: 3rem; font-size: 1.02rem; padding: .6rem 1rem; }
+  .ls-option.is-right { background: var(--good-soft); border-color: var(--good); }
+  .ls-option.is-wrong { background: var(--bad-soft); border-color: var(--bad); }
+
+  /* timeline */
+  .ls-timeline { position: relative; display: grid; gap: 1rem; padding-left: 1.75rem; }
+  .ls-timeline::before { content: ""; position: absolute; left: .45rem; top: .4rem; bottom: .4rem; width: 2px; background: var(--border-strong); }
+  .ls-event { position: relative; }
+  .ls-event::before { content: ""; position: absolute; left: -1.62rem; top: .45rem; width: .8rem; height: .8rem; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+  .ls-event.is-current::before { background: var(--accent); }
+  .ls-event .when { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); }
+
+  /* definition */
+  .ls-term { font-family: var(--font-display); font-size: clamp(2rem, 6vw, 3.5rem); font-weight: var(--display-weight); letter-spacing: var(--display-tracking); line-height: 1.05; margin: .25rem 0 1rem; }
+  .ls-def { font-size: clamp(1.1rem, 2.4vw, 1.5rem); max-width: 42rem; }
+  .ls-example { margin-top: 1.5rem; }
+
+  /* chrome */
+  .ls-bottom { position: sticky; bottom: 0; z-index: 15; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid var(--border); }
+  .ls-bottom .als-shell { display: flex; align-items: center; gap: .5rem; min-height: 3.5rem; }
+  .ls-count { font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .ls-notes { max-width: 60rem; margin: 0 auto 1rem; }
+  .ls-overview { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); padding: 2rem 0 4rem; }
+  .ls-thumb { text-align: left; cursor: pointer; min-height: 7rem; display: flex; flex-direction: column; gap: .35rem; }
+  .ls-thumb[aria-current="true"] { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .ls-thumb .n { font-family: var(--font-mono); font-size: .7rem; color: var(--text-faint); }
+  .ls-thumb .t { font-weight: 600; font-family: var(--font-display); }
+  .ls-anim-in { animation: ls-in .5s cubic-bezier(.2,.7,.2,1) both; }
+  .ls-anim-back { animation: ls-back .5s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes ls-in { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+  @keyframes ls-back { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+
+  @media print {
+    .ls-progress, .ls-bottom, .ls-overview { display: none !important; }
+    .ls-stage { min-height: 0; display: block; padding: 0; }
+    .ls-print-slide { break-after: page; padding: 8mm 0; }
+    .ls-step.is-hidden, .ls-step.is-past { opacity: 1 !important; transform: none !important; }
+    .ls-svg [data-ls-hidden="1"] { opacity: 1 !important; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="application/json" id="als-data">{"als":"1","kind":"lesson","title":"Kant's categorical imperative","subtitle":"Why some maxims cannot be willed as universal law","module":"ethics","subject":"Philosophy: ethics","sources":[{"id":"G","title":"Kant, Groundwork of the Metaphysic of Morals (1785), tr. T. K. Abbott (1895)","locator":"Academy pagination 4:389-445"},{"id":"L4","title":"Lecture 4: Kantian ethics","locator":"slides 1-28"}],"slides":[{"layout":"title","title":"Kant's *categorical* imperative","subtitle":"A test for maxims that does not appeal to consequences","kicker":"Ethics · Lecture 4"},{"layout":"compare","title":"Two kinds of *ought*","columns":[{"heading":"Hypothetical imperative","points":["*If you want X, do Y.*","Binds only those who want X","Instrumental: about means to ends","\"If you want to pass, revise.\""]},{"heading":"Categorical imperative","points":["*Do Y.* Full stop.","Binds every rational agent","Unconditional: about the form of the will","\"Do not make false promises.\""]}],"src":"G 4:414-416"},{"layout":"definition","kind":"Key term","term":"Maxim","definition":"The subjective principle on which a person acts: *in situation S, I will do A in order to achieve E*.","example":"\"When I need money, I will borrow it and promise to repay, although I know I never can.\"","src":"G 4:421n"},{"layout":"quote","quote":"Act only on that maxim whereby thou canst at the same time will that it should become a universal law.","by":"Kant, *Groundwork* 4:421 (Abbott tr.)","comment":"The **Formula of Universal Law** (FUL). It tests a maxim, not an outcome.","src":"G 4:421"},{"layout":"steps","title":"The false promise, step by step","steps":[{"text":"**1. Formulate the maxim.** When in need of money, I will promise to repay a loan I know I cannot repay."},{"text":"**2. Universalise it.** Imagine a world where *everyone* in need makes such promises, as a law of nature."},{"text":"**3. Follow it through.** In that world no one would believe a promise of repayment."},{"text":"**4. Find the contradiction.** Then my promise could not work as a promise: the maxim undermines itself."},{"text":"**5. Conclude.** The maxim cannot even be *conceived* as universal law, so acting on it is forbidden: a **perfect duty**."}],"notes":"Stress that the problem is not bad consequences but self-defeat: the universalised practice destroys the institution the maxim relies on.","src":"G 4:422"},{"layout":"compare","title":"Two ways a maxim can fail","columns":[{"heading":"Contradiction in conception","points":["The universalised maxim cannot even be thought consistently","Grounds **perfect** duties (no exceptions for inclination)","Kant's examples: false promising, suicide from self-love"]},{"heading":"Contradiction in the will","points":["Conceivable, but a rational agent cannot *will* it","Grounds **imperfect** duties (latitude in how and when)","Kant's examples: neglecting one's talents, refusing to help others"]}],"src":"G 4:424; L4 s.14"},{"layout":"check","question":"Which of these is a **hypothetical** imperative?","options":["Do not lie.","If you want to be trusted, keep your promises.","Treat humanity never merely as a means.","Act only on maxims you could will as universal law."],"answer":1,"explain":"It binds only on the condition that you want to be trusted. The others claim to bind unconditionally."},{"layout":"definition","kind":"Second formulation","term":"Formula of Humanity","definition":"\"So act as to treat humanity, whether in thine own person or in that of any other, in every case as an end withal, never as means only.\" (4:429)","example":"The false promiser uses the lender **merely** as a means: the lender cannot consent to a deal whose real terms are hidden from them.","src":"G 4:429"},{"layout":"timeline","title":"Where this sits in Kant's work","events":[{"when":"1781","what":"*Critique of Pure Reason*: the limits of theoretical knowledge"},{"when":"1785","what":"*Groundwork of the Metaphysics of Morals*: the categorical imperative"},{"when":"1788","what":"*Critique of Practical Reason*: freedom and the moral law"},{"when":"1797","what":"*Metaphysics of Morals*; the essay *On a Supposed Right to Lie*"}],"grounded":false},{"layout":"compare","title":"Two classic objections","columns":[{"heading":"Rigorism: the murderer at the door","points":["Lying to save a friend seems right, yet the FUL appears to forbid it","Constant raised it; Kant (1797) bit the bullet","Reply: refine the maxim's description, or give the Formula of Humanity priority"]},{"heading":"Empty formalism","points":["Any maxim can be redescribed so that it universalises","Hegel: the test yields no content by itself","Reply: maxims must state the agent's *actual* reasons, not gerrymandered ones"]}],"src":"L4 s.22-26"},{"layout":"check","question":"Why, for Kant, is the false promise wrong?","options":["Because if everyone did it, the results would be bad.","Because the universalised maxim defeats itself.","Because God forbids lying.","Because it makes the promiser unhappy."],"answer":1,"explain":"The test is about consistency, not consequences: universal false promising makes promising impossible, so the maxim cannot be willed as law. Answer A is the most common misreading."},{"layout":"summary","title":"Remember","points":["Categorical imperatives bind unconditionally; hypothetical ones depend on what you want.","FUL tests **maxims** for self-defeat when universalised, not outcomes.","Conception → perfect duties; will → imperfect duties.","Formula of Humanity: never treat persons **merely** as means."]}]}</script>
+<script>window.ALS_THEMES={"blueprint": {"label": "Blueprint", "short": "Maths, physics, CS, engineering", "description": "Precise and technical, in the spirit of tailwindcss.com. Maths, physics, CS, engineering.", "fonts": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap", "swatch": ["#030712", "#38bdf8"]}, "folio": {"label": "Folio", "short": "Philosophy, literature, history, arts", "description": "Editorial and literary: serif type, paper tones, generous margins. Philosophy, literature, history, languages, arts.", "fonts": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap", "swatch": ["#f7f3ea", "#8c2f2b"]}, "clinic": {"label": "Clinic", "short": "Biology, medicine, chemistry, health", "description": "Clean, calm and diagram-first, teal accents. Biology, medicine, chemistry, health, environment.", "fonts": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap", "swatch": ["#f6f9f9", "#0f766e"]}, "ledger": {"label": "Ledger", "short": "Economics, business, law, social science", "description": "Structured and sober, tabular numbers, strong rules. Business, economics, law, politics, social science.", "fonts": "https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap", "swatch": ["#fafaf8", "#1f3a5f"]}};
+/* ALS core runtime, shared by every template and inlined at build time.
+   Provides: data loading, theme + light/dark switching, safe Markdown-lite with KaTeX maths,
+   code highlighting, SVG sanitising, storage, downloads, keyboard helpers and the top bar. */
+(function () {
+  'use strict';
+
+  var ALS = (window.ALS = window.ALS || {});
+  var THEMES = window.ALS_THEMES || {};
+  var KATEX = 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/';
+
+  /* ---------------- small helpers ---------------- */
+  ALS.$ = function (sel, root) { return (root || document).querySelector(sel); };
+  ALS.$$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+
+  ALS.esc = function (s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  };
+
+  ALS.el = function (tag, attrs, children) {
+    var node = document.createElement(tag);
+    if (attrs) {
+      Object.keys(attrs).forEach(function (k) {
+        var v = attrs[k];
+        if (v == null || v === false) return;
+        if (k === 'class') node.className = v;
+        else if (k === 'html') node.innerHTML = v;
+        else if (k === 'text') node.textContent = v;
+        else if (k.slice(0, 2) === 'on' && typeof v === 'function') node.addEventListener(k.slice(2), v);
+        else node.setAttribute(k, v === true ? '' : v);
+      });
+    }
+    (children || []).forEach(function (c) {
+      if (c == null) return;
+      node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    });
+    return node;
+  };
+
+  ALS.slug = function (s) {
+    return String(s || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'item';
+  };
+
+  ALS.today = function () {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  };
+
+  ALS.shuffle = function (arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  };
+
+  ALS.download = function (filename, content, mime) {
+    var blob = new Blob([content], { type: mime || 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = ALS.el('a', { href: url, download: filename });
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  };
+
+  ALS.toast = function (msg) {
+    var t = ALS.$('#als-toast');
+    if (!t) {
+      t = ALS.el('div', { id: 'als-toast', role: 'status', 'aria-live': 'polite', class: 'als-toast' });
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.setAttribute('data-show', 'true');
+    clearTimeout(ALS._toastTimer);
+    ALS._toastTimer = setTimeout(function () { t.removeAttribute('data-show'); }, 2200);
+  };
+
+  /* ---------------- storage (never required to work) ---------------- */
+  ALS.store = {
+    key: function (k) { return 'als:' + ALS.pageKey + ':' + k; },
+    get: function (k, fallback) {
+      try { var v = localStorage.getItem(ALS.store.key(k)); return v == null ? fallback : JSON.parse(v); }
+      catch (e) { return fallback; }
+    },
+    set: function (k, v) { try { localStorage.setItem(ALS.store.key(k), JSON.stringify(v)); } catch (e) { /* private mode */ } },
+    del: function (k) { try { localStorage.removeItem(ALS.store.key(k)); } catch (e) { /* ignore */ } },
+    globalGet: function (k, fallback) { try { var v = localStorage.getItem('als:' + k); return v == null ? fallback : v; } catch (e) { return fallback; } },
+    globalSet: function (k, v) { try { localStorage.setItem('als:' + k, v); } catch (e) { /* ignore */ } }
+  };
+
+  /* ---------------- Markdown-lite + maths ---------------- */
+  var MATH_RE = /\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]|\\\(([\s\S]+?)\\\)|\$(?!\s)((?:\\\$|[^$\n])+?)(?<!\s)\$(?!\d)/g;
+
+  ALS.hasMath = function (s) { MATH_RE.lastIndex = 0; return MATH_RE.test(String(s || '')); };
+
+  function mathSpan(tex, display) {
+    return '<span class="als-math' + (display ? ' als-math-display' : '') + '" data-display="' + (display ? 1 : 0) +
+      '" data-tex="' + ALS.esc(tex) + '">' + ALS.esc(display ? tex : tex) + '</span>';
+  }
+
+  function inline(s) {
+    // s is already escaped. Order matters: links, bold, italic.
+    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, function (_, t, u) {
+      return '<a href="' + u + '" target="_blank" rel="noopener noreferrer">' + t + '</a>';
+    });
+    s = s.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*\w])\*(?!\s)([^*\n]+?)(?<!\s)\*(?!\w)/g, '$1<em>$2</em>');
+    s = s.replace(/(^|[\s(])_(?!\s)([^_\n]+?)(?<!\s)_(?=[\s).,;:!?]|$)/g, '$1<em>$2</em>');
+    return s;
+  }
+
+  /* Render a rich-text string to safe HTML. opts.inline = no paragraph wrapping. */
+  ALS.md = function (text, opts) {
+    opts = opts || {};
+    if (text == null) return '';
+    var store = [];
+    var hold = function (html) { store.push(html); return '\u0000' + (store.length - 1) + '\u0000'; };
+    var s = String(text).replace(/\r\n?/g, '\n');
+
+    s = s.replace(/`([^`\n]+)`/g, function (_, c) { return hold('<code>' + ALS.esc(c) + '</code>'); });
+    s = s.replace(MATH_RE, function (m, d1, d2, i1, i2) {
+      if (d1 != null || d2 != null) return hold(mathSpan((d1 != null ? d1 : d2).trim(), true));
+      return hold(mathSpan((i1 != null ? i1 : i2).trim(), false));
+    });
+    s = ALS.esc(s);
+
+    var out;
+    if (opts.inline) {
+      out = inline(s).replace(/\n/g, '<br>');
+    } else {
+      out = s.split(/\n{2,}/).map(function (block) {
+        var lines = block.split('\n');
+        if (lines.every(function (l) { return /^\s*[-*•]\s+/.test(l); })) {
+          return '<ul>' + lines.map(function (l) { return '<li>' + inline(l.replace(/^\s*[-*•]\s+/, '')) + '</li>'; }).join('') + '</ul>';
+        }
+        if (lines.every(function (l) { return /^\s*\d+[.)]\s+/.test(l); })) {
+          return '<ol>' + lines.map(function (l) { return '<li>' + inline(l.replace(/^\s*\d+[.)]\s+/, '')) + '</li>'; }).join('') + '</ol>';
+        }
+        var trimmed = block.trim();
+        if (/^\u0000\d+\u0000$/.test(trimmed) && store[+trimmed.slice(1, -1)].indexOf('als-math-display') > -1) return trimmed;
+        return '<p>' + inline(block).replace(/\n/g, '<br>') + '</p>';
+      }).join('');
+    }
+    return out.replace(/\u0000(\d+)\u0000/g, function (_, i) { return store[+i]; });
+  };
+
+  /* Set rich HTML on an element and typeset its maths. */
+  ALS.rich = function (node, text, opts) {
+    node.innerHTML = ALS.md(text, opts);
+    if (!opts || !opts.noClass) node.classList.add('als-rich');
+    ALS.renderMath(node);
+    return node;
+  };
+
+  ALS.renderMath = function (root) {
+    var nodes = ALS.$$('.als-math:not([data-done])', root || document);
+    if (!nodes.length) return;
+    if (!window.katex) {
+      nodes.forEach(function (n) { n.classList.add('als-math-raw'); });
+      ALS.loadKatex();
+      return;
+    }
+    nodes.forEach(function (n) {
+      try {
+        window.katex.render(n.getAttribute('data-tex'), n, { displayMode: n.getAttribute('data-display') === '1', throwOnError: false, strict: 'ignore' });
+        n.classList.remove('als-math-raw');
+        n.setAttribute('data-done', '1');
+      } catch (e) { n.classList.add('als-math-raw'); }
+    });
+  };
+
+  ALS.loadKatex = function () {
+    if (ALS._katexLoading || window.katex) return;
+    ALS._katexLoading = true;
+    document.head.appendChild(ALS.el('link', { rel: 'stylesheet', href: KATEX + 'katex.min.css', crossorigin: 'anonymous' }));
+    var sc = ALS.el('script', { src: KATEX + 'katex.min.js', crossorigin: 'anonymous', defer: true });
+    sc.onload = function () { ALS.renderMath(document); document.dispatchEvent(new Event('als:math')); };
+    sc.onerror = function () { /* offline: TeX stays readable as raw text */ };
+    document.head.appendChild(sc);
+  };
+
+  /* ---------------- code highlighting (small, generic) ---------------- */
+  var KW = {
+    py: 'and as assert async await break class continue def del elif else except False finally for from global if import in is lambda None nonlocal not or pass raise return True try while with yield match case self',
+    js: 'async await break case catch class const continue debugger default delete do else export extends false finally for from function if import in instanceof let new null of return super switch this throw true try typeof undefined var void while yield interface type enum implements',
+    c: 'auto break case char const continue default do double else enum extern float for goto if inline int long register return short signed sizeof static struct switch typedef union unsigned void volatile while bool true false nullptr class public private protected template typename namespace using new delete virtual override std include define',
+    java: 'abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long new null package private protected public return short static super switch this throw throws true false try void while var record',
+    sql: 'select from where group by order having join inner left right outer on as insert into values update set delete create table primary key foreign references not null and or in is distinct limit offset union all exists case when then else end count sum avg min max',
+    r: 'if else repeat while function for in next break TRUE FALSE NULL Inf NaN NA library return',
+    sh: 'if then else elif fi for while do done case esac in function return export local echo cd exit',
+    m: 'function end if else elseif for while switch case otherwise return break continue true false',
+    hs: 'case class data deriving do else if import in infix instance let module newtype of then type where',
+    rs: 'as break const continue crate else enum extern false fn for if impl in let loop match mod move mut pub ref return self Self static struct super trait true type unsafe use where while async await dyn'
+  };
+  var FAMILY = { python: 'py', py: 'py', javascript: 'js', js: 'js', typescript: 'js', ts: 'js', json: 'js', c: 'c', cpp: 'c', 'c++': 'c', h: 'c', csharp: 'java', cs: 'java', java: 'java', kotlin: 'java', go: 'c', sql: 'sql', r: 'r', bash: 'sh', sh: 'sh', shell: 'sh', matlab: 'm', octave: 'm', haskell: 'hs', rust: 'rs', rs: 'rs' };
+  var LINE_COMMENT = { py: '#', r: '#', sh: '#', sql: '--', hs: '--', m: '%' };
+
+  ALS.highlight = function (code, lang) {
+    var fam = FAMILY[String(lang || '').toLowerCase()] || 'js';
+    var kws = {};
+    (KW[fam] || '').split(' ').forEach(function (k) { kws[fam === 'sql' ? k.toLowerCase() : k] = 1; });
+    var lc = LINE_COMMENT[fam] || '//';
+    var lines = String(code).replace(/\r\n?/g, '\n').replace(/\t/g, '    ').split('\n');
+    var inBlock = false;
+    return lines.map(function (line) {
+      var out = '', i = 0;
+      while (i < line.length) {
+        if (inBlock) {
+          var end = line.indexOf('*/', i);
+          if (end < 0) { out += '<span class="tok-c">' + ALS.esc(line.slice(i)) + '</span>'; i = line.length; }
+          else { out += '<span class="tok-c">' + ALS.esc(line.slice(i, end + 2)) + '</span>'; i = end + 2; inBlock = false; }
+          continue;
+        }
+        var rest = line.slice(i);
+        if (rest.indexOf(lc) === 0) { out += '<span class="tok-c">' + ALS.esc(rest) + '</span>'; break; }
+        if (lc === '//' && rest.indexOf('/*') === 0) { inBlock = true; continue; }
+        var m = rest.match(/^("(?:\\.|[^"\\])*"?|'(?:\\.|[^'\\])*'?|`(?:\\.|[^`\\])*`?)/);
+        if (m) { out += '<span class="tok-s">' + ALS.esc(m[0]) + '</span>'; i += m[0].length; continue; }
+        m = rest.match(/^\d+(?:\.\d+)?(?:e[+-]?\d+)?/i);
+        if (m && !/[\w]/.test(line[i - 1] || '')) { out += '<span class="tok-n">' + m[0] + '</span>'; i += m[0].length; continue; }
+        m = rest.match(/^[A-Za-z_][\w]*/);
+        if (m) {
+          var w = m[0], key = fam === 'sql' ? w.toLowerCase() : w;
+          out += kws[key] ? '<span class="tok-k">' + w + '</span>' : ALS.esc(w);
+          i += w.length; continue;
+        }
+        out += ALS.esc(line[i]); i++;
+      }
+      return out || ' ';
+    });
+  };
+
+  /* ---------------- SVG sanitising (diagram slides) ---------------- */
+  ALS.safeSvg = function (svgText) {
+    try {
+      var doc = new DOMParser().parseFromString(String(svgText), 'image/svg+xml');
+      var svg = doc.documentElement;
+      if (!svg || svg.nodeName.toLowerCase() !== 'svg' || doc.getElementsByTagName('parsererror').length) return null;
+      var walk = function (n) {
+        Array.prototype.slice.call(n.children || []).forEach(function (c) {
+          var name = c.nodeName.toLowerCase();
+          if (name === 'script' || name === 'foreignobject' || name === 'iframe') { c.remove(); return; }
+          Array.prototype.slice.call(c.attributes).forEach(function (a) {
+            var an = a.name.toLowerCase();
+            if (an.indexOf('on') === 0) c.removeAttribute(a.name);
+            if ((an === 'href' || an === 'xlink:href') && /^\s*javascript:/i.test(a.value)) c.removeAttribute(a.name);
+          });
+          walk(c);
+        });
+      };
+      Array.prototype.slice.call(svg.attributes).forEach(function (a) { if (a.name.toLowerCase().indexOf('on') === 0) svg.removeAttribute(a.name); });
+      walk(svg);
+      return document.importNode(svg, true);
+    } catch (e) { return null; }
+  };
+
+  /* ---------------- keyboard ---------------- */
+  ALS.onKey = function (map) {
+    document.addEventListener('keydown', function (e) {
+      var t = e.target;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+      if (t && t.tagName === 'BUTTON' && (e.key === 'Enter' || e.key === ' ')) return; // let the focused button act
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      var fn = map[e.key] || map[e.code];
+      if (fn) { e.preventDefault(); fn(e); }
+    });
+  };
+
+  /* ---------------- icons ---------------- */
+  var P = {
+    palette: '<circle cx="13.5" cy="6.5" r="1.2"/><circle cx="17.5" cy="10.5" r="1.2"/><circle cx="8.5" cy="7.5" r="1.2"/><circle cx="6.5" cy="12.5" r="1.2"/><path d="M12 2a10 10 0 0 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.3A5.7 5.7 0 0 0 22 9.7C22 5.4 17.5 2 12 2z"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+    shuffle: '<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
+    download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+    print: '<path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',
+    left: '<path d="m15 18-6-6 6-6"/>',
+    right: '<path d="m9 18 6-6-6-6"/>',
+    grid: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
+    expand: '<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>',
+    rotate: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    x: '<path d="M18 6 6 18M6 6l12 12"/>',
+    bulb: '<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>',
+    eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    notes: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
+    play: '<path d="m6 4 14 8-14 8z"/>',
+    pause: '<path d="M7 4h3v16H7zM14 4h3v16h-3z"/>'
+  };
+  ALS.icon = function (name) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (P[name] || '') + '</svg>';
+  };
+  ALS.iconBtn = function (name, label, onclick, extraClass) {
+    return ALS.el('button', { type: 'button', class: 'als-btn als-btn--ghost als-iconbtn ' + (extraClass || ''), 'aria-label': label, title: label, html: ALS.icon(name), onclick: onclick });
+  };
+
+  /* ---------------- theme + mode ---------------- */
+  var root = document.documentElement;
+  var media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+  ALS.loadFonts = function (name) {
+    var t = THEMES[name];
+    if (!t || !t.fonts || ALS.$('link[data-als-fonts="' + name + '"]')) return;
+    document.head.appendChild(ALS.el('link', { rel: 'stylesheet', href: t.fonts, 'data-als-fonts': name }));
+  };
+
+  ALS.setTheme = function (name, persist) {
+    if (!THEMES[name]) name = root.getAttribute('data-als-default') || Object.keys(THEMES)[0];
+    root.setAttribute('data-als-theme', name);
+    ALS.loadFonts(name);
+    if (persist) ALS.store.set('theme', name);
+    ALS.$$('[data-theme-option]').forEach(function (b) { b.setAttribute('aria-checked', String(b.getAttribute('data-theme-option') === name)); });
+  };
+
+  ALS.applyMode = function () {
+    var pref = ALS.store.globalGet('mode', 'auto');
+    var dark = pref === 'dark' || (pref === 'auto' && media && media.matches);
+    root.setAttribute('data-als-mode', dark ? 'dark' : 'light');
+    var btn = ALS.$('#als-mode-btn');
+    if (btn) {
+      btn.innerHTML = ALS.icon(dark ? 'sun' : 'moon');
+      btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+      btn.title = btn.getAttribute('aria-label');
+    }
+  };
+  if (media && media.addEventListener) media.addEventListener('change', ALS.applyMode);
+
+  function themeMenu() {
+    var wrap = ALS.el('div', { class: 'als-menu als-noprint' });
+    var btn = ALS.iconBtn('palette', 'Choose design', function (e) {
+      e.stopPropagation();
+      wrap.setAttribute('data-open', wrap.getAttribute('data-open') === 'true' ? 'false' : 'true');
+    });
+    btn.setAttribute('aria-haspopup', 'menu');
+    var panel = ALS.el('div', { class: 'als-menu-panel', role: 'menu' });
+    Object.keys(THEMES).forEach(function (name) {
+      var t = THEMES[name];
+      var sw = ALS.el('span', { class: 'als-swatch', style: 'background: linear-gradient(135deg,' + t.swatch[0] + ' 50%,' + t.swatch[1] + ' 50%)' });
+      var label = ALS.el('span', { html: ALS.esc(t.label) + '<small>' + ALS.esc(t.short || '') + '</small>' });
+      panel.appendChild(ALS.el('button', {
+        type: 'button', class: 'als-menu-item', role: 'menuitemradio', 'data-theme-option': name,
+        onclick: function () { ALS.setTheme(name, true); wrap.setAttribute('data-open', 'false'); }
+      }, [sw, label]));
+    });
+    document.addEventListener('click', function (e) { if (!wrap.contains(e.target)) wrap.setAttribute('data-open', 'false'); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') wrap.setAttribute('data-open', 'false'); });
+    wrap.appendChild(btn); wrap.appendChild(panel);
+    return wrap;
+  }
+
+  /* Top bar: title, optional actions, theme menu and mode toggle. */
+  ALS.topbar = function (actions) {
+    var d = ALS.data;
+    var bar = ALS.el('header', { class: 'als-topbar' });
+    var shell = ALS.el('div', { class: 'als-shell' });
+    var brand = ALS.el('div', { class: 'als-brand' }, [
+      ALS.el('span', { class: 'als-brand-title', text: d.title }),
+      d.subtitle || d.subject ? ALS.el('span', { class: 'als-brand-sub', text: d.subtitle || d.subject }) : null
+    ]);
+    shell.appendChild(brand);
+    shell.appendChild(ALS.el('div', { class: 'als-spacer' }));
+    (actions || []).forEach(function (a) { if (a) shell.appendChild(a); });
+    shell.appendChild(themeMenu());
+    var modeBtn = ALS.iconBtn('moon', 'Toggle dark mode', function () {
+      var dark = root.getAttribute('data-als-mode') === 'dark';
+      ALS.store.globalSet('mode', dark ? 'light' : 'dark');
+      ALS.applyMode();
+    }, 'als-noprint');
+    modeBtn.id = 'als-mode-btn';
+    shell.appendChild(modeBtn);
+    bar.appendChild(shell);
+    return bar;
+  };
+
+  /* Source + grounding badges for an item. */
+  ALS.provenance = function (item) {
+    if (!item) return null;
+    var bits = [];
+    if (item.src) bits.push('<span class="als-src" title="Source in your material">' + ALS.esc(item.src) + '</span>');
+    if (item.grounded === false) bits.push('<span class="als-beyond" title="Added beyond your course material">beyond your notes</span>');
+    if (!bits.length) return null;
+    return ALS.el('div', { class: 'als-row als-provenance', html: bits.join(' ') });
+  };
+
+  /* Results export shared by the flashcards and trainer templates. */
+  ALS.exportResults = function (kind, items, extra) {
+    var d = ALS.data;
+    var payload = Object.assign({
+      als: '1', kind: 'results', source: kind, title: d.title, module: d.module || null,
+      date: ALS.today(), exported: new Date().toISOString(), items: items
+    }, extra || {});
+    var name = (d.module ? d.module + '-' : '') + ALS.slug(d.title) + '-results-' + ALS.today() + '.json';
+    ALS.download(name, JSON.stringify(payload, null, 2));
+    ALS.toast('Saved ' + name + '. Ask Claude to import it to update your progress.');
+  };
+
+  /* ---------------- boot ---------------- */
+  ALS.boot = function (render) {
+    var node = document.getElementById('als-data');
+    try { ALS.data = JSON.parse(node.textContent); }
+    catch (e) {
+      document.body.innerHTML = '<p style="padding:2rem;font-family:sans-serif">This page has no valid data block. Rebuild it with <code>als.py build</code>.</p>';
+      return;
+    }
+    ALS.pageKey = ALS.slug((ALS.data.module || '') + '-' + ALS.data.kind + '-' + ALS.data.title);
+    ALS.setTheme(ALS.store.get('theme', root.getAttribute('data-als-theme')));
+    ALS.applyMode();
+    if (ALS.hasMath(node.textContent)) ALS.loadKatex();
+    render(ALS.data);
+    ALS.applyMode();
+    ALS.renderMath(document);
+  };
+})();
+</script>
+<script>
+ALS.boot(function (lesson) {
+  var E = ALS.el, $ = ALS.$, $$ = ALS.$$;
+  var app = $('#app');
+  var slides = lesson.slides;
+  var st = { i: 0, step: 0, notes: ALS.store.get('notes', false), overview: false, playing: false, timer: null, dir: 1 };
+
+  function rich(tag, text, cls) { var n = E(tag, { class: cls || '' }); ALS.rich(n, text); return n; }
+  function inlineRich(tag, text, cls) { var n = E(tag, { class: cls || '' }); ALS.rich(n, text, { inline: true }); return n; }
+  function stepEl(node) { node.classList.add('ls-step'); return node; }
+
+  function stepCount(s) {
+    switch (s.layout) {
+      case 'points': case 'summary': return s.points.length;
+      case 'steps': return s.steps.length;
+      case 'diagram': return Math.max(1, (s.steps || []).length);
+      case 'code': return Math.max(1, (s.highlight || []).length, (s.explain || []).length);
+      case 'compare': return s.columns.length;
+      case 'check': return 2;
+      case 'timeline': return s.events.length;
+      case 'definition': return s.example ? 2 : 1;
+      default: return 1;
+    }
+  }
+
+  /* ---------- builders: each returns a node; steps are .ls-step elements in order ---------- */
+  var build = {
+    title: function (s) {
+      return E('div', { class: 'ls-title' }, [
+        s.kicker || lesson.module ? E('div', { class: 'als-kicker', text: s.kicker || lesson.module }) : null,
+        E('h1', { class: 'als-h1', html: ALS.md(s.title || lesson.title, { inline: true }) }),
+        s.subtitle || lesson.subtitle ? E('p', { class: 'als-sub', text: s.subtitle || lesson.subtitle }) : null,
+        E('div', { class: 'ls-title-meta' }, [
+          E('span', { class: 'als-chip', text: slides.length + ' slides' }),
+          lesson.subject ? E('span', { class: 'als-chip als-chip--accent', text: lesson.subject }) : null,
+          E('span', { class: 'als-chip', html: 'Press <span class="als-kbd">→</span> to begin' })
+        ])
+      ]);
+    },
+    points: function (s, summary) {
+      var ul = E('ul', { class: 'ls-points ls-big' + (summary ? ' ls-summary' : '') });
+      s.points.forEach(function (p, k) {
+        var li = E('li', {}, [E('span', { class: 'n', text: summary ? '✓' : String(k + 1).padStart(2, '0') }), inlineRich('div', p)]);
+        ul.appendChild(stepEl(li));
+      });
+      return ul;
+    },
+    summary: function (s) { return build.points(s, true); },
+    steps: function (s) {
+      var wrap = E('div', { class: 'ls-deriv' });
+      s.steps.forEach(function (row) {
+        var r = E('div', { class: 'ls-deriv-row' });
+        if (row.text) r.appendChild(inlineRich('div', row.text, 't'));
+        if (row.math) { var m = E('div', { class: 'm' }); ALS.rich(m, '$$' + row.math + '$$'); r.appendChild(m); }
+        wrap.appendChild(stepEl(r));
+      });
+      return wrap;
+    },
+    diagram: function (s) {
+      var box = E('div', { class: 'ls-svg' });
+      var svg = ALS.safeSvg(s.svg);
+      if (svg) box.appendChild(svg); else box.appendChild(E('p', { class: 'als-muted', text: 'Diagram could not be displayed (invalid SVG).' }));
+      var cap = E('div', { class: 'ls-caption als-rich' });
+      return E('div', { class: 'ls-diagram' }, [box, cap]);
+    },
+    code: function (s) {
+      var lines = ALS.highlight(s.code, s.lang);
+      var pre = E('pre', { class: 'als-code' });
+      lines.forEach(function (l, k) { pre.appendChild(E('span', { class: 'ln', 'data-line': String(k + 1), html: l })); });
+      var kids = [E('div', {}, [s.lang ? E('div', { class: 'als-kicker', style: 'margin-bottom:.5rem', text: s.lang }) : null, pre])];
+      var hasExplain = s.explain && s.explain.length;
+      if (hasExplain) kids.push(E('div', { class: 'ls-explain als-rich' }));
+      return E('div', { class: 'ls-code' + (hasExplain ? ' has-explain' : '') }, kids);
+    },
+    compare: function (s) {
+      var g = E('div', { class: 'ls-compare' });
+      s.columns.forEach(function (c) {
+        var ul = E('ul'); c.points.forEach(function (p) { ul.appendChild(inlineRich('li', p)); });
+        g.appendChild(stepEl(E('div', { class: 'als-card' }, [E('h3', { class: 'als-h3', html: ALS.md(c.heading, { inline: true }) }), ul])));
+      });
+      return g;
+    },
+    quote: function (s) {
+      return E('figure', { style: 'margin:0' }, [
+        E('blockquote', { class: 'ls-quote', html: ALS.md(s.quote, { inline: true }) }),
+        s.by ? E('figcaption', { class: 'ls-quote-by', html: '— ' + ALS.md(s.by, { inline: true }) }) : null,
+        s.comment ? rich('div', s.comment, 'ls-big als-muted') : null
+      ]);
+    },
+    check: function (s) {
+      var opts = E('div', { class: 'ls-options' });
+      var fb = stepEl(E('div', { class: 'als-callout als-callout--info', style: 'margin-top:1rem' }));
+      s.options.forEach(function (o, k) {
+        opts.appendChild(E('button', {
+          type: 'button', class: 'als-btn ls-option', 'data-k': String(k),
+          html: '<span class="als-mono als-faint">' + String.fromCharCode(65 + k) + '</span>&nbsp;&nbsp;' + ALS.md(o, { inline: true }),
+          onclick: function (e) { e.stopPropagation(); answerCheck(s, k); }
+        }));
+      });
+      ALS.rich(fb, '**Answer: ' + String.fromCharCode(65 + s.answer) + '.** ' + (s.explain || ''));
+      return E('div', {}, [E('div', { class: 'als-kicker', text: 'Quick check' }), inlineRich('div', s.question, 'ls-big'), opts, fb]);
+    },
+    timeline: function (s) {
+      var t = E('div', { class: 'ls-timeline' });
+      s.events.forEach(function (ev) {
+        t.appendChild(stepEl(E('div', { class: 'ls-event' }, [E('div', { class: 'when', text: ev.when }), inlineRich('div', ev.what, 'ls-big')])));
+      });
+      return t;
+    },
+    definition: function (s) {
+      var kids = [E('div', { class: 'als-kicker', text: s.kind || 'Definition' }), E('div', { class: 'ls-term', html: ALS.md(s.term, { inline: true }) }), rich('div', s.definition, 'ls-def')];
+      if (s.example) kids.push(stepEl(rich('div', '**Example.** ' + s.example, 'als-callout ls-example')));
+      return E('div', {}, kids);
+    }
+  };
+
+  function answerCheck(s, k) {
+    var node = $('#ls-current');
+    $$('.ls-option', node).forEach(function (b) {
+      var bk = +b.getAttribute('data-k');
+      b.classList.toggle('is-right', bk === s.answer);
+      b.classList.toggle('is-wrong', bk === k && k !== s.answer);
+      b.disabled = true;
+    });
+    st.step = 1; applySteps();
+  }
+
+  function slideNode(s, idx, forPrint) {
+    var inner = E('div', { class: 'ls-inner' });
+    if (s.layout !== 'title' && s.layout !== 'quote' && s.layout !== 'definition' && s.layout !== 'check') {
+      inner.appendChild(E('div', { class: 'als-kicker', style: 'margin-bottom:.5rem', text: (lesson.module ? lesson.module + ' · ' : '') + String(idx + 1).padStart(2, '0') }));
+      if (s.title) inner.appendChild(E('h2', { class: 'als-h2', html: ALS.md(s.title, { inline: true }) }));
+    }
+    var b = build[s.layout] || build.points;
+    inner.appendChild(b(s));
+    var prov = ALS.provenance(s);
+    if (prov) { prov.style.marginTop = '1.5rem'; inner.appendChild(prov); }
+    return E('section', { class: 'ls-slide' + (forPrint ? ' ls-print-slide' : ''), 'aria-roledescription': 'slide', 'aria-label': 'Slide ' + (idx + 1) + ' of ' + slides.length }, [inner]);
+  }
+
+  /* ---------- step application ---------- */
+  function applySteps() {
+    var node = $('#ls-current'); if (!node) return;
+    var s = slides[st.i];
+    var steps = $$('.ls-step', node);
+    var showUpTo = s.layout === 'check' ? (st.step >= 1 ? steps.length : 0) : (s.layout === 'definition' ? st.step : st.step + 1);
+    steps.forEach(function (el, k) {
+      el.classList.toggle('is-hidden', k >= showUpTo);
+      el.classList.toggle('is-current', k === showUpTo - 1);
+      el.classList.toggle('is-past', s.layout === 'steps' && k < showUpTo - 1);
+    });
+    if (s.layout === 'check' && st.step >= 1) {
+      $$('.ls-option', node).forEach(function (b) { b.disabled = true; if (+b.getAttribute('data-k') === s.answer) b.classList.add('is-right'); });
+    }
+    if (s.layout === 'diagram') {
+      var groups = s.steps || [];
+      var all = {}; groups.forEach(function (g) { g.forEach(function (id) { all[id] = 1; }); });
+      var visible = {}; groups.slice(0, st.step + 1).forEach(function (g) { g.forEach(function (id) { visible[id] = 1; }); });
+      var current = {}; (groups[st.step] || []).forEach(function (id) { current[id] = 1; });
+      Object.keys(all).forEach(function (id) {
+        var el = node.querySelector('svg [id="' + id.replace(/"/g, '') + '"]');
+        if (!el) return;
+        el.classList.add('ls-svg-el');
+        el.setAttribute('data-ls-hidden', visible[id] ? '0' : '1');
+        el.classList.toggle('is-current', !!current[id]);
+      });
+      var cap = $('.ls-caption', node);
+      if (cap) ALS.rich(cap, (s.captions || [])[st.step] || s.caption || '');
+    }
+    if (s.layout === 'code') {
+      var pre = $('.als-code', node);
+      var hl = (s.highlight || [])[st.step];
+      $$('.ln', pre).forEach(function (ln) { ln.classList.toggle('is-focus', !!hl && hl.indexOf(+ln.getAttribute('data-line')) > -1); });
+      pre.classList.toggle('has-focus', !!(hl && hl.length));
+      var ex = $('.ls-explain', node);
+      if (ex) ALS.rich(ex, (s.explain || [])[st.step] || '');
+    }
+    var total = slides.reduce(function (a, x) { return a + stepCount(x); }, 0);
+    var done = slides.slice(0, st.i).reduce(function (a, x) { return a + stepCount(x); }, 0) + st.step + 1;
+    var bar = $('.ls-progress span'); if (bar) bar.style.width = (done / total * 100) + '%';
+    var cnt = $('.ls-count'); if (cnt) cnt.textContent = String(st.i + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+    ALS.renderMath(node);
+  }
+
+  function go(i, step, dir) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    var changed = i !== st.i || !$('#ls-current');
+    st.i = i; st.step = step == null ? 0 : step; st.dir = dir || 1;
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) { /* file:// in some browsers */ }
+    if (changed || st.overview) { st.overview = false; renderStage(true); } else applySteps();
+    ALS.store.set('pos', i);
+  }
+  function next() {
+    var s = slides[st.i];
+    if (st.step < stepCount(s) - 1) { st.step++; applySteps(); }
+    else if (st.i < slides.length - 1) go(st.i + 1, 0, 1);
+    else stopPlay();
+  }
+  function prev() {
+    if (st.step > 0) { st.step--; applySteps(); }
+    else if (st.i > 0) go(st.i - 1, stepCount(slides[st.i - 1]) - 1, -1);
+  }
+  function stopPlay() { st.playing = false; clearInterval(st.timer); var b = $('#ls-play'); if (b) b.innerHTML = ALS.icon('play'); }
+  function togglePlay() {
+    if (st.playing) return stopPlay();
+    st.playing = true; $('#ls-play').innerHTML = ALS.icon('pause');
+    st.timer = setInterval(next, (lesson.autoplaySec || 4) * 1000);
+  }
+
+  /* ---------- rendering ---------- */
+  function renderStage(animate) {
+    var stage = $('#ls-stage');
+    stage.innerHTML = '';
+    if (st.overview) {
+      var grid = E('div', { class: 'ls-overview' });
+      slides.forEach(function (s, k) {
+        grid.appendChild(E('button', { type: 'button', class: 'als-card ls-thumb', 'aria-current': String(k === st.i), onclick: function () { st.overview = false; go(k, 0, 1); } }, [
+          E('span', { class: 'n', text: String(k + 1).padStart(2, '0') + ' · ' + s.layout }),
+          E('span', { class: 't', html: ALS.md(s.title || s.term || s.question || s.quote || lesson.title, { inline: true }) })
+        ]));
+      });
+      stage.appendChild(grid);
+      ALS.renderMath(grid);
+      return;
+    }
+    var node = slideNode(slides[st.i], st.i);
+    node.id = 'ls-current';
+    if (animate) node.classList.add(st.dir < 0 ? 'ls-anim-back' : 'ls-anim-in');
+    stage.appendChild(node);
+    var notes = $('#ls-notes');
+    if (notes) {
+      var n = slides[st.i].notes;
+      notes.hidden = !(st.notes && n);
+      if (n) ALS.rich(notes, '**Notes.** ' + n);
+    }
+    applySteps();
+  }
+
+  function render() {
+    app.innerHTML = '';
+    app.appendChild(E('div', { class: 'ls-progress als-noprint' }, [E('span')]));
+    app.appendChild(ALS.topbar([
+      ALS.iconBtn('print', 'Print or save as PDF (all steps revealed)', printAll, 'als-noprint')
+    ]));
+    var main = E('main', { class: 'als-shell' }, [E('div', { id: 'ls-stage', class: 'ls-stage' })]);
+    app.appendChild(main);
+    app.appendChild(E('div', { class: 'als-shell' }, [E('div', { id: 'ls-notes', class: 'ls-notes als-callout als-rich', hidden: true })]));
+    var bottom = E('nav', { class: 'ls-bottom als-noprint', 'aria-label': 'Lesson controls' }, [E('div', { class: 'als-shell' }, [
+      ALS.iconBtn('left', 'Previous (←)', prev),
+      ALS.iconBtn('right', 'Next (→ or Space)', next),
+      E('span', { class: 'ls-count' }),
+      E('div', { class: 'als-spacer' }),
+      (function () { var b = ALS.iconBtn('play', 'Autoplay (P)', togglePlay); b.id = 'ls-play'; return b; })(),
+      ALS.iconBtn('notes', 'Speaker notes (N)', toggleNotes),
+      ALS.iconBtn('grid', 'Overview (O)', toggleOverview),
+      ALS.iconBtn('expand', 'Full screen (F)', fullscreen)
+    ])]);
+    app.appendChild(bottom);
+    renderStage(false);
+  }
+
+  function toggleNotes() { st.notes = !st.notes; ALS.store.set('notes', st.notes); renderStage(false); if (st.notes && !slides[st.i].notes) ALS.toast('No notes on this slide'); }
+  function toggleOverview() { st.overview = !st.overview; renderStage(true); }
+  function fullscreen() {
+    try { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+    catch (e) { ALS.toast('Full screen is not available here'); }
+  }
+  function printAll() {
+    var stage = $('#ls-stage');
+    stage.innerHTML = '';
+    slides.forEach(function (s, k) {
+      var n = slideNode(s, k, true);
+      stage.appendChild(n);
+      if (s.layout === 'diagram' && s.captions) { var cap = $('.ls-caption', n); if (cap) ALS.rich(cap, s.captions.join(' ')); }
+      if (s.layout === 'code' && s.explain) { var ex = $('.ls-explain', n); if (ex) ALS.rich(ex, s.explain.join('\n\n')); }
+    });
+    ALS.renderMath(stage);
+    if (new URLSearchParams(location.search).get('print') === '1') return; // headless PDF: leave everything revealed
+    setTimeout(function () { window.print(); renderStage(false); }, 250);
+  }
+
+  ALS.onKey({
+    'ArrowRight': next, ' ': next, 'PageDown': next, 'Enter': next,
+    'ArrowLeft': prev, 'PageUp': prev, 'Backspace': prev,
+    'Home': function () { go(0, 0, -1); }, 'End': function () { go(slides.length - 1, 0, 1); },
+    'n': toggleNotes, 'N': toggleNotes, 'o': toggleOverview, 'O': toggleOverview,
+    'f': fullscreen, 'F': fullscreen, 'p': togglePlay, 'P': togglePlay,
+    'Escape': function () { if (st.overview) toggleOverview(); }
+  });
+
+  // touch swipe
+  var tx = null;
+  document.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (tx == null) return;
+    var dx = e.changedTouches[0].clientX - tx; tx = null;
+    if (Math.abs(dx) > 50) { if (dx < 0) next(); else prev(); }
+  });
+
+  window.addEventListener('hashchange', function () {
+    var h = parseInt((location.hash || '').slice(1), 10);
+    if (!isNaN(h) && h - 1 !== st.i) go(h - 1, 0, h - 1 > st.i ? 1 : -1);
+  });
+
+  var params = new URLSearchParams(location.search);
+  var start = parseInt((location.hash || '').slice(1), 10);
+  st.i = isNaN(start) ? 0 : Math.max(0, Math.min(slides.length - 1, start - 1));
+  render();
+  if (params.get('print') === '1') printAll();
+});
+</script>
+</body>
+</html>

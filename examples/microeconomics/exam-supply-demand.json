@@ -1,0 +1,53 @@
+{
+  "als": "1",
+  "kind": "exam",
+  "title": "Mock exam: markets and intervention",
+  "subtitle": "Microeconomics I · practice paper",
+  "module": "microeconomics",
+  "subject": "Microeconomics",
+  "meta": {
+    "course": "Microeconomics I (ECON 101)",
+    "duration": "60 minutes",
+    "allowed": "Non-programmable calculator",
+    "instructions": ["Answer all questions.", "Show your working: method marks are awarded.", "Draw diagrams where they help; label axes and curves."]
+  },
+  "sections": [
+    {
+      "title": "Part A: Equilibrium",
+      "intro": "Demand is $Q_d = 100 - 2P$ and supply is $Q_s = 20 + 2P$.",
+      "questions": [
+        {
+          "id": "a1", "topic": "equilibrium",
+          "prompt": "Competitive equilibrium.",
+          "parts": [
+            { "label": "a", "prompt": "Find the equilibrium price and quantity.", "points": 4, "space": "small", "solution": "$100 - 2P = 20 + 2P \\Rightarrow 4P = 80 \\Rightarrow P^* = 20$, $Q^* = 60$." },
+            { "label": "b", "prompt": "Compute the price elasticity of demand at the equilibrium and say whether demand is elastic there.", "points": 4, "space": "small", "solution": "$\\varepsilon = \\frac{dQ}{dP}\\cdot\\frac{P}{Q} = -2 \\cdot \\frac{20}{60} = -\\tfrac{2}{3}$. Since $|\\varepsilon| < 1$, demand is **inelastic** at the equilibrium." },
+            { "label": "c", "prompt": "The government sets a binding price ceiling of $P = 15$. Find the shortage.", "points": 4, "space": "small", "solution": "$Q_d = 100 - 30 = 70$, $Q_s = 20 + 30 = 50$, shortage $= 20$ units." }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Part B: A per-unit tax",
+      "questions": [
+        {
+          "id": "b1", "topic": "taxation", "points": 12, "space": "large",
+          "prompt": "A tax of 4 per unit is levied on sellers. Find (i) the price consumers pay, (ii) the price producers receive, (iii) the quantity traded, (iv) tax revenue, and (v) the deadweight loss. Who bears the tax, and why?",
+          "solution": "New supply: $Q_s = 20 + 2(P - 4) = 12 + 2P$. Then $100 - 2P = 12 + 2P \\Rightarrow P_c = 22$, $P_p = 18$, $Q = 56$. Revenue $= 4 \\cdot 56 = 224$. DWL $= \\tfrac12 \\cdot 4 \\cdot (60 - 56) = 8$. Consumers pay 2 of the 4 and producers 2: demand and supply have equal (absolute) slopes, so the burden is shared equally. The more inelastic side bears more in general.",
+          "marking": ["3: new supply curve or wedge set up correctly", "3: $P_c$, $P_p$ and $Q$", "2: revenue", "2: deadweight loss", "2: incidence with the elasticity argument"]
+        }
+      ]
+    },
+    {
+      "title": "Part C: Short essay",
+      "questions": [
+        {
+          "id": "c1", "topic": "labour-markets", "points": 10, "space": "large",
+          "prompt": "\"A minimum wage always reduces employment.\" Assess this claim using the competitive model and the monopsony model.",
+          "solution": "Competitive labour market: a binding minimum wage above equilibrium raises the wage, lowers quantity demanded, creates unemployment (excess supply). Monopsony: the employer sets employment where MRP = marginal cost of labour, paying a wage below MRP; a minimum wage between the monopsony wage and the competitive wage makes the marginal cost of labour flat at the minimum wage and can **raise** employment. Conclusion: the claim holds in the competitive model but not in general; the empirical answer depends on market power and the level of the minimum wage.",
+          "marking": ["3: competitive model correctly analysed (diagram or words)", "4: monopsony model, including why employment can rise", "3: evaluation and justified conclusion"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="{{lang}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="generator" content="academic-learning-skills {{version}} · lesson">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script>/*ALS:EARLY*/</script>
+<style>/*ALS:CSS*/</style>
+<style>
+  html, body { overflow-x: clip; } /* slide-in animation must never cause a horizontal scrollbar */
+  .ls-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 40; background: transparent; }
+  .ls-progress span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .4s ease; }
+  .ls-stage { min-height: calc(100vh - 3.5rem - 4rem); display: flex; align-items: center; justify-content: center; padding: 2rem 0 1rem; }
+  .ls-slide { width: 100%; }
+  .ls-inner { width: 100%; max-width: 60rem; margin: 0 auto; }
+  .ls-slide .als-h2 { font-size: clamp(1.6rem, 4vw, 2.6rem); margin-bottom: 1.25rem; }
+  .ls-big { font-size: clamp(1.1rem, 2.2vw, 1.45rem); line-height: 1.55; }
+
+  /* step reveal */
+  .ls-step { transition: opacity .5s ease, transform .5s cubic-bezier(.2,.7,.2,1), filter .5s ease; }
+  .ls-step.is-hidden { opacity: 0; transform: translateY(14px); pointer-events: none; }
+  .ls-step.is-past { opacity: .55; }
+  .ls-step.is-current { opacity: 1; }
+
+  /* title */
+  .ls-title { text-align: left; }
+  .ls-title .als-h1 { font-size: clamp(2.3rem, 7vw, 4.75rem); max-width: 18ch; }
+  .ls-title .als-sub { font-size: clamp(1.05rem, 2.2vw, 1.35rem); margin-top: 1rem; }
+  .ls-title-meta { margin-top: 2.5rem; display: flex; gap: .5rem; flex-wrap: wrap; }
+
+  /* points / summary */
+  .ls-points { list-style: none; padding: 0; margin: 0; display: grid; gap: .9rem; }
+  .ls-points li { display: grid; grid-template-columns: 2rem 1fr; gap: .75rem; align-items: start; }
+  .ls-points .n { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); padding-top: .35rem; }
+  .ls-summary li .n { color: var(--good); }
+
+  /* derivation steps */
+  .ls-deriv { display: grid; gap: .5rem; }
+  .ls-deriv-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: .25rem; padding: .7rem 1rem; border-radius: var(--radius-sm); border: 1px solid transparent; }
+  .ls-deriv-row.is-current { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+  .ls-deriv-row .t { color: var(--text-muted); font-size: .98rem; }
+  .ls-deriv-row .m { font-size: 1.2rem; overflow-x: auto; }
+
+  /* diagram */
+  .ls-diagram { display: grid; gap: 1rem; }
+  .ls-svg { background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; display: flex; justify-content: center; }
+  .ls-svg svg { width: 100%; height: auto; max-height: 58vh; color: var(--text); font-family: var(--font-body); }
+  .ls-svg [data-ls-hidden="1"] { opacity: 0; }
+  .ls-svg .ls-svg-el { transition: opacity .55s ease; }
+  .ls-svg .ls-svg-el.is-current { animation: ls-pulse 1.2s ease 1; }
+  @keyframes ls-pulse { 0% { opacity: .2; } 100% { opacity: 1; } }
+  .ls-caption { min-height: 3.2rem; font-size: 1.05rem; }
+  /* diagram colour classes that follow the theme */
+  .ls-svg .d-line { stroke: var(--text); fill: none; }
+  .ls-svg .d-muted { stroke: var(--text-faint); fill: none; }
+  .ls-svg .d-accent { stroke: var(--accent); fill: none; }
+  .ls-svg .d-accent2 { stroke: var(--accent-2); fill: none; }
+  .ls-svg .d-good { stroke: var(--good); fill: none; }
+  .ls-svg .d-bad { stroke: var(--bad); fill: none; }
+  .ls-svg .d-fill { fill: var(--bg-sunken); stroke: var(--border-strong); }
+  .ls-svg .d-fill-accent { fill: var(--accent-soft); stroke: var(--accent); }
+  .ls-svg .d-solid-accent { fill: var(--accent); stroke: none; }
+  .ls-svg .d-solid-accent2 { fill: var(--accent-2); stroke: none; }
+  .ls-svg .d-solid-muted { fill: var(--text-faint); stroke: none; }
+  .ls-svg .d-solid-line { fill: var(--text); stroke: none; }
+  .ls-svg .d-solid-good { fill: var(--good); stroke: none; }
+  .ls-svg .d-solid-bad { fill: var(--bad); stroke: none; }
+  .ls-svg .d-text { fill: var(--text); stroke: none; font-size: 14px; }
+  .ls-svg .d-text-muted { fill: var(--text-muted); stroke: none; font-size: 12px; }
+  .ls-svg .d-text-accent { fill: var(--accent); stroke: none; font-size: 14px; font-weight: 600; }
+
+  /* code */
+  .ls-code { display: grid; gap: 1rem; }
+  @media (min-width: 900px) { .ls-code.has-explain { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: start; } }
+  .ls-explain { font-size: 1.05rem; }
+
+  /* compare */
+  .ls-compare { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+  .ls-compare .als-card ul { margin: 0; padding-left: 1.1rem; }
+  .ls-compare .als-card li + li { margin-top: .4rem; }
+
+  /* quote */
+  .ls-quote { font-family: var(--font-display); font-size: clamp(1.5rem, 4vw, 2.6rem); line-height: 1.3; margin: 0; max-width: 32ch; text-wrap: balance; }
+  .ls-quote::before { content: "\201C"; display: block; font-size: 4rem; line-height: .6; color: var(--accent); margin-bottom: .5rem; }
+  .ls-quote-by { margin-top: 1.25rem; color: var(--text-muted); font-size: 1.05rem; }
+
+  /* check */
+  .ls-options { display: grid; gap: .6rem; margin-top: 1rem; }
+  .ls-option { text-align: left; justify-content: flex-start; min-height: 3rem; font-size: 1.02rem; padding: .6rem 1rem; }
+  .ls-option.is-right { background: var(--good-soft); border-color: var(--good); }
+  .ls-option.is-wrong { background: var(--bad-soft); border-color: var(--bad); }
+
+  /* timeline */
+  .ls-timeline { position: relative; display: grid; gap: 1rem; padding-left: 1.75rem; }
+  .ls-timeline::before { content: ""; position: absolute; left: .45rem; top: .4rem; bottom: .4rem; width: 2px; background: var(--border-strong); }
+  .ls-event { position: relative; }
+  .ls-event::before { content: ""; position: absolute; left: -1.62rem; top: .45rem; width: .8rem; height: .8rem; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+  .ls-event.is-current::before { background: var(--accent); }
+  .ls-event .when { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); }
+
+  /* definition */
+  .ls-term { font-family: var(--font-display); font-size: clamp(2rem, 6vw, 3.5rem); font-weight: var(--display-weight); letter-spacing: var(--display-tracking); line-height: 1.05; margin: .25rem 0 1rem; }
+  .ls-def { font-size: clamp(1.1rem, 2.4vw, 1.5rem); max-width: 42rem; }
+  .ls-example { margin-top: 1.5rem; }
+
+  /* chrome */
+  .ls-bottom { position: sticky; bottom: 0; z-index: 15; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid var(--border); }
+  .ls-bottom .als-shell { display: flex; align-items: center; gap: .5rem; min-height: 3.5rem; }
+  .ls-count { font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .ls-notes { max-width: 60rem; margin: 0 auto 1rem; }
+  .ls-overview { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); padding: 2rem 0 4rem; }
+  .ls-thumb { text-align: left; cursor: pointer; min-height: 7rem; display: flex; flex-direction: column; gap: .35rem; }
+  .ls-thumb[aria-current="true"] { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .ls-thumb .n { font-family: var(--font-mono); font-size: .7rem; color: var(--text-faint); }
+  .ls-thumb .t { font-weight: 600; font-family: var(--font-display); }
+  .ls-anim-in { animation: ls-in .5s cubic-bezier(.2,.7,.2,1) both; }
+  .ls-anim-back { animation: ls-back .5s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes ls-in { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+  @keyframes ls-back { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+
+  @media print {
+    .ls-progress, .ls-bottom, .ls-overview { display: none !important; }
+    .ls-stage { min-height: 0; display: block; padding: 0; }
+    .ls-print-slide { break-after: page; padding: 8mm 0; }
+    .ls-step.is-hidden, .ls-step.is-past { opacity: 1 !important; transform: none !important; }
+    .ls-svg [data-ls-hidden="1"] { opacity: 1 !important; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<!--ALS:DATA-->
+<script>/*ALS:CORE*/</script>
+<script>
+ALS.boot(function (lesson) {
+  var E = ALS.el, $ = ALS.$, $$ = ALS.$$;
+  var app = $('#app');
+  var slides = lesson.slides;
+  var st = { i: 0, step: 0, notes: ALS.store.get('notes', false), overview: false, playing: false, timer: null, dir: 1 };
+
+  function rich(tag, text, cls) { var n = E(tag, { class: cls || '' }); ALS.rich(n, text); return n; }
+  function inlineRich(tag, text, cls) { var n = E(tag, { class: cls || '' }); ALS.rich(n, text, { inline: true }); return n; }
+  function stepEl(node) { node.classList.add('ls-step'); return node; }
+
+  function stepCount(s) {
+    switch (s.layout) {
+      case 'points': case 'summary': return s.points.length;
+      case 'steps': return s.steps.length;
+      case 'diagram': return Math.max(1, (s.steps || []).length);
+      case 'code': return Math.max(1, (s.highlight || []).length, (s.explain || []).length);
+      case 'compare': return s.columns.length;
+      case 'check': return 2;
+      case 'timeline': return s.events.length;
+      case 'definition': return s.example ? 2 : 1;
+      default: return 1;
+    }
+  }
+
+  /* ---------- builders: each returns a node; steps are .ls-step elements in order ---------- */
+  var build = {
+    title: function (s) {
+      return E('div', { class: 'ls-title' }, [
+        s.kicker || lesson.module ? E('div', { class: 'als-kicker', text: s.kicker || lesson.module }) : null,
+        E('h1', { class: 'als-h1', html: ALS.md(s.title || lesson.title, { inline: true }) }),
+        s.subtitle || lesson.subtitle ? E('p', { class: 'als-sub', text: s.subtitle || lesson.subtitle }) : null,
+        E('div', { class: 'ls-title-meta' }, [
+          E('span', { class: 'als-chip', text: slides.length + ' slides' }),
+          lesson.subject ? E('span', { class: 'als-chip als-chip--accent', text: lesson.subject }) : null,
+          E('span', { class: 'als-chip', html: 'Press <span class="als-kbd">→</span> to begin' })
+        ])
+      ]);
+    },
+    points: function (s, summary) {
+      var ul = E('ul', { class: 'ls-points ls-big' + (summary ? ' ls-summary' : '') });
+      s.points.forEach(function (p, k) {
+        var li = E('li', {}, [E('span', { class: 'n', text: summary ? '✓' : String(k + 1).padStart(2, '0') }), inlineRich('div', p)]);
+        ul.appendChild(stepEl(li));
+      });
+      return ul;
+    },
+    summary: function (s) { return build.points(s, true); },
+    steps: function (s) {
+      var wrap = E('div', { class: 'ls-deriv' });
+      s.steps.forEach(function (row) {
+        var r = E('div', { class: 'ls-deriv-row' });
+        if (row.text) r.appendChild(inlineRich('div', row.text, 't'));
+        if (row.math) { var m = E('div', { class: 'm' }); ALS.rich(m, '$$' + row.math + '$$'); r.appendChild(m); }
+        wrap.appendChild(stepEl(r));
+      });
+      return wrap;
+    },
+    diagram: function (s) {
+      var box = E('div', { class: 'ls-svg' });
+      var svg = ALS.safeSvg(s.svg);
+      if (svg) box.appendChild(svg); else box.appendChild(E('p', { class: 'als-muted', text: 'Diagram could not be displayed (invalid SVG).' }));
+      var cap = E('div', { class: 'ls-caption als-rich' });
+      return E('div', { class: 'ls-diagram' }, [box, cap]);
+    },
+    code: function (s) {
+      var lines = ALS.highlight(s.code, s.lang);
+      var pre = E('pre', { class: 'als-code' });
+      lines.forEach(function (l, k) { pre.appendChild(E('span', { class: 'ln', 'data-line': String(k + 1), html: l })); });
+      var kids = [E('div', {}, [s.lang ? E('div', { class: 'als-kicker', style: 'margin-bottom:.5rem', text: s.lang }) : null, pre])];
+      var hasExplain = s.explain && s.explain.length;
+      if (hasExplain) kids.push(E('div', { class: 'ls-explain als-rich' }));
+      return E('div', { class: 'ls-code' + (hasExplain ? ' has-explain' : '') }, kids);
+    },
+    compare: function (s) {
+      var g = E('div', { class: 'ls-compare' });
+      s.columns.forEach(function (c) {
+        var ul = E('ul'); c.points.forEach(function (p) { ul.appendChild(inlineRich('li', p)); });
+        g.appendChild(stepEl(E('div', { class: 'als-card' }, [E('h3', { class: 'als-h3', html: ALS.md(c.heading, { inline: true }) }), ul])));
+      });
+      return g;
+    },
+    quote: function (s) {
+      return E('figure', { style: 'margin:0' }, [
+        E('blockquote', { class: 'ls-quote', html: ALS.md(s.quote, { inline: true }) }),
+        s.by ? E('figcaption', { class: 'ls-quote-by', html: '— ' + ALS.md(s.by, { inline: true }) }) : null,
+        s.comment ? rich('div', s.comment, 'ls-big als-muted') : null
+      ]);
+    },
+    check: function (s) {
+      var opts = E('div', { class: 'ls-options' });
+      var fb = stepEl(E('div', { class: 'als-callout als-callout--info', style: 'margin-top:1rem' }));
+      s.options.forEach(function (o, k) {
+        opts.appendChild(E('button', {
+          type: 'button', class: 'als-btn ls-option', 'data-k': String(k),
+          html: '<span class="als-mono als-faint">' + String.fromCharCode(65 + k) + '</span>&nbsp;&nbsp;' + ALS.md(o, { inline: true }),
+          onclick: function (e) { e.stopPropagation(); answerCheck(s, k); }
+        }));
+      });
+      ALS.rich(fb, '**Answer: ' + String.fromCharCode(65 + s.answer) + '.** ' + (s.explain || ''));
+      return E('div', {}, [E('div', { class: 'als-kicker', text: 'Quick check' }), inlineRich('div', s.question, 'ls-big'), opts, fb]);
+    },
+    timeline: function (s) {
+      var t = E('div', { class: 'ls-timeline' });
+      s.events.forEach(function (ev) {
+        t.appendChild(stepEl(E('div', { class: 'ls-event' }, [E('div', { class: 'when', text: ev.when }), inlineRich('div', ev.what, 'ls-big')])));
+      });
+      return t;
+    },
+    definition: function (s) {
+      var kids = [E('div', { class: 'als-kicker', text: s.kind || 'Definition' }), E('div', { class: 'ls-term', html: ALS.md(s.term, { inline: true }) }), rich('div', s.definition, 'ls-def')];
+      if (s.example) kids.push(stepEl(rich('div', '**Example.** ' + s.example, 'als-callout ls-example')));
+      return E('div', {}, kids);
+    }
+  };
+
+  function answerCheck(s, k) {
+    var node = $('#ls-current');
+    $$('.ls-option', node).forEach(function (b) {
+      var bk = +b.getAttribute('data-k');
+      b.classList.toggle('is-right', bk === s.answer);
+      b.classList.toggle('is-wrong', bk === k && k !== s.answer);
+      b.disabled = true;
+    });
+    st.step = 1; applySteps();
+  }
+
+  function slideNode(s, idx, forPrint) {
+    var inner = E('div', { class: 'ls-inner' });
+    if (s.layout !== 'title' && s.layout !== 'quote' && s.layout !== 'definition' && s.layout !== 'check') {
+      inner.appendChild(E('div', { class: 'als-kicker', style: 'margin-bottom:.5rem', text: (lesson.module ? lesson.module + ' · ' : '') + String(idx + 1).padStart(2, '0') }));
+      if (s.title) inner.appendChild(E('h2', { class: 'als-h2', html: ALS.md(s.title, { inline: true }) }));
+    }
+    var b = build[s.layout] || build.points;
+    inner.appendChild(b(s));
+    var prov = ALS.provenance(s);
+    if (prov) { prov.style.marginTop = '1.5rem'; inner.appendChild(prov); }
+    return E('section', { class: 'ls-slide' + (forPrint ? ' ls-print-slide' : ''), 'aria-roledescription': 'slide', 'aria-label': 'Slide ' + (idx + 1) + ' of ' + slides.length }, [inner]);
+  }
+
+  /* ---------- step application ---------- */
+  function applySteps() {
+    var node = $('#ls-current'); if (!node) return;
+    var s = slides[st.i];
+    var steps = $$('.ls-step', node);
+    var showUpTo = s.layout === 'check' ? (st.step >= 1 ? steps.length : 0) : (s.layout === 'definition' ? st.step : st.step + 1);
+    steps.forEach(function (el, k) {
+      el.classList.toggle('is-hidden', k >= showUpTo);
+      el.classList.toggle('is-current', k === showUpTo - 1);
+      el.classList.toggle('is-past', s.layout === 'steps' && k < showUpTo - 1);
+    });
+    if (s.layout === 'check' && st.step >= 1) {
+      $$('.ls-option', node).forEach(function (b) { b.disabled = true; if (+b.getAttribute('data-k') === s.answer) b.classList.add('is-right'); });
+    }
+    if (s.layout === 'diagram') {
+      var groups = s.steps || [];
+      var all = {}; groups.forEach(function (g) { g.forEach(function (id) { all[id] = 1; }); });
+      var visible = {}; groups.slice(0, st.step + 1).forEach(function (g) { g.forEach(function (id) { visible[id] = 1; }); });
+      var current = {}; (groups[st.step] || []).forEach(function (id) { current[id] = 1; });
+      Object.keys(all).forEach(function (id) {
+        var el = node.querySelector('svg [id="' + id.replace(/"/g, '') + '"]');
+        if (!el) return;
+        el.classList.add('ls-svg-el');
+        el.setAttribute('data-ls-hidden', visible[id] ? '0' : '1');
+        el.classList.toggle('is-current', !!current[id]);
+      });
+      var cap = $('.ls-caption', node);
+      if (cap) ALS.rich(cap, (s.captions || [])[st.step] || s.caption || '');
+    }
+    if (s.layout === 'code') {
+      var pre = $('.als-code', node);
+      var hl = (s.highlight || [])[st.step];
+      $$('.ln', pre).forEach(function (ln) { ln.classList.toggle('is-focus', !!hl && hl.indexOf(+ln.getAttribute('data-line')) > -1); });
+      pre.classList.toggle('has-focus', !!(hl && hl.length));
+      var ex = $('.ls-explain', node);
+      if (ex) ALS.rich(ex, (s.explain || [])[st.step] || '');
+    }
+    var total = slides.reduce(function (a, x) { return a + stepCount(x); }, 0);
+    var done = slides.slice(0, st.i).reduce(function (a, x) { return a + stepCount(x); }, 0) + st.step + 1;
+    var bar = $('.ls-progress span'); if (bar) bar.style.width = (done / total * 100) + '%';
+    var cnt = $('.ls-count'); if (cnt) cnt.textContent = String(st.i + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+    ALS.renderMath(node);
+  }
+
+  function go(i, step, dir) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    var changed = i !== st.i || !$('#ls-current');
+    st.i = i; st.step = step == null ? 0 : step; st.dir = dir || 1;
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) { /* file:// in some browsers */ }
+    if (changed || st.overview) { st.overview = false; renderStage(true); } else applySteps();
+    ALS.store.set('pos', i);
+  }
+  function next() {
+    var s = slides[st.i];
+    if (st.step < stepCount(s) - 1) { st.step++; applySteps(); }
+    else if (st.i < slides.length - 1) go(st.i + 1, 0, 1);
+    else stopPlay();
+  }
+  function prev() {
+    if (st.step > 0) { st.step--; applySteps(); }
+    else if (st.i > 0) go(st.i - 1, stepCount(slides[st.i - 1]) - 1, -1);
+  }
+  function stopPlay() { st.playing = false; clearInterval(st.timer); var b = $('#ls-play'); if (b) b.innerHTML = ALS.icon('play'); }
+  function togglePlay() {
+    if (st.playing) return stopPlay();
+    st.playing = true; $('#ls-play').innerHTML = ALS.icon('pause');
+    st.timer = setInterval(next, (lesson.autoplaySec || 4) * 1000);
+  }
+
+  /* ---------- rendering ---------- */
+  function renderStage(animate) {
+    var stage = $('#ls-stage');
+    stage.innerHTML = '';
+    if (st.overview) {
+      var grid = E('div', { class: 'ls-overview' });
+      slides.forEach(function (s, k) {
+        grid.appendChild(E('button', { type: 'button', class: 'als-card ls-thumb', 'aria-current': String(k === st.i), onclick: function () { st.overview = false; go(k, 0, 1); } }, [
+          E('span', { class: 'n', text: String(k + 1).padStart(2, '0') + ' · ' + s.layout }),
+          E('span', { class: 't', html: ALS.md(s.title || s.term || s.question || s.quote || lesson.title, { inline: true }) })
+        ]));
+      });
+      stage.appendChild(grid);
+      ALS.renderMath(grid);
+      return;
+    }
+    var node = slideNode(slides[st.i], st.i);
+    node.id = 'ls-current';
+    if (animate) node.classList.add(st.dir < 0 ? 'ls-anim-back' : 'ls-anim-in');
+    stage.appendChild(node);
+    var notes = $('#ls-notes');
+    if (notes) {
+      var n = slides[st.i].notes;
+      notes.hidden = !(st.notes && n);
+      if (n) ALS.rich(notes, '**Notes.** ' + n);
+    }
+    applySteps();
+  }
+
+  function render() {
+    app.innerHTML = '';
+    app.appendChild(E('div', { class: 'ls-progress als-noprint' }, [E('span')]));
+    app.appendChild(ALS.topbar([
+      ALS.iconBtn('print', 'Print or save as PDF (all steps revealed)', printAll, 'als-noprint')
+    ]));
+    var main = E('main', { class: 'als-shell' }, [E('div', { id: 'ls-stage', class: 'ls-stage' })]);
+    app.appendChild(main);
+    app.appendChild(E('div', { class: 'als-shell' }, [E('div', { id: 'ls-notes', class: 'ls-notes als-callout als-rich', hidden: true })]));
+    var bottom = E('nav', { class: 'ls-bottom als-noprint', 'aria-label': 'Lesson controls' }, [E('div', { class: 'als-shell' }, [
+      ALS.iconBtn('left', 'Previous (←)', prev),
+      ALS.iconBtn('right', 'Next (→ or Space)', next),
+      E('span', { class: 'ls-count' }),
+      E('div', { class: 'als-spacer' }),
+      (function () { var b = ALS.iconBtn('play', 'Autoplay (P)', togglePlay); b.id = 'ls-play'; return b; })(),
+      ALS.iconBtn('notes', 'Speaker notes (N)', toggleNotes),
+      ALS.iconBtn('grid', 'Overview (O)', toggleOverview),
+      ALS.iconBtn('expand', 'Full screen (F)', fullscreen)
+    ])]);
+    app.appendChild(bottom);
+    renderStage(false);
+  }
+
+  function toggleNotes() { st.notes = !st.notes; ALS.store.set('notes', st.notes); renderStage(false); if (st.notes && !slides[st.i].notes) ALS.toast('No notes on this slide'); }
+  function toggleOverview() { st.overview = !st.overview; renderStage(true); }
+  function fullscreen() {
+    try { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+    catch (e) { ALS.toast('Full screen is not available here'); }
+  }
+  function printAll() {
+    var stage = $('#ls-stage');
+    stage.innerHTML = '';
+    slides.forEach(function (s, k) {
+      var n = slideNode(s, k, true);
+      stage.appendChild(n);
+      if (s.layout === 'diagram' && s.captions) { var cap = $('.ls-caption', n); if (cap) ALS.rich(cap, s.captions.join(' ')); }
+      if (s.layout === 'code' && s.explain) { var ex = $('.ls-explain', n); if (ex) ALS.rich(ex, s.explain.join('\n\n')); }
+    });
+    ALS.renderMath(stage);
+    if (new URLSearchParams(location.search).get('print') === '1') return; // headless PDF: leave everything revealed
+    setTimeout(function () { window.print(); renderStage(false); }, 250);
+  }
+
+  ALS.onKey({
+    'ArrowRight': next, ' ': next, 'PageDown': next, 'Enter': next,
+    'ArrowLeft': prev, 'PageUp': prev, 'Backspace': prev,
+    'Home': function () { go(0, 0, -1); }, 'End': function () { go(slides.length - 1, 0, 1); },
+    'n': toggleNotes, 'N': toggleNotes, 'o': toggleOverview, 'O': toggleOverview,
+    'f': fullscreen, 'F': fullscreen, 'p': togglePlay, 'P': togglePlay,
+    'Escape': function () { if (st.overview) toggleOverview(); }
+  });
+
+  // touch swipe
+  var tx = null;
+  document.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (tx == null) return;
+    var dx = e.changedTouches[0].clientX - tx; tx = null;
+    if (Math.abs(dx) > 50) { if (dx < 0) next(); else prev(); }
+  });
+
+  window.addEventListener('hashchange', function () {
+    var h = parseInt((location.hash || '').slice(1), 10);
+    if (!isNaN(h) && h - 1 !== st.i) go(h - 1, 0, h - 1 > st.i ? 1 : -1);
+  });
+
+  var params = new URLSearchParams(location.search);
+  var start = parseInt((location.hash || '').slice(1), 10);
+  st.i = isNaN(start) ? 0 : Math.max(0, Math.min(slides.length - 1, start - 1));
+  render();
+  if (params.get('print') === '1') printAll();
+});
+</script>
+</body>
+</html>

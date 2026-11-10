@@ -1,0 +1,16 @@
+{
+  "description": "Academic Learning Skills: put a short study status (due reviews, deadlines, remembered preferences) into context when a session starts in a folder with a study workspace.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"${CLAUDE_PLUGIN_ROOT}/hooks/session_start.py\" 2>/dev/null || python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/session_start.py\" 2>/dev/null || true",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

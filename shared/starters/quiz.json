@@ -1,0 +1,52 @@
+{
+  "als": "1",
+  "kind": "quiz",
+  "title": "Practice set title",
+  "subtitle": "What it trains",
+  "module": "module-id",
+  "subject": "Subject name",
+  "settings": { "mode": "practice", "shuffle": true, "passMark": 0.7, "timeLimitMin": 20 },
+  "questions": [
+    {
+      "id": "q1", "type": "mcq", "topic": "topic-id", "difficulty": 1, "src": "L2 s.5",
+      "prompt": "Which option is correct?",
+      "options": ["Distractor based on a common mistake", "Correct answer", "Another distractor"],
+      "answer": 1,
+      "hints": ["A nudge that does not give the answer away"],
+      "explain": "Why the answer is correct and why the distractors are tempting."
+    },
+    {
+      "id": "q2", "type": "multi", "topic": "topic-id", "difficulty": 2,
+      "prompt": "Select **all** that apply.",
+      "options": ["Yes", "No", "Yes"],
+      "answer": [0, 2],
+      "explain": "Explanation."
+    },
+    {
+      "id": "q3", "type": "numeric", "topic": "topic-id", "difficulty": 2,
+      "prompt": "Compute $\\int_0^1 2x\\,dx$.",
+      "answer": 1, "tolerance": 0.01,
+      "hints": ["Find an antiderivative first."],
+      "solution": ["An antiderivative of $2x$ is $x^2$.", "Evaluate: $1^2 - 0^2 = 1$."]
+    },
+    {
+      "id": "q4", "type": "text", "topic": "topic-id", "difficulty": 3,
+      "prompt": "Explain in two or three sentences why ...",
+      "answer": "A model answer the learner compares against.",
+      "keywords": ["key idea one", "key idea two"]
+    },
+    {
+      "id": "q5", "type": "cloze", "topic": "topic-id", "difficulty": 1,
+      "prompt": "Fill the gaps.",
+      "text": "Water boils at {{1}} °C at {{2}} pressure.",
+      "blanks": [["100"], ["standard", "atmospheric", "sea-level"]],
+      "explain": "Explanation."
+    },
+    {
+      "id": "q6", "type": "order", "topic": "topic-id", "difficulty": 2,
+      "prompt": "Put the steps in order.",
+      "items": ["First", "Second", "Third", "Fourth"],
+      "explain": "Explanation."
+    }
+  ]
+}

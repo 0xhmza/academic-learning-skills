@@ -1,0 +1,12 @@
+{
+  "als": "1",
+  "kind": "events",
+  "calendar": "Study plan",
+  "timezone": "Europe/Berlin",
+  "events": [
+    { "title": "Problem sheet 4 due", "start": "2026-11-20", "allDay": true, "category": "deadline", "module": "module-id", "alarmsMin": [1440] },
+    { "title": "Study: eigenvalues (worked examples)", "start": "2026-11-16T18:00", "durationMin": 50, "category": "study", "module": "module-id", "description": "Goal: 6 problems from sheet 3.", "alarmsMin": [10] },
+    { "title": "Review flashcards", "start": "2026-11-17T08:15", "durationMin": 15, "category": "review", "module": "module-id" },
+    { "title": "Exam: Linear Algebra II", "start": "2027-02-14T09:00", "end": "2027-02-14T11:00", "category": "exam", "location": "Hall A", "alarmsMin": [10080, 1440] }
+  ]
+}

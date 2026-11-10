@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+build/
+dist/
+*.apkg
+!examples/showcase/*.apkg
+
+# A learner workspace created while trying the toolkit inside this repo
+/study/
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

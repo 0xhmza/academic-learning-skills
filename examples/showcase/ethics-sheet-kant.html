@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="en" data-als-theme="folio" data-als-default="folio" data-als-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kantian ethics</title>
+<meta name="generator" content="academic-learning-skills 0.1.0 · sheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script>(function(){try{var m=localStorage.getItem('als:mode')||'auto';var d=m==='dark'||(m==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-als-mode',d?'dark':'light');}catch(e){}})();</script>
+<style>/* ALS component contract.
+   Every template uses only these classes plus template-specific classes built on the same tokens.
+   A theme file defines the tokens (and optional motif overrides) under [data-als-theme="<name>"]. */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html, body { margin: 0; padding: 0; }
+body {
+  background-color: var(--bg);
+  background-image: var(--pattern, none);
+  background-size: var(--pattern-size, auto);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--font-size, 16px);
+  line-height: 1.6;
+  font-feature-settings: var(--font-features, normal);
+  min-height: 100vh;
+  transition: background-color .25s ease, color .25s ease;
+}
+img, svg { max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--accent); text-underline-offset: 3px; }
+::selection { background: var(--accent-soft); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius-sm); }
+
+/* ---------- layout ---------- */
+.als-shell { width: 100%; max-width: var(--shell-max, 72rem); margin: 0 auto; padding: 0 16px; }
+@media (min-width: 720px) { .als-shell { padding: 0 32px; } }
+.als-stack > * + * { margin-top: var(--stack-gap, 1rem); }
+.als-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.als-spacer { flex: 1 1 auto; }
+.als-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); }
+.als-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* ---------- top bar ---------- */
+.als-topbar {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.als-topbar .als-shell { display: flex; align-items: center; gap: .75rem; min-height: 3.5rem; }
+.als-brand { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.als-brand-title { font-family: var(--font-display); font-weight: var(--display-weight, 600); font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: var(--display-tracking, normal); }
+.als-brand-sub { color: var(--text-muted); font-size: .75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- type ---------- */
+.als-kicker {
+  font-family: var(--kicker-font, var(--font-mono));
+  text-transform: var(--kicker-transform, uppercase);
+  letter-spacing: var(--kicker-tracking, .08em);
+  font-size: .75rem; font-weight: 500; color: var(--accent);
+  font-variant: var(--kicker-variant, normal);
+}
+.als-h1 { font-family: var(--font-display); font-weight: var(--display-weight, 600); letter-spacing: var(--display-tracking, -0.02em); line-height: 1.1; font-size: clamp(1.9rem, 5vw, 3.25rem); margin: .25rem 0 .5rem; text-wrap: balance; }
+.als-h2 { font-family: var(--font-display); font-weight: var(--display-weight, 600); letter-spacing: var(--display-tracking, -0.01em); line-height: 1.2; font-size: clamp(1.35rem, 3vw, 2rem); margin: 0 0 .5rem; text-wrap: balance; }
+.als-h3 { font-family: var(--font-display); font-weight: var(--display-weight, 600); font-size: 1.125rem; margin: 0 0 .35rem; }
+.als-sub { color: var(--text-muted); font-size: 1.0625rem; margin: 0; max-width: 46rem; }
+.als-muted { color: var(--text-muted); }
+.als-faint { color: var(--text-faint); }
+.als-mono { font-family: var(--font-mono); }
+
+/* ---------- surfaces ---------- */
+.als-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow, none);
+  padding: 1.25rem;
+}
+.als-card--flat { box-shadow: none; }
+.als-card--sunken { background: var(--bg-sunken); }
+.als-divider { border: 0; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+/* ---------- controls ---------- */
+.als-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+  min-height: 2.5rem; padding: .45rem 1rem;
+  border-radius: var(--radius-btn, var(--radius-sm));
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elev); color: var(--text);
+  font-weight: 500; font-size: .9375rem; cursor: pointer; text-decoration: none;
+  transition: background-color .15s, border-color .15s, transform .08s, color .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.als-btn:hover { border-color: var(--text-faint); background: var(--bg-sunken); }
+.als-btn:active { transform: translateY(1px); }
+.als-btn[disabled] { opacity: .45; cursor: not-allowed; }
+.als-btn--primary { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+.als-btn--primary:hover { background: var(--accent-hover, var(--accent)); border-color: var(--accent-hover, var(--accent)); filter: brightness(1.05); }
+.als-btn--ghost { background: transparent; border-color: transparent; }
+.als-btn--ghost:hover { background: var(--bg-sunken); border-color: transparent; }
+.als-btn--good { background: var(--good-soft); border-color: color-mix(in srgb, var(--good) 45%, transparent); color: var(--good-text, var(--good)); }
+.als-btn--bad { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 45%, transparent); color: var(--bad-text, var(--bad)); }
+.als-btn--warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 45%, transparent); color: var(--warn-text, var(--warn)); }
+.als-btn--sm { min-height: 2rem; padding: .25rem .65rem; font-size: .8125rem; }
+.als-iconbtn { width: 2.5rem; height: 2.5rem; padding: 0; min-height: 0; }
+.als-iconbtn svg { width: 1.15rem; height: 1.15rem; }
+
+.als-input, .als-select, .als-textarea {
+  width: 100%; min-height: 2.75rem; padding: .55rem .8rem;
+  background: var(--bg-elev); border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  transition: border-color .15s, box-shadow .15s;
+}
+.als-textarea { min-height: 7rem; resize: vertical; line-height: 1.5; }
+.als-input:focus, .als-select:focus, .als-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+.als-seg { display: inline-flex; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); overflow: hidden; }
+.als-seg button { border: 0; background: transparent; padding: .35rem .75rem; cursor: pointer; font-size: .8125rem; color: var(--text-muted); }
+.als-seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--text); font-weight: 600; }
+
+.als-chip {
+  display: inline-flex; align-items: center; gap: .3rem;
+  padding: .15rem .55rem; border-radius: 999px;
+  background: var(--bg-sunken); border: 1px solid var(--border);
+  font-size: .75rem; color: var(--text-muted); white-space: nowrap;
+}
+.als-chip--accent { background: var(--accent-soft); color: var(--accent-text, var(--accent)); border-color: transparent; }
+.als-chip--good { background: var(--good-soft); color: var(--good-text, var(--good)); border-color: transparent; }
+.als-chip--bad { background: var(--bad-soft); color: var(--bad-text, var(--bad)); border-color: transparent; }
+.als-chip--warn { background: var(--warn-soft); color: var(--warn-text, var(--warn)); border-color: transparent; }
+.als-src { font-family: var(--font-mono); font-size: .6875rem; color: var(--text-faint); }
+.als-beyond { font-size: .6875rem; color: var(--warn-text, var(--warn)); border: 1px dashed color-mix(in srgb, var(--warn) 55%, transparent); border-radius: 999px; padding: .05rem .45rem; }
+
+.als-kbd { font-family: var(--font-mono); font-size: .7rem; padding: .05rem .35rem; border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: 4px; background: var(--bg-elev); color: var(--text-muted); }
+
+.als-progress { height: .375rem; background: var(--bg-sunken); border-radius: 999px; overflow: hidden; }
+.als-progress > span { display: block; height: 100%; width: 0; background: var(--accent); border-radius: inherit; transition: width .35s ease; }
+
+.als-callout { border: 1px solid var(--border); border-left: 3px solid var(--accent); background: var(--bg-elev); border-radius: var(--radius-sm); padding: .75rem 1rem; }
+.als-callout--good { border-left-color: var(--good); background: var(--good-soft); }
+.als-callout--bad { border-left-color: var(--bad); background: var(--bad-soft); }
+.als-callout--warn { border-left-color: var(--warn); background: var(--warn-soft); }
+.als-callout--info { border-left-color: var(--accent); background: var(--accent-soft); }
+
+/* ---------- menu (theme picker) ---------- */
+.als-menu { position: relative; }
+.als-menu-panel {
+  position: absolute; right: 0; top: calc(100% + .4rem); z-index: 30; min-width: 14rem;
+  background: var(--bg-elev); border: 1px solid var(--border-strong); border-radius: var(--radius);
+  box-shadow: 0 12px 32px -12px rgba(0,0,0,.35); padding: .4rem; display: none;
+}
+.als-menu[data-open="true"] .als-menu-panel { display: block; }
+.als-menu-item { display: flex; align-items: center; gap: .6rem; width: 100%; text-align: left; border: 0; background: transparent; padding: .5rem .6rem; border-radius: var(--radius-sm); cursor: pointer; }
+.als-menu-item:hover, .als-menu-item[aria-checked="true"] { background: var(--bg-sunken); }
+.als-menu-item small { display: block; color: var(--text-muted); font-size: .72rem; }
+.als-swatch { width: 1.1rem; height: 1.1rem; border-radius: 50%; flex: none; border: 1px solid var(--border-strong); }
+
+/* ---------- toast ---------- */
+.als-toast {
+  position: fixed; left: 50%; bottom: 1.25rem; transform: translate(-50%, 1rem); z-index: 50;
+  max-width: calc(100vw - 32px); padding: .6rem 1rem; border-radius: var(--radius-sm);
+  background: var(--text-strong, var(--text)); color: var(--bg); font-size: .875rem;
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,.4); opacity: 0; pointer-events: none;
+  transition: opacity .2s, transform .2s;
+}
+.als-toast[data-show="true"] { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- frame (motif hook, styled by themes) ---------- */
+.als-frame { min-height: calc(100vh - 3.5rem); padding-top: 2rem; padding-bottom: 4rem; }
+
+/* ---------- rich text ---------- */
+.als-rich { overflow-wrap: anywhere; }
+.als-rich > :first-child { margin-top: 0; }
+.als-rich > :last-child { margin-bottom: 0; }
+.als-rich p { margin: 0 0 .75em; }
+.als-rich ul, .als-rich ol { margin: 0 0 .75em; padding-left: 1.35em; }
+.als-rich li + li { margin-top: .25em; }
+.als-rich code { font-family: var(--font-mono); font-size: .875em; background: var(--bg-sunken); border: 1px solid var(--border); border-radius: 4px; padding: .05em .3em; }
+.als-rich strong { font-weight: 650; color: var(--text-strong, var(--text)); }
+.als-math-display { display: block; margin: .6em 0; overflow-x: auto; overflow-y: hidden; padding: .2em 0; text-align: center; }
+.als-math-raw { font-family: var(--font-mono); font-size: .9em; color: var(--accent-text, var(--accent)); }
+.katex { font-size: 1.08em; }
+.katex-display { margin: 0 !important; }
+
+/* ---------- code blocks ---------- */
+.als-code {
+  font-family: var(--font-mono); font-size: .875rem; line-height: 1.65;
+  background: var(--code-bg, var(--bg-sunken)); color: var(--code-text, var(--text));
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: .9rem 0; overflow-x: auto; margin: 0;
+}
+.als-code .ln { display: block; padding: 0 1rem; border-left: 3px solid transparent; transition: background-color .25s, opacity .25s, border-color .25s; white-space: pre; }
+.als-code.has-focus .ln { opacity: .4; }
+.als-code.has-focus .ln.is-focus { opacity: 1; background: var(--accent-soft); border-left-color: var(--accent); }
+.tok-k { color: var(--code-keyword, var(--accent)); font-weight: 500; }
+.tok-s { color: var(--code-string, var(--good)); }
+.tok-c { color: var(--text-faint); font-style: italic; }
+.tok-n { color: var(--code-number, var(--accent-2)); }
+
+/* ---------- motion ---------- */
+@keyframes als-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes als-fade { from { opacity: 0; } to { opacity: 1; } }
+.als-rise { animation: als-rise .45s cubic-bezier(.2,.7,.2,1) both; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- print ---------- */
+@media print {
+  @page { margin: 16mm 14mm; }
+  body { background: #fff !important; background-image: none !important; color: #000; font-size: 11pt; }
+  .als-noprint, .als-topbar { display: none !important; }
+  .als-card { box-shadow: none; break-inside: avoid; }
+  a { color: inherit; }
+}
+
+/* Blueprint: maths, physics, CS, engineering.
+   Inspired by the look of tailwindcss.com: near-black / white, sky accent, Inter + mono labels,
+   hairline grid lines, dark code blocks, pill-shaped primary buttons. Colour values come from the
+   MIT-licensed Tailwind palette (gray, sky, indigo, emerald, rose, amber). */
+
+[data-als-theme="blueprint"] {
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-features: "cv11", "ss01";
+  --display-weight: 600;
+  --display-tracking: -0.03em;
+  --kicker-tracking: .12em;
+  --radius: .75rem;
+  --radius-sm: .5rem;
+  --radius-btn: 999px;
+
+  --bg: #ffffff;
+  --bg-elev: #ffffff;
+  --bg-sunken: #f9fafb;
+  --text: #030712;
+  --text-strong: #030712;
+  --text-muted: #4b5563;
+  --text-faint: #9ca3af;
+  --border: rgb(3 7 18 / .08);
+  --border-strong: rgb(3 7 18 / .16);
+  --accent: #0284c7;
+  --accent-hover: #0369a1;
+  --accent-contrast: #ffffff;
+  --accent-text: #0369a1;
+  --accent-soft: rgb(14 165 233 / .12);
+  --accent-2: #6366f1;
+  --good: #059669;   --good-text: #047857;  --good-soft: rgb(16 185 129 / .12);
+  --bad: #e11d48;    --bad-text: #be123c;   --bad-soft: rgb(244 63 94 / .10);
+  --warn: #d97706;   --warn-text: #b45309;  --warn-soft: rgb(245 158 11 / .13);
+  --shadow: 0 1px 2px rgb(3 7 18 / .05);
+  --pattern:
+    linear-gradient(to right, rgb(3 7 18 / .035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(3 7 18 / .035) 1px, transparent 1px);
+  --pattern-size: 40px 40px;
+
+  --code-bg: #0f172a;
+  --code-text: #e2e8f0;
+  --code-keyword: #f472b6;
+  --code-string: #7dd3fc;
+  --code-number: #fbbf24;
+}
+
+[data-als-theme="blueprint"][data-als-mode="dark"] {
+  --bg: #030712;
+  --bg-elev: #0b1120;
+  --bg-sunken: #111827;
+  --text: #f3f4f6;
+  --text-strong: #ffffff;
+  --text-muted: #9ca3af;
+  --text-faint: #6b7280;
+  --border: rgb(255 255 255 / .08);
+  --border-strong: rgb(255 255 255 / .16);
+  --accent: #38bdf8;
+  --accent-hover: #7dd3fc;
+  --accent-contrast: #030712;
+  --accent-text: #7dd3fc;
+  --accent-soft: rgb(56 189 248 / .14);
+  --accent-2: #818cf8;
+  --good: #34d399;   --good-text: #6ee7b7;  --good-soft: rgb(52 211 153 / .13);
+  --bad: #fb7185;    --bad-text: #fda4af;   --bad-soft: rgb(251 113 133 / .13);
+  --warn: #fbbf24;   --warn-text: #fcd34d;  --warn-soft: rgb(251 191 36 / .13);
+  --shadow: none;
+  --pattern:
+    linear-gradient(to right, rgb(255 255 255 / .03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / .03) 1px, transparent 1px);
+  --code-bg: #0b1120;
+}
+
+/* Motif: primary actions are inverted pills, like the "Get started" button. */
+[data-als-theme="blueprint"] .als-btn--primary { background: var(--text-strong); border-color: var(--text-strong); color: var(--bg); }
+[data-als-theme="blueprint"] .als-btn--primary:hover { background: var(--text-muted); border-color: var(--text-muted); filter: none; }
+/* Motif: hairline frame around the main column on wide screens. */
+@media (min-width: 900px) {
+  [data-als-theme="blueprint"] .als-frame { border-inline: 1px solid var(--border); background: color-mix(in srgb, var(--bg) 70%, transparent); }
+}
+/* Motif: gradient display headings. */
+[data-als-theme="blueprint"] .als-h1 .als-grad, [data-als-theme="blueprint"] .als-grad {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+[data-als-theme="blueprint"] .als-kicker::before { content: "// "; opacity: .55; }
+
+/* Folio: philosophy, literature, history, languages, arts.
+   Editorial book typography: Garamond body, Cormorant display, paper tones, oxblood ink,
+   small-caps labels, ornamented dividers, square corners. */
+
+[data-als-theme="folio"] {
+  --font-body: "EB Garamond", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-display: "Cormorant Garamond", "EB Garamond", "Palatino Linotype", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --font-size: 18.5px;
+  --font-features: "kern", "liga", "onum";
+  --display-weight: 600;
+  --display-tracking: -0.005em;
+  --kicker-font: var(--font-body);
+  --kicker-transform: lowercase;
+  --kicker-variant: small-caps;
+  --kicker-tracking: .14em;
+  --radius: 4px;
+  --radius-sm: 3px;
+  --radius-btn: 3px;
+  --shell-max: 64rem;
+
+  --bg: #f7f3ea;
+  --bg-elev: #fbf8f1;
+  --bg-sunken: #efe8d9;
+  --text: #2a241e;
+  --text-strong: #1c1712;
+  --text-muted: #6b5e50;
+  --text-faint: #9c8f7f;
+  --border: #e3d9c6;
+  --border-strong: #cdbfa5;
+  --accent: #8c2f2b;
+  --accent-hover: #74231f;
+  --accent-contrast: #fbf8f1;
+  --accent-text: #7a2622;
+  --accent-soft: rgb(140 47 43 / .09);
+  --accent-2: #a0712a;
+  --good: #4d7a3a;   --good-text: #3f6630;  --good-soft: rgb(77 122 58 / .12);
+  --bad: #a33a2e;    --bad-text: #8e2f24;   --bad-soft: rgb(163 58 46 / .10);
+  --warn: #a8741a;   --warn-text: #8a5f12;  --warn-soft: rgb(168 116 26 / .12);
+  --shadow: 0 1px 0 rgb(80 60 30 / .06);
+  --pattern: radial-gradient(rgb(90 60 20 / .035) 1px, transparent 1.2px);
+  --pattern-size: 5px 5px;
+  --code-bg: #efe8d9;
+}
+
+[data-als-theme="folio"][data-als-mode="dark"] {
+  --bg: #1a1613;
+  --bg-elev: #221d19;
+  --bg-sunken: #15110f;
+  --text: #ece3d3;
+  --text-strong: #f7efe1;
+  --text-muted: #b3a691;
+  --text-faint: #7d715f;
+  --border: #352d26;
+  --border-strong: #4a3f35;
+  --accent: #d88a6c;
+  --accent-hover: #e8a487;
+  --accent-contrast: #1a1613;
+  --accent-text: #e9a588;
+  --accent-soft: rgb(216 138 108 / .14);
+  --accent-2: #d4a95a;
+  --good: #9cc27f;   --good-text: #b5d69c;  --good-soft: rgb(156 194 127 / .13);
+  --bad: #e08a7a;    --bad-text: #eba597;   --bad-soft: rgb(224 138 122 / .13);
+  --warn: #e0b25e;   --warn-text: #ecc884;  --warn-soft: rgb(224 178 94 / .13);
+  --shadow: none;
+  --pattern: radial-gradient(rgb(255 240 210 / .025) 1px, transparent 1.2px);
+  --code-bg: #15110f;
+}
+
+/* Motif: italic subtitles, ornamented dividers, drop caps, hanging quotes. */
+[data-als-theme="folio"] .als-sub { font-style: italic; font-size: 1.125rem; }
+[data-als-theme="folio"] .als-h1 { font-weight: 600; line-height: 1.05; }
+[data-als-theme="folio"] .als-divider { border: 0; text-align: center; margin: 2rem 0; height: auto; }
+[data-als-theme="folio"] .als-divider::before { content: "\2766"; color: var(--accent); font-size: 1.1rem; letter-spacing: 1rem; }
+[data-als-theme="folio"] .als-dropcap > p:first-child::first-letter {
+  float: left; font-family: var(--font-display); font-size: 3.6em; line-height: .82; padding: .06em .08em 0 0; color: var(--accent); font-weight: 600;
+}
+[data-als-theme="folio"] .als-card { border-color: var(--border); }
+[data-als-theme="folio"] .als-btn { font-family: var(--font-body); letter-spacing: .02em; }
+[data-als-theme="folio"] .als-btn--primary { font-variant: small-caps; letter-spacing: .08em; }
+[data-als-theme="folio"] .als-grad { color: var(--accent); font-style: italic; }
+[data-als-theme="folio"] .als-kicker::before, [data-als-theme="folio"] .als-kicker::after { content: "\2014"; margin: 0 .4em; opacity: .6; }
+
+/* Clinic: biology, medicine, chemistry, health, environment, psychology.
+   Calm, airy and diagram-first: IBM Plex, teal accent with violet secondary, soft rounded cards,
+   faint dot lattice. */
+
+[data-als-theme="clinic"] {
+  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-display: "IBM Plex Sans", ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --display-weight: 600;
+  --display-tracking: -0.015em;
+  --kicker-font: var(--font-body);
+  --kicker-tracking: .1em;
+  --radius: 1rem;
+  --radius-sm: .6rem;
+  --radius-btn: .6rem;
+
+  --bg: #f4f8f8;
+  --bg-elev: #ffffff;
+  --bg-sunken: #edf4f4;
+  --text: #0f2a2e;
+  --text-strong: #08201f;
+  --text-muted: #4a6366;
+  --text-faint: #8aa1a3;
+  --border: #dce8e8;
+  --border-strong: #c3d5d6;
+  --accent: #0f766e;
+  --accent-hover: #115e59;
+  --accent-contrast: #ffffff;
+  --accent-text: #0f766e;
+  --accent-soft: rgb(20 184 166 / .12);
+  --accent-2: #7c3aed;
+  --good: #15803d;   --good-text: #166534;  --good-soft: rgb(34 197 94 / .12);
+  --bad: #dc2626;    --bad-text: #b91c1c;   --bad-soft: rgb(239 68 68 / .10);
+  --warn: #ca8a04;   --warn-text: #a16207;  --warn-soft: rgb(234 179 8 / .14);
+  --shadow: 0 1px 3px rgb(15 42 46 / .05), 0 10px 28px -16px rgb(15 42 46 / .18);
+  --pattern: radial-gradient(rgb(15 118 110 / .08) 1px, transparent 1.3px);
+  --pattern-size: 22px 22px;
+  --code-bg: #0f2a2e;
+  --code-text: #d5ecea;
+  --code-keyword: #5eead4;
+  --code-string: #c4b5fd;
+  --code-number: #fcd34d;
+}
+
+[data-als-theme="clinic"][data-als-mode="dark"] {
+  --bg: #0a1a1c;
+  --bg-elev: #102427;
+  --bg-sunken: #0c1f21;
+  --text: #e6f2f1;
+  --text-strong: #ffffff;
+  --text-muted: #9db8b7;
+  --text-faint: #5f7c7c;
+  --border: #1d3639;
+  --border-strong: #2a4a4d;
+  --accent: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-contrast: #052e2b;
+  --accent-text: #5eead4;
+  --accent-soft: rgb(45 212 191 / .14);
+  --accent-2: #a78bfa;
+  --good: #4ade80;   --good-text: #86efac;  --good-soft: rgb(74 222 128 / .13);
+  --bad: #f87171;    --bad-text: #fca5a5;   --bad-soft: rgb(248 113 113 / .13);
+  --warn: #facc15;   --warn-text: #fde047;  --warn-soft: rgb(250 204 21 / .12);
+  --shadow: none;
+  --pattern: radial-gradient(rgb(45 212 191 / .06) 1px, transparent 1.3px);
+  --code-bg: #071416;
+}
+
+/* Motif: pill kicker, accent ring on cards when focused, soft section tint. */
+[data-als-theme="clinic"] .als-kicker { display: inline-block; background: var(--accent-soft); color: var(--accent-text); padding: .2rem .65rem; border-radius: 999px; font-weight: 600; }
+[data-als-theme="clinic"] .als-card:focus-within { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+[data-als-theme="clinic"] .als-grad { color: var(--accent); }
+[data-als-theme="clinic"] .als-callout { border-left-width: 0; border-radius: var(--radius-sm); }
+
+/* Ledger: economics, business, law, politics, social science, education.
+   Sober and structured: Libre Franklin body, Source Serif display, navy and burgundy,
+   tabular figures, strong horizontal rules, nearly square corners. */
+
+[data-als-theme="ledger"] {
+  --font-body: "Libre Franklin", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --font-features: "tnum", "lnum";
+  --display-weight: 650;
+  --display-tracking: -0.012em;
+  --kicker-font: var(--font-body);
+  --kicker-tracking: .16em;
+  --radius: 3px;
+  --radius-sm: 2px;
+  --radius-btn: 2px;
+
+  --bg: #fafaf8;
+  --bg-elev: #ffffff;
+  --bg-sunken: #f2f2ee;
+  --text: #161b26;
+  --text-strong: #0b0f17;
+  --text-muted: #525a6a;
+  --text-faint: #8b92a0;
+  --border: #e3e3dd;
+  --border-strong: #c9c9c0;
+  --accent: #1f3a5f;
+  --accent-hover: #162b47;
+  --accent-contrast: #ffffff;
+  --accent-text: #1f3a5f;
+  --accent-soft: rgb(31 58 95 / .08);
+  --accent-2: #9b2c2c;
+  --good: #2f6b3a;   --good-text: #285c31;  --good-soft: rgb(47 107 58 / .10);
+  --bad: #a61b1b;    --bad-text: #8f1717;   --bad-soft: rgb(166 27 27 / .08);
+  --warn: #9a6700;   --warn-text: #7d5400;  --warn-soft: rgb(154 103 0 / .10);
+  --shadow: none;
+  --pattern: none;
+  --code-bg: #f2f2ee;
+}
+
+[data-als-theme="ledger"][data-als-mode="dark"] {
+  --bg: #0f141c;
+  --bg-elev: #151c27;
+  --bg-sunken: #0c1118;
+  --text: #e7e9ee;
+  --text-strong: #ffffff;
+  --text-muted: #a2aab8;
+  --text-faint: #687183;
+  --border: #232c3a;
+  --border-strong: #334055;
+  --accent: #8fb3e8;
+  --accent-hover: #b0caf0;
+  --accent-contrast: #0f141c;
+  --accent-text: #a9c5ee;
+  --accent-soft: rgb(143 179 232 / .13);
+  --accent-2: #e59a9a;
+  --good: #7cc48a;   --good-text: #9dd6a8;  --good-soft: rgb(124 196 138 / .12);
+  --bad: #f08a8a;    --bad-text: #f5a8a8;   --bad-soft: rgb(240 138 138 / .12);
+  --warn: #e8b85a;   --warn-text: #f0cc84;  --warn-soft: rgb(232 184 90 / .12);
+  --code-bg: #0c1118;
+}
+
+/* Motif: heavy top rules on headings and cards, uppercase muted labels, tabular data feel. */
+[data-als-theme="ledger"] .als-h2 { border-top: 2px solid var(--text-strong); padding-top: .6rem; }
+[data-als-theme="ledger"] .als-card { border-top: 2px solid var(--text-strong); }
+[data-als-theme="ledger"] .als-kicker { color: var(--accent-2); font-weight: 600; }
+[data-als-theme="ledger"] .als-chip { border-radius: 2px; }
+[data-als-theme="ledger"] .als-grad { color: var(--accent); }
+[data-als-theme="ledger"] .als-callout { border-left-width: 4px; }
+[data-als-theme="ledger"] .als-btn--primary { text-transform: uppercase; letter-spacing: .08em; font-size: .8125rem; font-weight: 600; }
+</style>
+<style>
+  .sh-head { max-width: 46rem; margin: 0 auto 2rem; }
+  .sh-notes { max-width: 46rem; margin: 0 auto; }
+  .sh-notes .sh-block { margin: 0 0 1.5rem; }
+  .sh-layout { display: grid; gap: 2rem; }
+  @media (min-width: 1100px) { .sh-layout.has-toc { grid-template-columns: 13rem minmax(0, 46rem); justify-content: center; } }
+  .sh-toc { position: sticky; top: 4.5rem; align-self: start; font-size: .875rem; display: none; }
+  @media (min-width: 1100px) { .sh-toc { display: block; } }
+  .sh-toc a { display: block; color: var(--text-muted); text-decoration: none; padding: .25rem 0 .25rem .75rem; border-left: 2px solid var(--border); }
+  .sh-toc a:hover { color: var(--text); border-left-color: var(--accent); }
+  .sh-section-title { scroll-margin-top: 5rem; }
+  .sh-def { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: .9rem 1.1rem; background: var(--bg-elev); }
+  .sh-def .term { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.1rem; margin-bottom: .2rem; }
+  .sh-def .term::after { content: " ·"; color: var(--accent); }
+  .sh-formula { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: .75rem 1rem; background: var(--bg-elev); }
+  .sh-formula .t { font-size: .8125rem; color: var(--text-muted); font-weight: 600; }
+  .sh-formula .note { font-size: .875rem; color: var(--text-muted); }
+  .sh-kp ul { margin: .25rem 0 0; padding-left: 1.2rem; }
+  .sh-example .sol { margin-top: .6rem; }
+  .sh-table { width: 100%; border-collapse: collapse; font-size: .9rem; font-variant-numeric: tabular-nums; }
+  .sh-table th, .sh-table td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .sh-table th { font-weight: 600; border-bottom: 2px solid var(--border-strong); background: var(--bg-sunken); }
+  .sh-table-wrap { overflow-x: auto; }
+  .sh-quote { margin: 0; padding: .25rem 0 .25rem 1.1rem; border-left: 3px solid var(--accent); font-family: var(--font-display); font-size: 1.2rem; font-style: italic; }
+  .sh-quote figcaption { font-family: var(--font-body); font-style: normal; font-size: .875rem; color: var(--text-muted); margin-top: .35rem; }
+  .sh-block-title { font-weight: 600; margin-bottom: .35rem; }
+
+  /* cheat sheet: dense columns */
+  .sh-cheat { columns: 1; column-gap: 1.25rem; font-size: .875rem; line-height: 1.45; }
+  @media (min-width: 720px) { .sh-cheat { columns: 2; } }
+  @media (min-width: 1100px) { .sh-cheat { columns: 3; } }
+  .sh-cheat .sh-block { break-inside: avoid; margin: 0 0 .9rem; display: inline-block; width: 100%; }
+  .sh-cheat .als-h2 { font-size: 1.05rem; margin: 0 0 .35rem; padding-top: .35rem; }
+  .sh-cheat .sh-def, .sh-cheat .sh-formula { padding: .5rem .65rem; }
+  .sh-cheat .sh-def .term { font-size: .95rem; }
+  .sh-cheat .als-callout { padding: .5rem .7rem; }
+  .sh-cheat .als-rich p { margin-bottom: .4em; }
+  @media print {
+    .sh-toc { display: none !important; }
+    .sh-layout { display: block; }
+    .sh-cheat { columns: 3; font-size: 8.5pt; column-gap: 6mm; }
+    .sh-head { margin-bottom: 4mm; }
+    .sh-block { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="application/json" id="als-data">{"als":"1","kind":"sheet","title":"Kantian ethics","subtitle":"Summary of lecture 4 and Groundwork II","module":"ethics","subject":"Philosophy: ethics","layout":"notes","sources":[{"id":"G","title":"Kant, Groundwork of the Metaphysic of Morals (1785), tr. T. K. Abbott (1895)","locator":"4:389-445"},{"id":"L4","title":"Lecture 4: Kantian ethics","locator":"slides 1-28"}],"blocks":[{"type":"section","title":"The question","body":"Kant asks what makes an action *morally* good. His answer: not its consequences and not the inclinations behind it, but the **will** that acts from duty, that is, out of respect for a law reason gives itself.\n\nThe supreme principle of that law is the **categorical imperative**.","src":"G 4:393-403"},{"type":"definition","term":"Good will","body":"The only thing good without qualification: a will that acts from duty, whatever it achieves.","src":"G 4:393"},{"type":"definition","term":"Maxim","body":"The subjective principle of an action: *in situation S I will do A to achieve E*.","src":"G 4:421n"},{"type":"section","title":"Hypothetical and categorical imperatives","body":"A **hypothetical** imperative commands an action as a means to something one wants (\"If you want X, do Y\"). A **categorical** imperative commands unconditionally, for every rational being.","src":"G 4:414-416"},{"type":"quote","quote":"Act only on that maxim whereby thou canst at the same time will that it should become a universal law.","by":"Groundwork 4:421 (Abbott tr.)","body":"The Formula of Universal Law (FUL)."},{"type":"keypoints","title":"Applying the FUL","points":["State the maxim with the agent's real reasons.","Imagine it as a universal law of nature.","Can the world with that law be **conceived**? If not: violation of a perfect duty.","Could a rational agent **will** that world? If not: violation of an imperfect duty."],"src":"L4 s.10-14"},{"type":"table","title":"The four examples (G 4:421-423)","headers":["Example","Fails by","Duty"],"rows":[["Suicide from self-love","contradiction in conception","perfect, to oneself"],["False promise","contradiction in conception","perfect, to others"],["Neglecting one's talents","contradiction in the will","imperfect, to oneself"],["Refusing to help others","contradiction in the will","imperfect, to others"]]},{"type":"section","title":"The Formula of Humanity","body":"\"So act as to treat humanity, whether in thine own person or in that of any other, in every case as an end withal, never as means only.\" (4:429)\n\nUsing someone as a means is fine (the baker sells you bread); using them **merely** as a means, in a way they could not consent to, is not.","src":"G 4:429"},{"type":"warning","title":"Common mistake","body":"The FUL is **not** a consequence test (\"what if everyone did it? That would be bad\"). The problem is a *contradiction*: the universalised maxim undermines itself or cannot be rationally willed. Writing the consequentialist version in an exam loses most of the marks.","src":"L4 s.12"},{"type":"section","title":"Objections","body":"- **Rigorism**: the murderer at the door. Kant (1797) holds that lying is wrong even then; many Kantians instead refine the maxim or appeal to the Formula of Humanity.\n- **Empty formalism** (Hegel): the test seems to accept or reject maxims depending on how they are described.\n- **Conflicts of duty**: the theory gives little guidance when duties clash.","src":"L4 s.22-26"},{"type":"example","title":"Exam-style question","body":"Does the Formula of Universal Law forbid lying to the murderer at the door? Discuss.","solution":"Outline: (1) reconstruct the maxim and the FUL test; (2) Kant's own answer in *On a Supposed Right to Lie*; (3) the redescription strategy and its risk of formalism; (4) Korsgaard-style reply via the Formula of Humanity or a two-level reading; (5) your verdict with a reason."}]}</script>
+<script>window.ALS_THEMES={"blueprint": {"label": "Blueprint", "short": "Maths, physics, CS, engineering", "description": "Precise and technical, in the spirit of tailwindcss.com. Maths, physics, CS, engineering.", "fonts": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap", "swatch": ["#030712", "#38bdf8"]}, "folio": {"label": "Folio", "short": "Philosophy, literature, history, arts", "description": "Editorial and literary: serif type, paper tones, generous margins. Philosophy, literature, history, languages, arts.", "fonts": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap", "swatch": ["#f7f3ea", "#8c2f2b"]}, "clinic": {"label": "Clinic", "short": "Biology, medicine, chemistry, health", "description": "Clean, calm and diagram-first, teal accents. Biology, medicine, chemistry, health, environment.", "fonts": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap", "swatch": ["#f6f9f9", "#0f766e"]}, "ledger": {"label": "Ledger", "short": "Economics, business, law, social science", "description": "Structured and sober, tabular numbers, strong rules. Business, economics, law, politics, social science.", "fonts": "https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap", "swatch": ["#fafaf8", "#1f3a5f"]}};
+/* ALS core runtime, shared by every template and inlined at build time.
+   Provides: data loading, theme + light/dark switching, safe Markdown-lite with KaTeX maths,
+   code highlighting, SVG sanitising, storage, downloads, keyboard helpers and the top bar. */
+(function () {
+  'use strict';
+
+  var ALS = (window.ALS = window.ALS || {});
+  var THEMES = window.ALS_THEMES || {};
+  var KATEX = 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/';
+
+  /* ---------------- small helpers ---------------- */
+  ALS.$ = function (sel, root) { return (root || document).querySelector(sel); };
+  ALS.$$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+
+  ALS.esc = function (s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  };
+
+  ALS.el = function (tag, attrs, children) {
+    var node = document.createElement(tag);
+    if (attrs) {
+      Object.keys(attrs).forEach(function (k) {
+        var v = attrs[k];
+        if (v == null || v === false) return;
+        if (k === 'class') node.className = v;
+        else if (k === 'html') node.innerHTML = v;
+        else if (k === 'text') node.textContent = v;
+        else if (k.slice(0, 2) === 'on' && typeof v === 'function') node.addEventListener(k.slice(2), v);
+        else node.setAttribute(k, v === true ? '' : v);
+      });
+    }
+    (children || []).forEach(function (c) {
+      if (c == null) return;
+      node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    });
+    return node;
+  };
+
+  ALS.slug = function (s) {
+    return String(s || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'item';
+  };
+
+  ALS.today = function () {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  };
+
+  ALS.shuffle = function (arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  };
+
+  ALS.download = function (filename, content, mime) {
+    var blob = new Blob([content], { type: mime || 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = ALS.el('a', { href: url, download: filename });
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  };
+
+  ALS.toast = function (msg) {
+    var t = ALS.$('#als-toast');
+    if (!t) {
+      t = ALS.el('div', { id: 'als-toast', role: 'status', 'aria-live': 'polite', class: 'als-toast' });
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.setAttribute('data-show', 'true');
+    clearTimeout(ALS._toastTimer);
+    ALS._toastTimer = setTimeout(function () { t.removeAttribute('data-show'); }, 2200);
+  };
+
+  /* ---------------- storage (never required to work) ---------------- */
+  ALS.store = {
+    key: function (k) { return 'als:' + ALS.pageKey + ':' + k; },
+    get: function (k, fallback) {
+      try { var v = localStorage.getItem(ALS.store.key(k)); return v == null ? fallback : JSON.parse(v); }
+      catch (e) { return fallback; }
+    },
+    set: function (k, v) { try { localStorage.setItem(ALS.store.key(k), JSON.stringify(v)); } catch (e) { /* private mode */ } },
+    del: function (k) { try { localStorage.removeItem(ALS.store.key(k)); } catch (e) { /* ignore */ } },
+    globalGet: function (k, fallback) { try { var v = localStorage.getItem('als:' + k); return v == null ? fallback : v; } catch (e) { return fallback; } },
+    globalSet: function (k, v) { try { localStorage.setItem('als:' + k, v); } catch (e) { /* ignore */ } }
+  };
+
+  /* ---------------- Markdown-lite + maths ---------------- */
+  var MATH_RE = /\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]|\\\(([\s\S]+?)\\\)|\$(?!\s)((?:\\\$|[^$\n])+?)(?<!\s)\$(?!\d)/g;
+
+  ALS.hasMath = function (s) { MATH_RE.lastIndex = 0; return MATH_RE.test(String(s || '')); };
+
+  function mathSpan(tex, display) {
+    return '<span class="als-math' + (display ? ' als-math-display' : '') + '" data-display="' + (display ? 1 : 0) +
+      '" data-tex="' + ALS.esc(tex) + '">' + ALS.esc(display ? tex : tex) + '</span>';
+  }
+
+  function inline(s) {
+    // s is already escaped. Order matters: links, bold, italic.
+    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, function (_, t, u) {
+      return '<a href="' + u + '" target="_blank" rel="noopener noreferrer">' + t + '</a>';
+    });
+    s = s.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*\w])\*(?!\s)([^*\n]+?)(?<!\s)\*(?!\w)/g, '$1<em>$2</em>');
+    s = s.replace(/(^|[\s(])_(?!\s)([^_\n]+?)(?<!\s)_(?=[\s).,;:!?]|$)/g, '$1<em>$2</em>');
+    return s;
+  }
+
+  /* Render a rich-text string to safe HTML. opts.inline = no paragraph wrapping. */
+  ALS.md = function (text, opts) {
+    opts = opts || {};
+    if (text == null) return '';
+    var store = [];
+    var hold = function (html) { store.push(html); return '\u0000' + (store.length - 1) + '\u0000'; };
+    var s = String(text).replace(/\r\n?/g, '\n');
+
+    s = s.replace(/`([^`\n]+)`/g, function (_, c) { return hold('<code>' + ALS.esc(c) + '</code>'); });
+    s = s.replace(MATH_RE, function (m, d1, d2, i1, i2) {
+      if (d1 != null || d2 != null) return hold(mathSpan((d1 != null ? d1 : d2).trim(), true));
+      return hold(mathSpan((i1 != null ? i1 : i2).trim(), false));
+    });
+    s = ALS.esc(s);
+
+    var out;
+    if (opts.inline) {
+      out = inline(s).replace(/\n/g, '<br>');
+    } else {
+      out = s.split(/\n{2,}/).map(function (block) {
+        var lines = block.split('\n');
+        if (lines.every(function (l) { return /^\s*[-*•]\s+/.test(l); })) {
+          return '<ul>' + lines.map(function (l) { return '<li>' + inline(l.replace(/^\s*[-*•]\s+/, '')) + '</li>'; }).join('') + '</ul>';
+        }
+        if (lines.every(function (l) { return /^\s*\d+[.)]\s+/.test(l); })) {
+          return '<ol>' + lines.map(function (l) { return '<li>' + inline(l.replace(/^\s*\d+[.)]\s+/, '')) + '</li>'; }).join('') + '</ol>';
+        }
+        var trimmed = block.trim();
+        if (/^\u0000\d+\u0000$/.test(trimmed) && store[+trimmed.slice(1, -1)].indexOf('als-math-display') > -1) return trimmed;
+        return '<p>' + inline(block).replace(/\n/g, '<br>') + '</p>';
+      }).join('');
+    }
+    return out.replace(/\u0000(\d+)\u0000/g, function (_, i) { return store[+i]; });
+  };
+
+  /* Set rich HTML on an element and typeset its maths. */
+  ALS.rich = function (node, text, opts) {
+    node.innerHTML = ALS.md(text, opts);
+    if (!opts || !opts.noClass) node.classList.add('als-rich');
+    ALS.renderMath(node);
+    return node;
+  };
+
+  ALS.renderMath = function (root) {
+    var nodes = ALS.$$('.als-math:not([data-done])', root || document);
+    if (!nodes.length) return;
+    if (!window.katex) {
+      nodes.forEach(function (n) { n.classList.add('als-math-raw'); });
+      ALS.loadKatex();
+      return;
+    }
+    nodes.forEach(function (n) {
+      try {
+        window.katex.render(n.getAttribute('data-tex'), n, { displayMode: n.getAttribute('data-display') === '1', throwOnError: false, strict: 'ignore' });
+        n.classList.remove('als-math-raw');
+        n.setAttribute('data-done', '1');
+      } catch (e) { n.classList.add('als-math-raw'); }
+    });
+  };
+
+  ALS.loadKatex = function () {
+    if (ALS._katexLoading || window.katex) return;
+    ALS._katexLoading = true;
+    document.head.appendChild(ALS.el('link', { rel: 'stylesheet', href: KATEX + 'katex.min.css', crossorigin: 'anonymous' }));
+    var sc = ALS.el('script', { src: KATEX + 'katex.min.js', crossorigin: 'anonymous', defer: true });
+    sc.onload = function () { ALS.renderMath(document); document.dispatchEvent(new Event('als:math')); };
+    sc.onerror = function () { /* offline: TeX stays readable as raw text */ };
+    document.head.appendChild(sc);
+  };
+
+  /* ---------------- code highlighting (small, generic) ---------------- */
+  var KW = {
+    py: 'and as assert async await break class continue def del elif else except False finally for from global if import in is lambda None nonlocal not or pass raise return True try while with yield match case self',
+    js: 'async await break case catch class const continue debugger default delete do else export extends false finally for from function if import in instanceof let new null of return super switch this throw true try typeof undefined var void while yield interface type enum implements',
+    c: 'auto break case char const continue default do double else enum extern float for goto if inline int long register return short signed sizeof static struct switch typedef union unsigned void volatile while bool true false nullptr class public private protected template typename namespace using new delete virtual override std include define',
+    java: 'abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long new null package private protected public return short static super switch this throw throws true false try void while var record',
+    sql: 'select from where group by order having join inner left right outer on as insert into values update set delete create table primary key foreign references not null and or in is distinct limit offset union all exists case when then else end count sum avg min max',
+    r: 'if else repeat while function for in next break TRUE FALSE NULL Inf NaN NA library return',
+    sh: 'if then else elif fi for while do done case esac in function return export local echo cd exit',
+    m: 'function end if else elseif for while switch case otherwise return break continue true false',
+    hs: 'case class data deriving do else if import in infix instance let module newtype of then type where',
+    rs: 'as break const continue crate else enum extern false fn for if impl in let loop match mod move mut pub ref return self Self static struct super trait true type unsafe use where while async await dyn'
+  };
+  var FAMILY = { python: 'py', py: 'py', javascript: 'js', js: 'js', typescript: 'js', ts: 'js', json: 'js', c: 'c', cpp: 'c', 'c++': 'c', h: 'c', csharp: 'java', cs: 'java', java: 'java', kotlin: 'java', go: 'c', sql: 'sql', r: 'r', bash: 'sh', sh: 'sh', shell: 'sh', matlab: 'm', octave: 'm', haskell: 'hs', rust: 'rs', rs: 'rs' };
+  var LINE_COMMENT = { py: '#', r: '#', sh: '#', sql: '--', hs: '--', m: '%' };
+
+  ALS.highlight = function (code, lang) {
+    var fam = FAMILY[String(lang || '').toLowerCase()] || 'js';
+    var kws = {};
+    (KW[fam] || '').split(' ').forEach(function (k) { kws[fam === 'sql' ? k.toLowerCase() : k] = 1; });
+    var lc = LINE_COMMENT[fam] || '//';
+    var lines = String(code).replace(/\r\n?/g, '\n').replace(/\t/g, '    ').split('\n');
+    var inBlock = false;
+    return lines.map(function (line) {
+      var out = '', i = 0;
+      while (i < line.length) {
+        if (inBlock) {
+          var end = line.indexOf('*/', i);
+          if (end < 0) { out += '<span class="tok-c">' + ALS.esc(line.slice(i)) + '</span>'; i = line.length; }
+          else { out += '<span class="tok-c">' + ALS.esc(line.slice(i, end + 2)) + '</span>'; i = end + 2; inBlock = false; }
+          continue;
+        }
+        var rest = line.slice(i);
+        if (rest.indexOf(lc) === 0) { out += '<span class="tok-c">' + ALS.esc(rest) + '</span>'; break; }
+        if (lc === '//' && rest.indexOf('/*') === 0) { inBlock = true; continue; }
+        var m = rest.match(/^("(?:\\.|[^"\\])*"?|'(?:\\.|[^'\\])*'?|`(?:\\.|[^`\\])*`?)/);
+        if (m) { out += '<span class="tok-s">' + ALS.esc(m[0]) + '</span>'; i += m[0].length; continue; }
+        m = rest.match(/^\d+(?:\.\d+)?(?:e[+-]?\d+)?/i);
+        if (m && !/[\w]/.test(line[i - 1] || '')) { out += '<span class="tok-n">' + m[0] + '</span>'; i += m[0].length; continue; }
+        m = rest.match(/^[A-Za-z_][\w]*/);
+        if (m) {
+          var w = m[0], key = fam === 'sql' ? w.toLowerCase() : w;
+          out += kws[key] ? '<span class="tok-k">' + w + '</span>' : ALS.esc(w);
+          i += w.length; continue;
+        }
+        out += ALS.esc(line[i]); i++;
+      }
+      return out || ' ';
+    });
+  };
+
+  /* ---------------- SVG sanitising (diagram slides) ---------------- */
+  ALS.safeSvg = function (svgText) {
+    try {
+      var doc = new DOMParser().parseFromString(String(svgText), 'image/svg+xml');
+      var svg = doc.documentElement;
+      if (!svg || svg.nodeName.toLowerCase() !== 'svg' || doc.getElementsByTagName('parsererror').length) return null;
+      var walk = function (n) {
+        Array.prototype.slice.call(n.children || []).forEach(function (c) {
+          var name = c.nodeName.toLowerCase();
+          if (name === 'script' || name === 'foreignobject' || name === 'iframe') { c.remove(); return; }
+          Array.prototype.slice.call(c.attributes).forEach(function (a) {
+            var an = a.name.toLowerCase();
+            if (an.indexOf('on') === 0) c.removeAttribute(a.name);
+            if ((an === 'href' || an === 'xlink:href') && /^\s*javascript:/i.test(a.value)) c.removeAttribute(a.name);
+          });
+          walk(c);
+        });
+      };
+      Array.prototype.slice.call(svg.attributes).forEach(function (a) { if (a.name.toLowerCase().indexOf('on') === 0) svg.removeAttribute(a.name); });
+      walk(svg);
+      return document.importNode(svg, true);
+    } catch (e) { return null; }
+  };
+
+  /* ---------------- keyboard ---------------- */
+  ALS.onKey = function (map) {
+    document.addEventListener('keydown', function (e) {
+      var t = e.target;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+      if (t && t.tagName === 'BUTTON' && (e.key === 'Enter' || e.key === ' ')) return; // let the focused button act
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      var fn = map[e.key] || map[e.code];
+      if (fn) { e.preventDefault(); fn(e); }
+    });
+  };
+
+  /* ---------------- icons ---------------- */
+  var P = {
+    palette: '<circle cx="13.5" cy="6.5" r="1.2"/><circle cx="17.5" cy="10.5" r="1.2"/><circle cx="8.5" cy="7.5" r="1.2"/><circle cx="6.5" cy="12.5" r="1.2"/><path d="M12 2a10 10 0 0 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.3A5.7 5.7 0 0 0 22 9.7C22 5.4 17.5 2 12 2z"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+    shuffle: '<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
+    download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+    print: '<path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',
+    left: '<path d="m15 18-6-6 6-6"/>',
+    right: '<path d="m9 18 6-6-6-6"/>',
+    grid: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
+    expand: '<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>',
+    rotate: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    x: '<path d="M18 6 6 18M6 6l12 12"/>',
+    bulb: '<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>',
+    eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    notes: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
+    play: '<path d="m6 4 14 8-14 8z"/>',
+    pause: '<path d="M7 4h3v16H7zM14 4h3v16h-3z"/>'
+  };
+  ALS.icon = function (name) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (P[name] || '') + '</svg>';
+  };
+  ALS.iconBtn = function (name, label, onclick, extraClass) {
+    return ALS.el('button', { type: 'button', class: 'als-btn als-btn--ghost als-iconbtn ' + (extraClass || ''), 'aria-label': label, title: label, html: ALS.icon(name), onclick: onclick });
+  };
+
+  /* ---------------- theme + mode ---------------- */
+  var root = document.documentElement;
+  var media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+  ALS.loadFonts = function (name) {
+    var t = THEMES[name];
+    if (!t || !t.fonts || ALS.$('link[data-als-fonts="' + name + '"]')) return;
+    document.head.appendChild(ALS.el('link', { rel: 'stylesheet', href: t.fonts, 'data-als-fonts': name }));
+  };
+
+  ALS.setTheme = function (name, persist) {
+    if (!THEMES[name]) name = root.getAttribute('data-als-default') || Object.keys(THEMES)[0];
+    root.setAttribute('data-als-theme', name);
+    ALS.loadFonts(name);
+    if (persist) ALS.store.set('theme', name);
+    ALS.$$('[data-theme-option]').forEach(function (b) { b.setAttribute('aria-checked', String(b.getAttribute('data-theme-option') === name)); });
+  };
+
+  ALS.applyMode = function () {
+    var pref = ALS.store.globalGet('mode', 'auto');
+    var dark = pref === 'dark' || (pref === 'auto' && media && media.matches);
+    root.setAttribute('data-als-mode', dark ? 'dark' : 'light');
+    var btn = ALS.$('#als-mode-btn');
+    if (btn) {
+      btn.innerHTML = ALS.icon(dark ? 'sun' : 'moon');
+      btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+      btn.title = btn.getAttribute('aria-label');
+    }
+  };
+  if (media && media.addEventListener) media.addEventListener('change', ALS.applyMode);
+
+  function themeMenu() {
+    var wrap = ALS.el('div', { class: 'als-menu als-noprint' });
+    var btn = ALS.iconBtn('palette', 'Choose design', function (e) {
+      e.stopPropagation();
+      wrap.setAttribute('data-open', wrap.getAttribute('data-open') === 'true' ? 'false' : 'true');
+    });
+    btn.setAttribute('aria-haspopup', 'menu');
+    var panel = ALS.el('div', { class: 'als-menu-panel', role: 'menu' });
+    Object.keys(THEMES).forEach(function (name) {
+      var t = THEMES[name];
+      var sw = ALS.el('span', { class: 'als-swatch', style: 'background: linear-gradient(135deg,' + t.swatch[0] + ' 50%,' + t.swatch[1] + ' 50%)' });
+      var label = ALS.el('span', { html: ALS.esc(t.label) + '<small>' + ALS.esc(t.short || '') + '</small>' });
+      panel.appendChild(ALS.el('button', {
+        type: 'button', class: 'als-menu-item', role: 'menuitemradio', 'data-theme-option': name,
+        onclick: function () { ALS.setTheme(name, true); wrap.setAttribute('data-open', 'false'); }
+      }, [sw, label]));
+    });
+    document.addEventListener('click', function (e) { if (!wrap.contains(e.target)) wrap.setAttribute('data-open', 'false'); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') wrap.setAttribute('data-open', 'false'); });
+    wrap.appendChild(btn); wrap.appendChild(panel);
+    return wrap;
+  }
+
+  /* Top bar: title, optional actions, theme menu and mode toggle. */
+  ALS.topbar = function (actions) {
+    var d = ALS.data;
+    var bar = ALS.el('header', { class: 'als-topbar' });
+    var shell = ALS.el('div', { class: 'als-shell' });
+    var brand = ALS.el('div', { class: 'als-brand' }, [
+      ALS.el('span', { class: 'als-brand-title', text: d.title }),
+      d.subtitle || d.subject ? ALS.el('span', { class: 'als-brand-sub', text: d.subtitle || d.subject }) : null
+    ]);
+    shell.appendChild(brand);
+    shell.appendChild(ALS.el('div', { class: 'als-spacer' }));
+    (actions || []).forEach(function (a) { if (a) shell.appendChild(a); });
+    shell.appendChild(themeMenu());
+    var modeBtn = ALS.iconBtn('moon', 'Toggle dark mode', function () {
+      var dark = root.getAttribute('data-als-mode') === 'dark';
+      ALS.store.globalSet('mode', dark ? 'light' : 'dark');
+      ALS.applyMode();
+    }, 'als-noprint');
+    modeBtn.id = 'als-mode-btn';
+    shell.appendChild(modeBtn);
+    bar.appendChild(shell);
+    return bar;
+  };
+
+  /* Source + grounding badges for an item. */
+  ALS.provenance = function (item) {
+    if (!item) return null;
+    var bits = [];
+    if (item.src) bits.push('<span class="als-src" title="Source in your material">' + ALS.esc(item.src) + '</span>');
+    if (item.grounded === false) bits.push('<span class="als-beyond" title="Added beyond your course material">beyond your notes</span>');
+    if (!bits.length) return null;
+    return ALS.el('div', { class: 'als-row als-provenance', html: bits.join(' ') });
+  };
+
+  /* Results export shared by the flashcards and trainer templates. */
+  ALS.exportResults = function (kind, items, extra) {
+    var d = ALS.data;
+    var payload = Object.assign({
+      als: '1', kind: 'results', source: kind, title: d.title, module: d.module || null,
+      date: ALS.today(), exported: new Date().toISOString(), items: items
+    }, extra || {});
+    var name = (d.module ? d.module + '-' : '') + ALS.slug(d.title) + '-results-' + ALS.today() + '.json';
+    ALS.download(name, JSON.stringify(payload, null, 2));
+    ALS.toast('Saved ' + name + '. Ask Claude to import it to update your progress.');
+  };
+
+  /* ---------------- boot ---------------- */
+  ALS.boot = function (render) {
+    var node = document.getElementById('als-data');
+    try { ALS.data = JSON.parse(node.textContent); }
+    catch (e) {
+      document.body.innerHTML = '<p style="padding:2rem;font-family:sans-serif">This page has no valid data block. Rebuild it with <code>als.py build</code>.</p>';
+      return;
+    }
+    ALS.pageKey = ALS.slug((ALS.data.module || '') + '-' + ALS.data.kind + '-' + ALS.data.title);
+    ALS.setTheme(ALS.store.get('theme', root.getAttribute('data-als-theme')));
+    ALS.applyMode();
+    if (ALS.hasMath(node.textContent)) ALS.loadKatex();
+    render(ALS.data);
+    ALS.applyMode();
+    ALS.renderMath(document);
+  };
+})();
+</script>
+<script>
+ALS.boot(function (sh) {
+  var E = ALS.el, $ = ALS.$;
+  var app = $('#app');
+  var layout = ALS.store.get('layout', sh.layout || 'notes');
+
+  function richDiv(text, cls) { var d = E('div', { class: cls || '' }); ALS.rich(d, text); return d; }
+
+  function block(b, k) {
+    var wrap = E('div', { class: 'sh-block' });
+    switch (b.type) {
+      case 'section':
+        if (b.title) wrap.appendChild(E('h2', { class: 'als-h2 sh-section-title', id: 'sec-' + k, html: ALS.md(b.title, { inline: true }) }));
+        if (b.body) wrap.appendChild(richDiv(b.body, k === 0 && layout === 'notes' ? 'als-dropcap' : ''));
+        break;
+      case 'definition':
+        wrap.appendChild(E('div', { class: 'sh-def' }, [E('div', { class: 'term', html: ALS.md(b.term, { inline: true }) }), richDiv(b.body)]));
+        break;
+      case 'formula':
+        var f = E('div', { class: 'sh-formula' });
+        if (b.title) f.appendChild(E('div', { class: 't', html: ALS.md(b.title, { inline: true }) }));
+        f.appendChild(richDiv('$$' + b.math + '$$'));
+        if (b.note) f.appendChild(richDiv(b.note, 'note'));
+        wrap.appendChild(f);
+        break;
+      case 'keypoints':
+        var kp = E('div', { class: 'als-callout als-callout--info sh-kp' });
+        if (b.title) kp.appendChild(E('div', { class: 'sh-block-title', html: ALS.md(b.title, { inline: true }) }));
+        var ul = E('ul'); b.points.forEach(function (p) { var li = E('li'); ALS.rich(li, p, { inline: true }); ul.appendChild(li); });
+        kp.appendChild(ul); wrap.appendChild(kp);
+        break;
+      case 'example':
+        var ex = E('div', { class: 'als-card als-card--flat sh-example' });
+        ex.appendChild(E('div', { class: 'als-kicker', text: b.title || 'Example' }));
+        if (b.body) ex.appendChild(richDiv(b.body));
+        if (b.solution) {
+          var det = E('details', { class: 'sol', open: layout === 'cheatsheet' || null }, [E('summary', { style: 'cursor:pointer;color:var(--accent);font-weight:500', text: 'Solution' })]);
+          det.appendChild(richDiv(b.solution));
+          ex.appendChild(det);
+        }
+        wrap.appendChild(ex);
+        break;
+      case 'warning':
+        var w = E('div', { class: 'als-callout als-callout--warn' });
+        w.appendChild(E('div', { class: 'sh-block-title', text: b.title || 'Common mistake' }));
+        if (b.body) w.appendChild(richDiv(b.body));
+        wrap.appendChild(w);
+        break;
+      case 'table':
+        if (b.title) wrap.appendChild(E('div', { class: 'sh-block-title', html: ALS.md(b.title, { inline: true }) }));
+        var t = E('table', { class: 'sh-table' });
+        var thead = E('thead', {}, [E('tr', {}, b.headers.map(function (h) { return E('th', { html: ALS.md(h, { inline: true }) }); }))]);
+        var tbody = E('tbody', {}, b.rows.map(function (r) { return E('tr', {}, r.map(function (c) { return E('td', { html: ALS.md(String(c), { inline: true }) }); })); }));
+        t.appendChild(thead); t.appendChild(tbody);
+        wrap.appendChild(E('div', { class: 'sh-table-wrap' }, [t]));
+        break;
+      case 'quote':
+        wrap.appendChild(E('figure', { class: 'sh-quote' }, [E('blockquote', { style: 'margin:0', html: ALS.md(b.quote, { inline: true }) }), b.by ? E('figcaption', { html: '— ' + ALS.md(b.by, { inline: true }) }) : null]));
+        if (b.body) wrap.appendChild(richDiv(b.body, 'als-muted'));
+        break;
+    }
+    var prov = ALS.provenance(b); if (prov) { prov.style.marginTop = '.35rem'; wrap.appendChild(prov); }
+    return wrap;
+  }
+
+  function render() {
+    app.innerHTML = '';
+    var seg = E('div', { class: 'als-seg als-noprint', role: 'group', 'aria-label': 'Layout' }, [['notes', 'Notes'], ['cheatsheet', 'Cheat sheet']].map(function (o) {
+      return E('button', { type: 'button', 'aria-pressed': String(layout === o[0]), text: o[1], onclick: function () { layout = o[0]; ALS.store.set('layout', layout); render(); } });
+    }));
+    app.appendChild(ALS.topbar([seg, ALS.iconBtn('print', 'Print or save as PDF', function () { window.print(); }, 'als-noprint')]));
+    var main = E('main', { class: 'als-shell als-frame' });
+    var head = E('header', { class: 'sh-head' + (layout === 'cheatsheet' ? '' : '') , style: layout === 'cheatsheet' ? 'max-width:none' : '' }, [
+      E('div', { class: 'als-kicker', text: [sh.module, layout === 'cheatsheet' ? 'Cheat sheet' : 'Study notes'].filter(Boolean).join(' · ') }),
+      E('h1', { class: 'als-h1', text: sh.title }),
+      sh.subtitle ? E('p', { class: 'als-sub', text: sh.subtitle }) : null
+    ]);
+    main.appendChild(head);
+    var sections = [];
+    sh.blocks.forEach(function (b, k) { if (b.type === 'section' && b.title) sections.push({ k: k, title: b.title }); });
+    var body = E('div', { class: layout === 'cheatsheet' ? 'sh-cheat' : 'sh-notes' });
+    sh.blocks.forEach(function (b, k) { body.appendChild(block(b, k)); });
+    if (layout === 'notes' && sections.length >= 4) {
+      var toc = E('nav', { class: 'sh-toc', 'aria-label': 'Contents' }, [E('div', { class: 'als-kicker', style: 'margin-bottom:.5rem', text: 'Contents' })].concat(sections.map(function (s) {
+        return E('a', { href: '#sec-' + s.k, html: ALS.md(s.title, { inline: true }) });
+      })));
+      main.appendChild(E('div', { class: 'sh-layout has-toc' }, [toc, body]));
+    } else main.appendChild(body);
+    if (sh.sources && sh.sources.length) {
+      var src = E('footer', { class: layout === 'cheatsheet' ? '' : 'sh-notes', style: 'margin-top:2.5rem;font-size:.8125rem;color:var(--text-muted)' }, [E('hr', { class: 'als-divider' }), E('div', { class: 'als-kicker', text: 'Sources' })]);
+      var ul = E('ul', { style: 'padding-left:1.1rem' });
+      sh.sources.forEach(function (s) { ul.appendChild(E('li', { html: '<span class="als-mono">' + ALS.esc(s.id) + '</span> ' + ALS.esc(s.title) + (s.locator ? ', ' + ALS.esc(s.locator) : '') })); });
+      src.appendChild(ul);
+      main.appendChild(src);
+    }
+    app.appendChild(main);
+    ALS.applyMode();
+    ALS.renderMath(app);
+  }
+  render();
+});
+</script>
+</body>
+</html>

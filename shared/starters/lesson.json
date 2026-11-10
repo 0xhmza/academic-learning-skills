@@ -1,0 +1,31 @@
+{
+  "als": "1",
+  "kind": "lesson",
+  "title": "Lesson title",
+  "subtitle": "One-line promise of what the learner will understand",
+  "module": "module-id",
+  "subject": "Subject name",
+  "autoplaySec": 4,
+  "slides": [
+    { "layout": "title", "title": "Lesson title", "subtitle": "Why this matters", "kicker": "Module · Week 3" },
+    { "layout": "points", "title": "Big idea", "points": ["First point, revealed first", "Second point", "Third point with $x^2$"], "notes": "Speaker notes, toggled with N", "src": "L3 s.2" },
+    { "layout": "definition", "term": "Term", "definition": "Precise definition.", "example": "A concrete example." },
+    { "layout": "steps", "title": "Derivation", "steps": [
+      { "text": "Start from", "math": "f(x) = x^2" },
+      { "text": "Differentiate", "math": "f'(x) = 2x" }
+    ] },
+    { "layout": "diagram", "title": "Picture it",
+      "svg": "<svg viewBox='0 0 400 200' xmlns='http://www.w3.org/2000/svg'><g id='axes'><line class='d-line' x1='40' y1='170' x2='380' y2='170'/><line class='d-line' x1='40' y1='170' x2='40' y2='20'/></g><path id='curve' class='d-accent' stroke-width='3' d='M40 170 Q 210 -40 380 170'/><g id='label'><circle class='d-solid-accent' cx='210' cy='65' r='5'/><text class='d-text' x='222' y='60'>maximum</text></g></svg>",
+      "steps": [["axes"], ["curve"], ["label"]],
+      "captions": ["Axes first.", "Then the curve.", "The maximum sits where the slope is zero."] },
+    { "layout": "code", "title": "In code", "lang": "python", "code": "def f(x):\n    return x * x\n\nprint(f(3))", "highlight": [[1, 2], [4]], "explain": ["Define the function.", "Call it."] },
+    { "layout": "compare", "title": "Compare", "columns": [
+      { "heading": "Option A", "points": ["Pro", "Con"] },
+      { "heading": "Option B", "points": ["Pro", "Con"] }
+    ] },
+    { "layout": "timeline", "title": "Timeline", "events": [ { "when": "1687", "what": "Newton's *Principia*" }, { "when": "1905", "what": "Special relativity" } ] },
+    { "layout": "quote", "quote": "A short, attributable quotation.", "by": "Author, *Work* (year)" },
+    { "layout": "check", "question": "Quick check question?", "options": ["Wrong", "Right", "Wrong"], "answer": 1, "explain": "Why the right answer is right." },
+    { "layout": "summary", "title": "Remember", "points": ["Takeaway one", "Takeaway two"] }
+  ]
+}

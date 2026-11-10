@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="{{lang}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="generator" content="academic-learning-skills {{version}} · exam">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script>/*ALS:EARLY*/</script>
+<style>/*ALS:CSS*/</style>
+<style>
+  .ex-paper { max-width: 52rem; margin: 0 auto; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(1.25rem, 4vw, 3rem); box-shadow: var(--shadow, none); }
+  .ex-toolbar { max-width: 52rem; margin: 0 auto 1rem; display: flex; flex-wrap: wrap; gap: .5rem .75rem; align-items: center; }
+  .ex-toolbar .lbl { font-size: .8125rem; color: var(--text-muted); }
+  .ex-cover { border-bottom: 2px solid var(--text); padding-bottom: 1.25rem; margin-bottom: 1.5rem; }
+  .ex-facts { display: flex; flex-wrap: wrap; gap: .4rem 1.5rem; font-size: .9rem; color: var(--text-muted); margin-top: .75rem; }
+  .ex-facts b { color: var(--text); font-weight: 600; }
+  .ex-ident { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 1rem 2rem; margin-top: 1.25rem; }
+  .ex-ident div { border-bottom: 1px solid var(--text-faint); padding-bottom: .2rem; font-size: .8rem; color: var(--text-muted); min-height: 2rem; display: flex; align-items: flex-end; }
+  .ex-instr { margin-top: 1rem; font-size: .95rem; }
+  .ex-section { margin-top: 2rem; }
+  .ex-section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; border-bottom: 1px solid var(--border-strong); padding-bottom: .35rem; margin-bottom: 1rem; }
+  .ex-q { display: grid; grid-template-columns: 2.25rem 1fr auto; gap: .25rem .75rem; margin: 0 0 1.5rem; break-inside: avoid; page-break-inside: avoid; }
+  .ex-num { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+  .ex-pts { font-family: var(--font-mono); font-size: .75rem; color: var(--text-muted); white-space: nowrap; padding-top: .2rem; }
+  .ex-body { min-width: 0; }
+  .ex-part { display: grid; grid-template-columns: 1.75rem 1fr auto; gap: .25rem .5rem; margin-top: .75rem; }
+  .ex-part .lab { font-weight: 600; }
+  .ex-space { margin-top: .6rem; background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(1.9rem - 1px), var(--border-strong) calc(1.9rem - 1px), var(--border-strong) 1.9rem); }
+  .ex-space.small { height: 3.8rem; } .ex-space.medium { height: 7.6rem; } .ex-space.large { height: 15.2rem; }
+  body[data-space="off"] .ex-space { display: none; }
+  .ex-sol { margin-top: .75rem; border-left: 3px solid var(--good); background: var(--good-soft); padding: .65rem .9rem; border-radius: var(--radius-sm); }
+  .ex-sol .als-kicker { color: var(--good-text, var(--good)); }
+  .ex-sol ul { margin: .35rem 0 0; padding-left: 1.2rem; font-size: .9rem; }
+  body[data-sol="off"] .ex-sol, body[data-sol="end"] .ex-body .ex-sol { display: none; }
+  .ex-appendix { display: none; margin-top: 2.5rem; border-top: 2px solid var(--text); padding-top: 1.25rem; }
+  body[data-sol="end"] .ex-appendix { display: block; }
+  body[data-sol="end"] .ex-appendix { break-before: page; page-break-before: always; }
+  .ex-appendix .ex-sol-item { margin-bottom: 1.25rem; break-inside: avoid; }
+  .ex-total { text-align: right; font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); margin-top: 1rem; }
+  @media print {
+    .ex-paper { border: 0; box-shadow: none; padding: 0; max-width: none; background: #fff; }
+    .ex-toolbar { display: none !important; }
+    .als-frame { padding: 0 !important; }
+    .ex-space { background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(9mm - 1px), #bbb calc(9mm - 1px), #bbb 9mm); }
+  }
+</style>
+</head>
+<body data-sol="off" data-space="on">
+<div id="app"></div>
+<!--ALS:DATA-->
+<script>/*ALS:CORE*/</script>
+<script>
+ALS.boot(function (ex) {
+  var E = ALS.el, $ = ALS.$;
+  var app = $('#app');
+  var meta = ex.meta || {};
+  var qp = new URLSearchParams(location.search);
+  var solMode = ['off', 'inline', 'end'].indexOf(qp.get('solutions')) > -1 ? qp.get('solutions') : ALS.store.get('sol', 'off');
+  var space = ['on', 'off'].indexOf(qp.get('space')) > -1 ? qp.get('space') : ALS.store.get('space', 'on');
+  document.body.setAttribute('data-sol', solMode);
+  document.body.setAttribute('data-space', space);
+
+  function pts(p) { return p == null ? '' : p + (p === 1 ? ' pt' : ' pts'); }
+  function qPoints(q) { return q.points != null ? q.points : (q.parts || []).reduce(function (a, p) { return a + (p.points || 0); }, 0) || null; }
+  var total = ex.sections.reduce(function (a, s) { return a + s.questions.reduce(function (b, q) { return b + (qPoints(q) || 0); }, 0); }, 0);
+  var hasSol = ex.sections.some(function (s) { return s.questions.some(function (q) { return q.solution || (q.parts || []).some(function (p) { return p.solution; }); }); });
+
+  function solBox(text, marking) {
+    if (!text && !(marking && marking.length)) return null;
+    var b = E('div', { class: 'ex-sol' }, [E('div', { class: 'als-kicker', text: 'Solution' })]);
+    if (text) { var t = E('div'); ALS.rich(t, text); b.appendChild(t); }
+    if (marking && marking.length) {
+      var ul = E('ul'); marking.forEach(function (m) { var li = E('li'); ALS.rich(li, m, { inline: true }); ul.appendChild(li); });
+      b.appendChild(E('div', { style: 'margin-top:.5rem;font-size:.8rem;font-weight:600', text: 'Marking' })); b.appendChild(ul);
+    }
+    return b;
+  }
+
+  function seg(name, opts, current, onpick) {
+    return E('div', { class: 'als-seg', role: 'group', 'aria-label': name }, opts.map(function (o) {
+      return E('button', { type: 'button', 'aria-pressed': String(current === o[0]), text: o[1], onclick: function () { onpick(o[0]); } });
+    }));
+  }
+
+  function render() {
+    app.innerHTML = '';
+    app.appendChild(ALS.topbar([ALS.iconBtn('print', 'Print or save as PDF', function () { window.print(); }, 'als-noprint')]));
+    var main = E('main', { class: 'als-shell als-frame' });
+
+    var tb = E('div', { class: 'ex-toolbar als-noprint' }, [
+      hasSol ? E('span', { class: 'lbl', text: 'Solutions' }) : null,
+      hasSol ? seg('Solutions', [['off', 'Hidden'], ['inline', 'Inline'], ['end', 'At the end']], solMode, function (v) { solMode = v; ALS.store.set('sol', v); document.body.setAttribute('data-sol', v); render(); }) : null,
+      E('span', { class: 'lbl', text: 'Answer space' }),
+      seg('Answer space', [['on', 'Lines'], ['off', 'None']], space, function (v) { space = v; ALS.store.set('space', v); document.body.setAttribute('data-space', v); render(); }),
+      E('div', { class: 'als-spacer' }),
+      E('button', { type: 'button', class: 'als-btn als-btn--primary als-btn--sm', html: ALS.icon('print') + ' Print / PDF', onclick: function () { window.print(); } })
+    ]);
+    tb.querySelectorAll('svg').forEach(function (s) { s.style.width = '1rem'; });
+    main.appendChild(tb);
+
+    var paper = E('article', { class: 'ex-paper' });
+    var cover = E('header', { class: 'ex-cover' }, [
+      meta.course || ex.module ? E('div', { class: 'als-kicker', text: meta.course || ex.module }) : null,
+      E('h1', { class: 'als-h1', style: 'font-size:clamp(1.7rem,4.5vw,2.6rem)', text: ex.title }),
+      ex.subtitle ? E('p', { class: 'als-sub', text: ex.subtitle }) : null,
+      E('div', { class: 'ex-facts' }, [
+        meta.duration ? E('span', { html: 'Time <b>' + ALS.esc(meta.duration) + '</b>' }) : null,
+        total ? E('span', { html: 'Total <b>' + total + ' pts</b>' }) : null,
+        meta.allowed ? E('span', { html: 'Allowed <b>' + ALS.esc(meta.allowed) + '</b>' }) : null
+      ]),
+      E('div', { class: 'ex-ident' }, [E('div', { text: 'Name' }), E('div', { text: 'Student ID' }), E('div', { text: 'Date' })])
+    ]);
+    if (meta.instructions && meta.instructions.length) {
+      var ins = E('div', { class: 'ex-instr als-rich' });
+      ALS.rich(ins, meta.instructions.map(function (i) { return '- ' + i; }).join('\n'));
+      cover.appendChild(ins);
+    }
+    paper.appendChild(cover);
+
+    var appendix = E('section', { class: 'ex-appendix' }, [E('h2', { class: 'als-h2', text: 'Solutions' })]);
+    var n = 0;
+    ex.sections.forEach(function (sec) {
+      var s = E('section', { class: 'ex-section' });
+      var secPts = sec.questions.reduce(function (a, q) { return a + (qPoints(q) || 0); }, 0);
+      s.appendChild(E('div', { class: 'ex-section-head' }, [E('h2', { class: 'als-h3', style: 'margin:0', text: sec.title }), secPts ? E('span', { class: 'ex-pts', text: pts(secPts) }) : null]));
+      if (sec.intro) { var it = E('div', { class: 'als-muted', style: 'margin-bottom:1rem' }); ALS.rich(it, sec.intro); s.appendChild(it); }
+      sec.questions.forEach(function (q) {
+        n++;
+        var body = E('div', { class: 'ex-body' });
+        ALS.rich(body.appendChild(E('div')), q.prompt);
+        var prov = ALS.provenance(q); if (prov) { prov.classList.add('als-noprint'); body.appendChild(prov); }
+        if (q.parts && q.parts.length) {
+          q.parts.forEach(function (p) {
+            var pb = E('div', {});
+            ALS.rich(pb.appendChild(E('div')), p.prompt);
+            if ((p.space || 'medium') !== 'none') pb.appendChild(E('div', { class: 'ex-space ' + (p.space || 'medium'), 'aria-hidden': 'true' }));
+            var ps = solBox(p.solution); if (ps) pb.appendChild(ps);
+            body.appendChild(E('div', { class: 'ex-part' }, [E('span', { class: 'lab', text: '(' + p.label + ')' }), pb, E('span', { class: 'ex-pts', text: pts(p.points) })]));
+          });
+        } else if ((q.space || 'medium') !== 'none') body.appendChild(E('div', { class: 'ex-space ' + (q.space || 'medium'), 'aria-hidden': 'true' }));
+        var qs = solBox(q.solution, q.marking); if (qs) body.appendChild(qs);
+        s.appendChild(E('div', { class: 'ex-q' }, [E('span', { class: 'ex-num', text: n + '.' }), body, E('span', { class: 'ex-pts', text: q.parts && q.parts.length && q.points == null ? '' : pts(qPoints(q)) })]));
+
+        // appendix copy
+        var item = E('div', { class: 'ex-sol-item' }, [E('div', { class: 'als-h3', text: 'Question ' + n })]);
+        var any = false;
+        if (q.parts) q.parts.forEach(function (p) { var b = solBox(p.solution); if (b) { any = true; item.appendChild(E('div', { style: 'font-weight:600;margin-top:.5rem', text: '(' + p.label + ')' })); item.appendChild(b); } });
+        var main2 = solBox(q.solution, q.marking); if (main2) { any = true; item.appendChild(main2); }
+        if (any) appendix.appendChild(item);
+      });
+      paper.appendChild(s);
+    });
+    if (total) paper.appendChild(E('div', { class: 'ex-total', text: 'Total: ' + total + ' pts' }));
+    if (hasSol) paper.appendChild(appendix);
+    main.appendChild(paper);
+    app.appendChild(main);
+    ALS.applyMode();
+    ALS.renderMath(app);
+  }
+  render();
+});
+</script>
+</body>
+</html>

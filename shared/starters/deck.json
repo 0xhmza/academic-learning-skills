@@ -1,0 +1,46 @@
+{
+  "als": "1",
+  "kind": "deck",
+  "title": "Deck title",
+  "subtitle": "What this deck covers",
+  "module": "module-id",
+  "subject": "Subject name",
+  "sources": [
+    { "id": "L1", "title": "Lecture 1 slides", "locator": "slides 1-30" }
+  ],
+  "cards": [
+    {
+      "id": "c1",
+      "type": "basic",
+      "front": "Question with **bold** and inline maths $a^2+b^2=c^2$?",
+      "back": "Short answer.",
+      "extra": "Optional context shown after the answer.",
+      "tags": ["definitions"],
+      "topic": "topic-id",
+      "src": "L1 s.4"
+    },
+    {
+      "id": "c2",
+      "type": "reverse",
+      "front": "Term",
+      "back": "Definition of the term",
+      "topic": "topic-id",
+      "src": "L1 s.6"
+    },
+    {
+      "id": "c3",
+      "type": "cloze",
+      "text": "The {{c1::mitochondrion}} produces most of the cell's {{c2::ATP::energy molecule}}.",
+      "extra": "One card is generated per cN number.",
+      "topic": "topic-id",
+      "src": "L1 s.9"
+    },
+    {
+      "id": "c4",
+      "type": "basic",
+      "front": "A fact added beyond the course material",
+      "back": "Answer",
+      "grounded": false
+    }
+  ]
+}
