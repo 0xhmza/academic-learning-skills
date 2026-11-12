@@ -7,9 +7,9 @@ fonts offline.
 | Theme | For | Character |
 |---|---|---|
 | `blueprint` | maths, physics, CS, engineering, statistics | In the spirit of tailwindcss.com: near-black/white, sky accent, Inter + JetBrains Mono, hairline grid, dark code blocks, pill primary buttons, `//` mono kickers |
-| `folio` | philosophy, literature, history, languages, arts, theology | Editorial: EB Garamond + Cormorant, paper tones, oxblood ink, small caps, ornamented dividers, drop caps |
+| `folio` | philosophy, literature, history, languages, arts, theology | A literary quarterly: Fraunces headlines, Newsreader text, warm paper, plum ink with an ochre second accent, ink-black buttons |
 | `clinic` | biology, medicine, chemistry, health, psychology, environment | IBM Plex, teal + violet, soft rounded cards, dot lattice, diagram-first |
-| `ledger` | economics, business, law, politics, social science, education | Libre Franklin + Source Serif, navy + burgundy, tabular figures, heavy rules |
+| `ledger` | economics, business, law, politics, social science, education | The financial pages: DM Serif Display over DM Sans, newsprint, Oxford blue with a claret accent, tabular figures |
 
 ## How a theme is chosen (first match wins)
 
@@ -54,3 +54,10 @@ slide's `steps`. Group parts that appear together in a `<g id="…">`.
    `[data-als-mode="dark"]`; add motif rules sparingly.
 2. Add an entry to `themes.json` with `label`, `short`, `description`, `fonts`, `swatch` and `subjects`.
 3. Run `python -m unittest discover tests` — the theme test checks every token is defined in both modes.
+
+## Right-to-left, scrollbars and the status bar
+
+- Each theme has a `[dir="rtl"]` block with Arabic fonts (`fontsRtl` in `themes.json`). Layout CSS uses logical
+  properties, so pages mirror automatically; maths, code and diagrams stay left-to-right.
+- Scrollbars use the theme colours (`base.css`). Display formulas scale to fit instead of scrolling.
+- Every theme defines `--status-bg` for the status bar. Hideable regions are tagged with `ALS.panel(id, node)`.

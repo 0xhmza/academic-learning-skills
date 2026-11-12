@@ -366,6 +366,9 @@ def _lesson_scaffold(data: dict, args) -> None:
     cfg = settings.resolve(ws if ws.exists() else None, args.module)
     data["grounding"] = args.grounding or cfg["lesson_grounding"]["value"]
     data["depth"] = settings.normalise("lesson_depth", args.depth or cfg["lesson_depth"]["value"])
+    data["explain"] = cfg["lesson_explain"]["value"]
+    if cfg["lesson_view"]["value"] == "present":
+        data["view"] = "present"
     if args.lang:
         data["lang"] = args.lang
     sources = []

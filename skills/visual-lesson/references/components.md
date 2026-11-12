@@ -2,7 +2,13 @@
 
 Each component is a slide layout: a small spec in, a themed, animated SVG out. All of them accept
 `title`, `steps`, `captions` (one per step), `caption`, `focus` and the usual `src`, `notes`, `more`,
-`level`. Labels inside a drawing are plain text: use Unicode (σ, x₁, ŷ, ∂), not LaTeX.
+`level`, and the explanation fields `lead`, `explain` and `takeaway`: every visual needs an `explain`
+that tells the reader how to read it.
+
+Labels inside a drawing accept maths: write `"$\\sigma(z)$"`, `"$x_1$"`, `"$\\hat y$"` and it is typeset
+by KaTeX in place. Plain numbers (ticks, cell values, bar values) are set in the maths font
+automatically. Unicode symbols (σ, x₁) still work and are converted, but LaTeX is exact. In a
+right-to-left lesson the drawing itself stays left-to-right; labels may be in Arabic.
 
 ## Steps
 

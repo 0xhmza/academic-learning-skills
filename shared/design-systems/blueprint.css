@@ -85,3 +85,13 @@
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 [data-als-theme="blueprint"] .als-kicker::before { content: "// "; opacity: .55; }
+
+/* Arabic and other right-to-left scripts */
+[data-als-theme="blueprint"][dir="rtl"] {
+  --font-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --font-display: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --display-weight: 700;
+}
+[data-als-theme="blueprint"][dir="rtl"] .als-kicker::before { content: none; }
+[data-als-theme="blueprint"] { --status-bg: #f3f4f6; }
+[data-als-theme="blueprint"][data-als-mode="dark"] { --status-bg: #0b1120; }

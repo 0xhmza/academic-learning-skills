@@ -49,16 +49,27 @@ def choose_theme(data: dict, ws: Path | None, override: str | None = None) -> tu
     return themes.route(data.get("subject"), mod_info.get("subject"), mod_info.get("title"), data.get("title"))
 
 
+RTL_LANGS = {"ar", "he", "fa", "ur", "ps", "sd", "ckb", "yi", "dv", "ug"}
+
+
+def is_rtl(data: dict) -> bool:
+    """Right-to-left page? `dir` in the data file wins; otherwise the language decides."""
+    if data.get("dir") in ("rtl", "ltr"):
+        return data["dir"] == "rtl"
+    return str(data.get("lang") or "en").split("-")[0].lower() in RTL_LANGS
+
+
 def render(data: dict, theme: str) -> str:
     kind = data.get("kind")
     tpl_name = TEMPLATE_FOR_KIND.get(kind)
     if not tpl_name:
         raise BuildError(f"no template for kind {kind!r}")
     tpl = (TEMPLATES / tpl_name).read_text(encoding="utf-8")
-    core = (TEMPLATES / "core.js").read_text(encoding="utf-8")
+    core = (TEMPLATES / "i18n.js").read_text(encoding="utf-8") + "\n" + (TEMPLATES / "core.js").read_text(encoding="utf-8")
     reg = json.dumps(themes.runtime_registry(), ensure_ascii=False)
     out = (
         tpl.replace("{{lang}}", html.escape(data.get("lang") or "en", quote=True))
+        .replace("{{dir}}", "rtl" if is_rtl(data) else "ltr")
         .replace("{{theme}}", theme)
         .replace("{{title}}", html.escape(data.get("title", "Study"), quote=False))
         .replace("{{version}}", version())

@@ -7,56 +7,497 @@
   "subject": "Subject name",
   "grounding": "strict",
   "depth": "medium",
-  "sources": [{ "id": "L3", "title": "Lecture 3", "file": "sources/L03.pdf" }],
-  "macros": { "\\R": "\\mathbb{R}" },
+  "sources": [
+    {
+      "id": "L3",
+      "title": "Lecture 3",
+      "file": "sources/L03.pdf"
+    }
+  ],
+  "macros": {
+    "\\R": "\\mathbb{R}"
+  },
   "autoplaySec": 4,
   "slides": [
-    { "layout": "title", "title": "Lesson title", "subtitle": "Why this matters", "kicker": "Module · Week 3" },
-    { "layout": "points", "title": "Big idea", "points": ["First point, revealed first", "Second point", "Third point with $x^2$"], "notes": "What the lecturer says here (key N).", "more": "The fuller wording from the source, shown on demand (key E).", "src": "L3 s.2" },
-    { "layout": "definition", "term": "Term", "kind": "Definition", "definition": "Precise definition in the source's words.", "example": "The example the source gives.", "src": "L3 s.3" },
-    { "layout": "formula", "title": "The formula, part by part", "formula": "\\hat y = \\sigma(w^\\top x + b)", "parts": [
-      { "sym": "x \\in \\R^d", "means": "the input" },
-      { "sym": "w,\\ b", "means": "weights and bias" },
-      { "sym": "\\sigma", "means": "squashes the score into $(0,1)$" }
-    ], "src": "L3 s.4" },
-    { "layout": "steps", "title": "Derivation or worked example", "given": "$f(x) = x^2$, find the slope at $x = 3$", "steps": [
-      { "text": "Differentiate", "math": "f'(x) = 2x", "why": "power rule" },
-      { "text": "An intermediate step only shown at depth deep", "math": "f'(3) = 2 \\cdot 3", "level": "deep" },
-      { "text": "Evaluate", "math": "f'(3) = 6" }
-    ], "result": "The slope at $x=3$ is $6$.", "src": "L3 s.5" },
-    { "layout": "plot", "title": "A function, drawn from its formula", "x": [-6, 6], "y": [0, 1], "xlabel": "z", "ylabel": "σ(z)",
-      "curves": [{ "id": "sig", "fn": "1/(1+exp(-x))", "label": "sigmoid" }],
-      "lines": [{ "y": 0.5, "label": "0.5" }], "points": [{ "at": [0, 0.5], "label": "(0, 0.5)" }],
-      "steps": [["axes"], ["sig"], ["l1", "p1"]],
-      "captions": ["Axes first.", "The curve rises from 0 to 1.", "It crosses 0.5 at $z = 0$."], "src": "L3 s.6" },
-    { "layout": "flow", "title": "A process as boxes and arrows", "nodes": ["x: Input", { "id": "h", "label": "Hidden layer", "sub": "ReLU", "style": "accent" }, "y: Output"],
-      "edges": ["x>h: W₁", "h>y: W₂"], "captions": ["Start with the input.", "It is transformed.", "The result comes out."], "src": "L3 s.7" },
-    { "layout": "grid", "title": "Cells that light up", "grids": [
-      { "id": "in", "label": "input", "cells": [[1, 2, 0], [0, 1, 3], [2, 1, 0]] },
-      { "id": "k", "label": "kernel", "op": "∗", "cells": [[1, 0], [0, 1]] },
-      { "id": "out", "label": "output", "op": "=", "cells": [[2, 5], [1, 1]] }
-    ], "steps": [["in", "k"], ["out", "!in.r1c1:r2c2", "!out.r1c1"], ["!in.r1c2:r2c3", "!out.r1c2"]],
-      "captions": ["An input and a kernel.", "The first window gives the first output cell.", "Slide the window one step to the right."], "src": "L3 s.8" },
-    { "layout": "layers", "title": "Layers of units", "layers": [{ "n": 3, "label": "Input" }, { "n": 4, "label": "Hidden", "style": "accent" }, { "n": 1, "label": "Output" }], "src": "L3 s.9" },
-    { "layout": "tree", "title": "A hierarchy", "root": ["Root", ["Left", "Leaf A", "Leaf B"], "Right"], "src": "L3 s.10" },
-    { "layout": "bars", "title": "Numbers side by side", "labels": ["A", "B", "C"], "values": [12, 30, 21], "unit": "%", "highlight": [2], "src": "L3 s.11" },
-    { "layout": "table", "title": "Row by row", "columns": ["Method", "Cost", "Use when"], "rows": [["A", "$O(n)$", "data is sorted"], ["B", "$O(n^2)$", "data is tiny"]], "src": "L3 s.12" },
-    { "layout": "diagram", "title": "Free-form picture (only when no component fits)",
+    {
+      "layout": "title",
+      "title": "Lesson title",
+      "subtitle": "Why this matters",
+      "kicker": "Module · Week 3"
+    },
+    {
+      "layout": "objectives",
+      "title": "After this lesson you can",
+      "points": [
+        "state the definition from the material",
+        "apply the central formula to its example"
+      ],
+      "src": "L3 s.1"
+    },
+    {
+      "layout": "section",
+      "number": 1,
+      "title": "First part of the lesson",
+      "lead": "One sentence on what this part covers and why it comes now."
+    },
+    {
+      "layout": "points",
+      "title": "Big idea",
+      "points": [
+        {
+          "text": "First claim, revealed first",
+          "detail": "The sentence or two a lecturer would say about it: what it means and why it holds."
+        },
+        {
+          "text": "Second claim",
+          "detail": "Its explanation, in the source's terms."
+        },
+        "Third claim with $x^2$ (a point may stay a bare string when it needs no comment)"
+      ],
+      "notes": "What the lecturer says here (key N).",
+      "more": "The fuller wording from the source, shown on demand (key E).",
+      "src": "L3 s.2",
+      "lead": "One or two sentences: what this slide is about and how it follows from the previous one.",
+      "explain": "The explanation in full sentences: how the points hang together, what follows from them, what to watch out for. Write it so that someone who missed the lecture understands the slide from the page alone.",
+      "takeaway": "The one sentence to remember from this slide."
+    },
+    {
+      "layout": "text",
+      "title": "A passage explained in prose",
+      "body": "Use this when the material argues in sentences rather than in bullet points: two or three short paragraphs that follow the source's reasoning.\n\nKeep its terms and its order. Bold the **key term** the first time it appears.",
+      "takeaway": "The conclusion of the passage in one sentence.",
+      "src": "L3 s.2"
+    },
+    {
+      "layout": "definition",
+      "term": "Term",
+      "kind": "Definition",
+      "definition": "Precise definition in the source's words.",
+      "example": "The example the source gives.",
+      "src": "L3 s.3",
+      "explain": "The definition in plain words, and why each condition in it is there.",
+      "intuition": "An analogy or everyday example of your own. The page labels it as the tutor's, not the material's."
+    },
+    {
+      "layout": "formula",
+      "title": "The formula, part by part",
+      "formula": "\\hat y = \\sigma(w^\\top x + b)",
+      "parts": [
+        {
+          "sym": "x \\in \\R^d",
+          "means": "the input"
+        },
+        {
+          "sym": "w,\\ b",
+          "means": "weights and bias"
+        },
+        {
+          "sym": "\\sigma",
+          "means": "squashes the score into $(0,1)$"
+        }
+      ],
+      "src": "L3 s.4",
+      "explain": "What the formula computes, read aloud in words, and what happens when a part grows or shrinks."
+    },
+    {
+      "layout": "steps",
+      "title": "Derivation or worked example",
+      "given": "$f(x) = x^2$, find the slope at $x = 3$",
+      "steps": [
+        {
+          "text": "Differentiate",
+          "math": "f'(x) = 2x",
+          "why": "power rule"
+        },
+        {
+          "text": "An intermediate step only shown at depth deep",
+          "math": "f'(3) = 2 \\cdot 3",
+          "level": "deep"
+        },
+        {
+          "text": "Evaluate",
+          "math": "f'(3) = 6"
+        }
+      ],
+      "result": "The slope at $x=3$ is $6$.",
+      "src": "L3 s.5",
+      "lead": "What is being derived or solved, and the idea of the approach.",
+      "explain": "Why the derivation goes this way: the idea behind the key step and what the result means."
+    },
+    {
+      "layout": "plot",
+      "title": "A function, drawn from its formula",
+      "x": [
+        -6,
+        6
+      ],
+      "y": [
+        0,
+        1
+      ],
+      "xlabel": "z",
+      "ylabel": "σ(z)",
+      "curves": [
+        {
+          "id": "sig",
+          "fn": "1/(1+exp(-x))",
+          "label": "sigmoid"
+        }
+      ],
+      "lines": [
+        {
+          "y": 0.5,
+          "label": "0.5"
+        }
+      ],
+      "points": [
+        {
+          "at": [
+            0,
+            0.5
+          ],
+          "label": "(0, 0.5)"
+        }
+      ],
+      "steps": [
+        [
+          "axes"
+        ],
+        [
+          "sig"
+        ],
+        [
+          "l1",
+          "p1"
+        ]
+      ],
+      "captions": [
+        "Axes first.",
+        "The curve rises from 0 to 1.",
+        "It crosses 0.5 at $z = 0$."
+      ],
+      "src": "L3 s.6",
+      "explain": "How to read the picture: what the axes mean, what the shape of the curve says, which feature matters."
+    },
+    {
+      "layout": "flow",
+      "title": "A process as boxes and arrows",
+      "nodes": [
+        "x: Input",
+        {
+          "id": "h",
+          "label": "Hidden layer",
+          "sub": "ReLU",
+          "style": "accent"
+        },
+        "y: Output"
+      ],
+      "edges": [
+        "x>h: W₁",
+        "h>y: W₂"
+      ],
+      "captions": [
+        "Start with the input.",
+        "It is transformed.",
+        "The result comes out."
+      ],
+      "src": "L3 s.7"
+    },
+    {
+      "layout": "grid",
+      "title": "Cells that light up",
+      "grids": [
+        {
+          "id": "in",
+          "label": "input",
+          "cells": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              3
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "id": "k",
+          "label": "kernel",
+          "op": "∗",
+          "cells": [
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "id": "out",
+          "label": "output",
+          "op": "=",
+          "cells": [
+            [
+              2,
+              5
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      "steps": [
+        [
+          "in",
+          "k"
+        ],
+        [
+          "out",
+          "!in.r1c1:r2c2",
+          "!out.r1c1"
+        ],
+        [
+          "!in.r1c2:r2c3",
+          "!out.r1c2"
+        ]
+      ],
+      "captions": [
+        "An input and a kernel.",
+        "The first window gives the first output cell.",
+        "Slide the window one step to the right."
+      ],
+      "src": "L3 s.8"
+    },
+    {
+      "layout": "layers",
+      "title": "Layers of units",
+      "layers": [
+        {
+          "n": 3,
+          "label": "Input"
+        },
+        {
+          "n": 4,
+          "label": "Hidden",
+          "style": "accent"
+        },
+        {
+          "n": 1,
+          "label": "Output"
+        }
+      ],
+      "src": "L3 s.9"
+    },
+    {
+      "layout": "tree",
+      "title": "A hierarchy",
+      "root": [
+        "Root",
+        [
+          "Left",
+          "Leaf A",
+          "Leaf B"
+        ],
+        "Right"
+      ],
+      "src": "L3 s.10"
+    },
+    {
+      "layout": "bars",
+      "title": "Numbers side by side",
+      "labels": [
+        "A",
+        "B",
+        "C"
+      ],
+      "values": [
+        12,
+        30,
+        21
+      ],
+      "unit": "%",
+      "highlight": [
+        2
+      ],
+      "src": "L3 s.11"
+    },
+    {
+      "layout": "table",
+      "title": "Row by row",
+      "columns": [
+        "Method",
+        "Cost",
+        "Use when"
+      ],
+      "rows": [
+        [
+          "A",
+          "$O(n)$",
+          "data is sorted"
+        ],
+        [
+          "B",
+          "$O(n^2)$",
+          "data is tiny"
+        ]
+      ],
+      "src": "L3 s.12"
+    },
+    {
+      "layout": "diagram",
+      "title": "Free-form picture (only when no component fits)",
       "svg": "<svg viewBox='0 0 400 200' xmlns='http://www.w3.org/2000/svg'><g id='axes'><line class='d-line' x1='40' y1='170' x2='380' y2='170'/><line class='d-line' x1='40' y1='170' x2='40' y2='20'/></g><path id='curve' class='d-accent ls-draw' stroke-width='3' d='M40 170 Q 210 -40 380 170'/><g id='label'><line class='d-muted' x1='290' y1='40' x2='222' y2='62' marker-end='url(#als-arrow-muted)'/><circle class='d-solid-accent' cx='210' cy='65' r='5'/><text class='d-text' x='296' y='40'>maximum</text></g></svg>",
-      "steps": [["axes"], ["curve"], ["label"]],
-      "captions": ["Axes first.", "Then the curve.", "The maximum sits where the slope is zero."], "src": "L3 s.13" },
-    { "layout": "figure", "title": "The lecturer's own figure", "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==", "alt": "Slide 14 of lecture 3",
-      "caption": "The figure as shown in the lecture.", "marks": [{ "x": 10, "y": 15, "w": 35, "h": 30, "text": "What the first region shows." }, { "x": 55, "y": 50, "w": 35, "h": 35, "text": "What the second region shows." }], "src": "L3 s.14" },
-    { "layout": "code", "title": "In code", "lang": "python", "code": "def f(x):\n    return x * x\n\nprint(f(3))", "highlight": [[1, 2], [4]], "explain": ["Define the function.", "Call it."], "src": "L3 s.15" },
-    { "layout": "compare", "title": "Compare", "columns": [
-      { "heading": "Option A", "points": ["Pro", "Con"] },
-      { "heading": "Option B", "points": ["Pro", "Con"] }
-    ], "src": "L3 s.16" },
-    { "layout": "timeline", "title": "Timeline", "events": [ { "when": "1687", "what": "Newton's *Principia*" }, { "when": "1905", "what": "Special relativity" } ], "src": "L3 s.17" },
-    { "layout": "quote", "quote": "A short quotation taken word for word from the source.", "by": "Author, *Work* (year)", "src": "L3 s.18" },
-    { "layout": "pitfall", "title": "A mistake the source warns about", "wrong": "The tempting but wrong statement.", "why": "The reason the source gives.", "right": "The correct statement.", "src": "L3 s.19" },
-    { "layout": "recall", "question": "State it from memory before you reveal the answer.", "answer": "The answer, in the source's words.", "src": "L3 s.4" },
-    { "layout": "check", "question": "Quick check question?", "options": ["Wrong", "Right", "Wrong"], "answer": 1, "explain": "Why the right answer is right.", "src": "L3 s.5" },
-    { "layout": "summary", "title": "Remember", "points": ["Takeaway one", "Takeaway two"] }
+      "steps": [
+        [
+          "axes"
+        ],
+        [
+          "curve"
+        ],
+        [
+          "label"
+        ]
+      ],
+      "captions": [
+        "Axes first.",
+        "Then the curve.",
+        "The maximum sits where the slope is zero."
+      ],
+      "src": "L3 s.13"
+    },
+    {
+      "layout": "figure",
+      "title": "The lecturer's own figure",
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+      "alt": "Slide 14 of lecture 3",
+      "caption": "The figure as shown in the lecture.",
+      "marks": [
+        {
+          "x": 10,
+          "y": 15,
+          "w": 35,
+          "h": 30,
+          "text": "What the first region shows."
+        },
+        {
+          "x": 55,
+          "y": 50,
+          "w": 35,
+          "h": 35,
+          "text": "What the second region shows."
+        }
+      ],
+      "src": "L3 s.14"
+    },
+    {
+      "layout": "code",
+      "title": "In code",
+      "lang": "python",
+      "code": "def f(x):\n    return x * x\n\nprint(f(3))",
+      "highlight": [
+        [
+          1,
+          2
+        ],
+        [
+          4
+        ]
+      ],
+      "explain": [
+        "Define the function.",
+        "Call it."
+      ],
+      "src": "L3 s.15",
+      "about": "What the program does as a whole and why it is written this way."
+    },
+    {
+      "layout": "compare",
+      "title": "Compare",
+      "columns": [
+        {
+          "heading": "Option A",
+          "points": [
+            "Pro",
+            "Con"
+          ]
+        },
+        {
+          "heading": "Option B",
+          "points": [
+            "Pro",
+            "Con"
+          ]
+        }
+      ],
+      "src": "L3 s.16"
+    },
+    {
+      "layout": "timeline",
+      "title": "Timeline",
+      "events": [
+        {
+          "when": "1687",
+          "what": "Newton's *Principia*"
+        },
+        {
+          "when": "1905",
+          "what": "Special relativity"
+        }
+      ],
+      "src": "L3 s.17"
+    },
+    {
+      "layout": "quote",
+      "quote": "A short quotation taken word for word from the source.",
+      "by": "Author, *Work* (year)",
+      "src": "L3 s.18"
+    },
+    {
+      "layout": "pitfall",
+      "title": "A mistake the source warns about",
+      "wrong": "The tempting but wrong statement.",
+      "why": "The reason the source gives.",
+      "right": "The correct statement.",
+      "src": "L3 s.19"
+    },
+    {
+      "layout": "recall",
+      "question": "State it from memory before you reveal the answer.",
+      "answer": "The answer, in the source's words.",
+      "src": "L3 s.4"
+    },
+    {
+      "layout": "check",
+      "question": "Quick check question?",
+      "options": [
+        "Wrong",
+        "Right",
+        "Wrong"
+      ],
+      "answer": 1,
+      "explain": "Why the right answer is right.",
+      "src": "L3 s.5"
+    },
+    {
+      "layout": "summary",
+      "title": "Remember",
+      "points": [
+        "Takeaway one",
+        "Takeaway two"
+      ]
+    }
   ]
 }

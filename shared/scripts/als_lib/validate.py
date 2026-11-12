@@ -102,8 +102,64 @@ BLANK_MARK = re.compile(r"\{\{(\d+)\}\}")
 SVG_ID = re.compile(r"""\bid\s*=\s*["']([^"']+)["']""")
 
 
-NO_SRC_NEEDED = {"title", "summary"}
+NO_SRC_NEEDED = {"title", "summary", "section"}
 LONG_POINT = 220
+# slides that are short by nature and need no explanation of their own
+THIN_OK = {"title", "section", "quote", "check", "recall", "summary", "objectives", "pitfall"}
+# words of explanation a content slide should carry, by lesson depth ("explain": "short" halves it)
+EXPLAIN_MIN = {"brief": 12, "medium": 35, "standard": 35, "deep": 55}
+MATH_SEG = re.compile(r"\$\$.*?\$\$|\$[^$\n]+\$|\\\(.*?\\\)|\\\[.*?\\\]|\\begin\{.*?\\end\{[^}]*\}|`[^`\n]+`", re.S)
+TEX_CMD = re.compile(r"\\[a-zA-Z]{2,}")
+RAW_KEYS = {"math", "formula", "sym", "svg", "code", "image", "fn", "src", "id", "layout", "file", "lang", "macros", "url", "from", "to"}
+
+
+def _words(x) -> int:
+    if isinstance(x, str):
+        return len(re.sub(r"[$*`{}\\]", " ", x).split())
+    if isinstance(x, list):
+        return sum(_words(y) for y in x)
+    return 0
+
+
+def explanation_words(s: dict) -> int:
+    """Words on a slide that explain rather than state: lead, explain, point details, step reasons, captions…"""
+    n = sum(_words(s.get(k)) for k in ("lead", "explain", "intuition", "takeaway", "about", "captions", "caption", "comment", "note", "body", "example", "given", "result"))
+    for key, fields in (("points", ("detail",)), ("steps", ("why", "text")), ("parts", ("means",)), ("events", ("detail",)), ("marks", ("text",))):
+        for item in s.get(key) or []:
+            if isinstance(item, dict):
+                n += sum(_words(item.get(f)) for f in fields)
+    for col in s.get("columns") or []:
+        if isinstance(col, dict):
+            n += _words(col.get("text")) + sum(_words(p.get("detail")) for p in col.get("points") or [] if isinstance(p, dict))
+    return n
+
+
+def math_lint(data, warns: list[str]) -> None:
+    """LaTeX that is not inside $…$ cannot be typeset; an unpaired $ swallows the text after it."""
+    hits: list[str] = []
+
+    def walk(x, path: str, key: str | None = None) -> None:
+        if key in RAW_KEYS:
+            return
+        if isinstance(x, str):
+            rest = MATH_SEG.sub(" ", x)
+            m = TEX_CMD.search(rest)
+            if m:
+                hits.append(f"{path}: LaTeX outside $…$ ({m.group(0)}…); wrap the expression in $…$")
+            elif len(re.findall(r"(?<![\\\d])\$(?!\d)", rest)) % 2 == 1:
+                hits.append(f"{path}: unpaired $; maths needs an opening and a closing $")
+        elif isinstance(x, list):
+            for i, y in enumerate(x):
+                walk(y, f"{path}[{i}]", key)
+        elif isinstance(x, dict):
+            for k, v in x.items():
+                if not k.startswith("_"):
+                    walk(v, f"{path}.{k}", k)
+
+    walk(data, "$")
+    warns.extend(hits[:10])
+    if len(hits) > 10:
+        warns.append(f"… and {len(hits) - 10} more maths problems")
 
 
 def _step_tokens(p: str, s: dict, known: set[str], errs: list[str], warns: list[str]) -> None:
@@ -174,12 +230,23 @@ def _lesson(data: dict, errs: list[str], warns: list[str]) -> None:
             for k, m in enumerate(s.get("marks", [])):
                 if m.get("x", 0) + m.get("w", 0) > 100.5 or m.get("y", 0) + m.get("h", 0) > 100.5:
                     errs.append(f"{p}: mark {k + 1} leaves the image (x + w and y + h are percentages and must stay within 100)")
-        if layout in ("points", "summary"):
+        if layout in ("points", "summary", "objectives"):
             pts = s.get("points", [])
             if layout == "points" and len(pts) > 6:
                 warns.append(f"{p}: {len(pts)} points on one slide; consider splitting (max ~6)")
-            if any(len(str(x)) > LONG_POINT for x in pts):
-                warns.append(f"{p}: a point is longer than {LONG_POINT} characters; slides hold short claims, move the rest to 'notes' or 'more'")
+            if any(len(str(x.get("text", "")) if isinstance(x, dict) else str(x)) > LONG_POINT for x in pts):
+                warns.append(f"{p}: a point is longer than {LONG_POINT} characters; keep the claim short and put its explanation in the point's 'detail' or the slide's 'explain'")
+        if layout == "code" and isinstance(s.get("explain"), str):
+            errs.append(f"{p}: on a code slide 'explain' is the list of per-step comments; put the overall explanation in 'about'")
+    # a lesson is read without a lecturer: content slides must carry their explanation on the page
+    mode = data.get("explain", "full")
+    need = EXPLAIN_MIN.get(data.get("depth") or "medium", 35) // (2 if mode == "short" else 1)
+    if mode != "off":
+        thin = [str(i + 1) for i, s in enumerate(data.get("slides", []))
+                if s.get("layout") not in THIN_OK and explanation_words(s) < need]
+        if thin:
+            warns.append(f"thin slides (under {need} words of explanation on the page): {', '.join(thin)}. Add 'explain' (what a lecturer would say here), "
+                         "'lead', or 'detail' on the points; these lessons are read without a presenter")
 
 
 def semantic(data: dict) -> tuple[list[str], list[str]]:
@@ -244,6 +311,8 @@ def validate_data(data) -> tuple[list[str], list[str]]:
     if errs:
         return errs, []
     e2, warns = semantic(data)
+    if kind != "events":
+        math_lint(data, warns)
     return e2, warns
 
 

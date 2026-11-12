@@ -1,18 +1,20 @@
 <!doctype html>
-<html lang="en" data-als-theme="folio" data-als-default="folio" data-als-mode="light">
+<html lang="en" dir="ltr" data-als-theme="folio" data-als-default="folio" data-als-mode="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kantian ethics</title>
-<meta name="generator" content="academic-learning-skills 0.2.0 · sheet">
+<meta name="generator" content="academic-learning-skills 0.3.0 · sheet">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <script>(function(){try{var m=localStorage.getItem('als:mode')||'auto';var d=m==='dark'||(m==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-als-mode',d?'dark':'light');}catch(e){}})();</script>
 <style>/* ALS component contract.
    Every template uses only these classes plus template-specific classes built on the same tokens.
-   A theme file defines the tokens (and optional motif overrides) under [data-als-theme="<name>"]. */
+   A theme file defines the tokens (and optional motif overrides) under [data-als-theme="<name>"].
+   Layout uses logical properties (inline-start/end) only, so every page mirrors correctly in RTL. */
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; color-scheme: light; }
+html[data-als-mode="dark"] { color-scheme: dark; }
 html, body { margin: 0; padding: 0; }
 body {
   background-color: var(--bg);
@@ -21,46 +23,59 @@ body {
   background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-body);
-  font-size: var(--font-size, 16px);
-  line-height: 1.6;
+  font-size: var(--font-size, 1rem);
+  line-height: var(--leading, 1.6);
   font-feature-settings: var(--font-features, normal);
   min-height: 100vh;
   transition: background-color .25s ease, color .25s ease;
 }
+#app { display: flex; flex-direction: column; min-height: 100vh; }
+#app > main, #app > .als-main { flex: 1 0 auto; }
 img, svg { max-width: 100%; }
 button, input, select, textarea { font: inherit; color: inherit; }
-a { color: var(--accent); text-underline-offset: 3px; }
+a { color: var(--accent-text, var(--accent)); text-underline-offset: 3px; }
 ::selection { background: var(--accent-soft); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius-sm); }
 
+/* ---------- scrollbars follow the theme (and dark mode) ---------- */
+* { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--text-faint) 60%, transparent) transparent; }
+::-webkit-scrollbar { width: 10px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--text-faint) 60%, transparent); border-radius: 999px; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background-color: var(--text-muted); }
+::-webkit-scrollbar-corner { background: transparent; }
+
 /* ---------- layout ---------- */
-.als-shell { width: 100%; max-width: var(--shell-max, 72rem); margin: 0 auto; padding: 0 16px; }
+.als-shell { width: 100%; max-width: var(--shell-max, 76rem); margin: 0 auto; padding: 0 16px; }
 @media (min-width: 720px) { .als-shell { padding: 0 32px; } }
 .als-stack > * + * { margin-top: var(--stack-gap, 1rem); }
 .als-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
 .als-spacer { flex: 1 1 auto; }
 .als-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); }
 .als-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.als-frame { padding-top: 2rem; padding-bottom: 3rem; }
 
 /* ---------- top bar ---------- */
 .als-topbar {
   position: sticky; top: 0; z-index: 20;
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
   backdrop-filter: saturate(1.4) blur(10px);
   -webkit-backdrop-filter: saturate(1.4) blur(10px);
   border-bottom: 1px solid var(--border);
 }
-.als-topbar .als-shell { display: flex; align-items: center; gap: .75rem; min-height: 3.5rem; }
+.als-topbar .als-shell { display: flex; align-items: center; gap: .5rem; min-height: 3.25rem; max-width: none; }
 .als-brand { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
 .als-brand-title { font-family: var(--font-display); font-weight: var(--display-weight, 600); font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: var(--display-tracking, normal); }
 .als-brand-sub { color: var(--text-muted); font-size: .75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.als-panel-close { opacity: .55; }
+.als-panel-close:hover { opacity: 1; }
 
 /* ---------- type ---------- */
 .als-kicker {
   font-family: var(--kicker-font, var(--font-mono));
   text-transform: var(--kicker-transform, uppercase);
   letter-spacing: var(--kicker-tracking, .08em);
-  font-size: .75rem; font-weight: 500; color: var(--accent);
+  font-size: var(--kicker-size, .75rem); font-weight: var(--kicker-weight, 500); color: var(--kicker-color, var(--accent-text, var(--accent)));
   font-variant: var(--kicker-variant, normal);
 }
 .als-h1 { font-family: var(--font-display); font-weight: var(--display-weight, 600); letter-spacing: var(--display-tracking, -0.02em); line-height: 1.1; font-size: clamp(1.9rem, 5vw, 3.25rem); margin: .25rem 0 .5rem; text-wrap: balance; }
@@ -101,11 +116,12 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .als-btn--primary:hover { background: var(--accent-hover, var(--accent)); border-color: var(--accent-hover, var(--accent)); filter: brightness(1.05); }
 .als-btn--ghost { background: transparent; border-color: transparent; }
 .als-btn--ghost:hover { background: var(--bg-sunken); border-color: transparent; }
+.als-btn--ghost[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent-text, var(--accent)); }
 .als-btn--good { background: var(--good-soft); border-color: color-mix(in srgb, var(--good) 45%, transparent); color: var(--good-text, var(--good)); }
 .als-btn--bad { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 45%, transparent); color: var(--bad-text, var(--bad)); }
 .als-btn--warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 45%, transparent); color: var(--warn-text, var(--warn)); }
 .als-btn--sm { min-height: 2rem; padding: .25rem .65rem; font-size: .8125rem; }
-.als-iconbtn { width: 2.5rem; height: 2.5rem; padding: 0; min-height: 0; }
+.als-iconbtn { width: 2.5rem; height: 2.5rem; padding: 0; min-height: 0; flex: none; }
 .als-iconbtn svg { width: 1.15rem; height: 1.15rem; }
 
 .als-input, .als-select, .als-textarea {
@@ -122,7 +138,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 
 .als-chip {
   display: inline-flex; align-items: center; gap: .3rem;
-  padding: .15rem .55rem; border-radius: 999px;
+  padding: .15rem .55rem; border-radius: var(--radius-chip, 999px);
   background: var(--bg-sunken); border: 1px solid var(--border);
   font-size: .75rem; color: var(--text-muted); white-space: nowrap;
 }
@@ -138,28 +154,28 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .als-progress { height: .375rem; background: var(--bg-sunken); border-radius: 999px; overflow: hidden; }
 .als-progress > span { display: block; height: 100%; width: 0; background: var(--accent); border-radius: inherit; transition: width .35s ease; }
 
-.als-callout { border: 1px solid var(--border); border-left: 3px solid var(--accent); background: var(--bg-elev); border-radius: var(--radius-sm); padding: .75rem 1rem; }
-.als-callout--good { border-left-color: var(--good); background: var(--good-soft); }
-.als-callout--bad { border-left-color: var(--bad); background: var(--bad-soft); }
-.als-callout--warn { border-left-color: var(--warn); background: var(--warn-soft); }
-.als-callout--info { border-left-color: var(--accent); background: var(--accent-soft); }
+.als-callout { border: 1px solid var(--border); border-inline-start: 3px solid var(--accent); background: var(--bg-elev); border-radius: var(--radius-sm); padding: .75rem 1rem; }
+.als-callout--good { border-inline-start-color: var(--good); background: var(--good-soft); }
+.als-callout--bad { border-inline-start-color: var(--bad); background: var(--bad-soft); }
+.als-callout--warn { border-inline-start-color: var(--warn); background: var(--warn-soft); }
+.als-callout--info { border-inline-start-color: var(--accent); background: var(--accent-soft); }
 
 /* ---------- menu (theme picker) ---------- */
 .als-menu { position: relative; }
 .als-menu-panel {
-  position: absolute; right: 0; top: calc(100% + .4rem); z-index: 30; min-width: 14rem;
+  position: absolute; inset-inline-end: 0; top: calc(100% + .4rem); z-index: 30; min-width: 15rem;
   background: var(--bg-elev); border: 1px solid var(--border-strong); border-radius: var(--radius);
   box-shadow: 0 12px 32px -12px rgba(0,0,0,.35); padding: .4rem; display: none;
 }
 .als-menu[data-open="true"] .als-menu-panel { display: block; }
-.als-menu-item { display: flex; align-items: center; gap: .6rem; width: 100%; text-align: left; border: 0; background: transparent; padding: .5rem .6rem; border-radius: var(--radius-sm); cursor: pointer; }
+.als-menu-item { display: flex; align-items: center; gap: .6rem; width: 100%; text-align: start; border: 0; background: transparent; padding: .5rem .6rem; border-radius: var(--radius-sm); cursor: pointer; }
 .als-menu-item:hover, .als-menu-item[aria-checked="true"] { background: var(--bg-sunken); }
 .als-menu-item small { display: block; color: var(--text-muted); font-size: .72rem; }
 .als-swatch { width: 1.1rem; height: 1.1rem; border-radius: 50%; flex: none; border: 1px solid var(--border-strong); }
 
 /* ---------- toast ---------- */
 .als-toast {
-  position: fixed; left: 50%; bottom: 1.25rem; transform: translate(-50%, 1rem); z-index: 50;
+  position: fixed; left: 50%; bottom: 3rem; transform: translate(-50%, 1rem); z-index: 50;
   max-width: calc(100vw - 32px); padding: .6rem 1rem; border-radius: var(--radius-sm);
   background: var(--text-strong, var(--text)); color: var(--bg); font-size: .875rem;
   box-shadow: 0 10px 30px -10px rgba(0,0,0,.4); opacity: 0; pointer-events: none;
@@ -167,29 +183,77 @@ a { color: var(--accent); text-underline-offset: 3px; }
 }
 .als-toast[data-show="true"] { opacity: 1; transform: translate(-50%, 0); }
 
-/* ---------- frame (motif hook, styled by themes) ---------- */
-.als-frame { min-height: calc(100vh - 3.5rem); padding-top: 2rem; padding-bottom: 4rem; }
+/* ---------- dock and status bar ---------- */
+.als-dock { position: sticky; bottom: 0; z-index: 25; margin-top: auto; }
+.als-status {
+  display: flex; align-items: stretch; gap: .25rem; min-height: 1.75rem; padding: 0 .5rem;
+  background: var(--status-bg, var(--bg-sunken)); color: var(--text-muted); border-top: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: .6875rem; line-height: 1; font-variant-numeric: tabular-nums;
+  direction: ltr; /* a status bar reads the same way in every language; its texts are isolated below */
+}
+.als-status-group { display: flex; align-items: stretch; gap: 0; min-width: 0; }
+.als-status-info { flex: 1 1 auto; overflow: hidden; justify-content: center; }
+.als-status-end { margin-inline-start: auto; }
+.als-seg-item, .als-seg-group { display: inline-flex; align-items: center; gap: .3rem; padding: 0 .5rem; white-space: nowrap; border: 0; background: none; color: inherit; font: inherit; unicode-bidi: isolate; }
+.als-seg-group { padding: 0; gap: 0; }
+.als-seg-item + .als-seg-item, .als-seg-group + .als-seg-item, .als-seg-item + .als-seg-group { border-inline-start: 1px solid var(--border); }
+.als-status-info .als-seg-item:first-child, .als-seg-group .als-seg-item { border-inline-start: 0; }
+.als-seg-item .k { color: var(--text-faint); }
+.als-seg-item .v { color: var(--text); }
+.als-seg-item .i { display: inline-grid; }
+.als-seg-item .i svg { width: .85rem; height: .85rem; }
+.als-seg-btn { cursor: pointer; transition: background-color .15s, color .15s; }
+.als-seg-btn:hover { background: var(--accent-soft); color: var(--text); }
+.als-seg-btn[aria-pressed="false"] { color: var(--text-faint); }
+.als-seg-btn[aria-pressed="false"] .i { opacity: .55; }
+.als-seg-btn[aria-pressed="true"] { color: var(--accent-text, var(--accent)); }
+#als-zen[aria-pressed="true"] { background: var(--accent); color: var(--accent-contrast); }
+#als-timer.is-paused .v { color: var(--text-faint); text-decoration: line-through; }
+#als-focus.is-on { background: var(--accent-soft); }
+#als-focus.is-on .v { color: var(--accent-text, var(--accent)); font-weight: 600; }
+#als-focus.is-done { background: var(--good-soft); animation: als-blink 1s ease 6; }
+@keyframes als-blink { 50% { background: var(--good); color: var(--bg); } }
+@media (max-width: 720px) { .als-hide-sm { display: none !important; } .als-status-info .als-seg-item:nth-child(n+3) { display: none; } }
+
+/* ---------- collapsible panels ---------- */
+[data-als-hide~="header"] [data-als-panel="header"],
+[data-als-hide~="sidebar"] [data-als-panel="sidebar"],
+[data-als-hide~="controls"] [data-als-panel="controls"],
+[data-als-hide~="status"] [data-als-panel="status"] { display: none !important; }
+.als-handles { position: fixed; inset-block-end: .4rem; inset-inline-end: .4rem; z-index: 30; display: none; gap: .25rem; }
+[data-als-hide~="status"] .als-handles { display: flex; }
+.als-handle { display: none; width: 1.75rem; height: 1.75rem; place-items: center; padding: 0; cursor: pointer; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--bg-elev); color: var(--text-muted); opacity: .45; transition: opacity .15s; }
+.als-handle:hover, .als-handle:focus-visible { opacity: 1; color: var(--text); }
+.als-handle svg { width: .9rem; height: .9rem; }
+[data-als-hide~="header"] .als-handle[data-handle="header"],
+[data-als-hide~="sidebar"] .als-handle[data-handle="sidebar"],
+[data-als-hide~="controls"] .als-handle[data-handle="controls"],
+[data-als-hide~="status"] .als-handle[data-handle="status"] { display: inline-grid; }
 
 /* ---------- rich text ---------- */
-.als-rich { overflow-wrap: anywhere; }
+.als-rich { overflow-wrap: break-word; }
 .als-rich > :first-child { margin-top: 0; }
 .als-rich > :last-child { margin-bottom: 0; }
 .als-rich p { margin: 0 0 .75em; }
-.als-rich ul, .als-rich ol { margin: 0 0 .75em; padding-left: 1.35em; }
+.als-rich ul, .als-rich ol { margin: 0 0 .75em; padding-inline-start: 1.35em; }
 .als-rich li + li { margin-top: .25em; }
 .als-rich code { font-family: var(--font-mono); font-size: .875em; background: var(--bg-sunken); border: 1px solid var(--border); border-radius: 4px; padding: .05em .3em; }
 .als-rich strong { font-weight: 650; color: var(--text-strong, var(--text)); }
-.als-math-display { display: block; margin: .6em 0; overflow-x: auto; overflow-y: hidden; padding: .2em 0; text-align: center; }
+
+/* ---------- maths: left-to-right in every language, never a scrollbar of its own ---------- */
+.als-math, .katex { direction: ltr; unicode-bidi: isolate; }
+.als-math-display { display: block; margin: .6em 0; padding: .15em 0; text-align: center; max-width: 100%; overflow: hidden; }
 .als-math-raw { font-family: var(--font-mono); font-size: .9em; color: var(--accent-text, var(--accent)); }
 .katex { font-size: 1.08em; }
 .katex-display { margin: 0 !important; }
+.katex-display > .katex { white-space: nowrap; }
 
-/* ---------- code blocks ---------- */
+/* ---------- code blocks (always left-to-right) ---------- */
 .als-code {
   font-family: var(--font-mono); font-size: .875rem; line-height: 1.65;
   background: var(--code-bg, var(--bg-sunken)); color: var(--code-text, var(--text));
   border: 1px solid var(--border); border-radius: var(--radius-sm);
-  padding: .9rem 0; overflow-x: auto; margin: 0;
+  padding: .9rem 0; overflow-x: auto; margin: 0; direction: ltr; text-align: left;
 }
 .als-code .ln { display: block; padding: 0 1rem; border-left: 3px solid transparent; transition: background-color .25s, opacity .25s, border-color .25s; white-space: pre; }
 .als-code.has-focus .ln { opacity: .4; }
@@ -198,6 +262,17 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .tok-s { color: var(--code-string, var(--good)); }
 .tok-c { color: var(--text-faint); font-style: italic; }
 .tok-n { color: var(--code-number, var(--accent-2)); }
+code, pre, kbd, .als-mono, .als-src, .als-kbd { direction: ltr; unicode-bidi: isolate; }
+
+/* ---------- right-to-left (Arabic, Hebrew, Persian, Urdu) ---------- */
+[dir="rtl"] body { line-height: var(--leading-rtl, 1.9); }
+[dir="rtl"] * { letter-spacing: 0 !important; }                 /* letter-spacing breaks Arabic joining */
+[dir="rtl"] .als-kicker, [dir="rtl"] .als-btn, [dir="rtl"] th { text-transform: none !important; font-variant: normal !important; }
+[dir="rtl"] .als-kicker { font-family: var(--font-body); font-size: .85rem; font-weight: 600; }
+[dir="rtl"] em { font-style: normal; font-weight: 600; }       /* Arabic script has no italics */
+[dir="rtl"] .als-h1, [dir="rtl"] .als-h2 { line-height: 1.45; }
+[dir="rtl"] .als-flip svg { transform: scaleX(-1); }            /* previous/next chevrons follow reading direction */
+[dir="rtl"] .als-status .k, [dir="rtl"] .als-status .v { font-family: var(--font-body); }
 
 /* ---------- motion ---------- */
 @keyframes als-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
@@ -210,8 +285,10 @@ a { color: var(--accent); text-underline-offset: 3px; }
 /* ---------- print ---------- */
 @media print {
   @page { margin: 16mm 14mm; }
+  html { font-size: 100% !important; }
   body { background: #fff !important; background-image: none !important; color: #000; font-size: 11pt; }
-  .als-noprint, .als-topbar { display: none !important; }
+  #app { display: block; min-height: 0; }
+  .als-noprint, .als-topbar, .als-dock, .als-handles { display: none !important; }
   .als-card { box-shadow: none; break-inside: avoid; }
   a { color: inherit; }
 }
@@ -304,88 +381,126 @@ a { color: var(--accent); text-underline-offset: 3px; }
 }
 [data-als-theme="blueprint"] .als-kicker::before { content: "// "; opacity: .55; }
 
+/* Arabic and other right-to-left scripts */
+[data-als-theme="blueprint"][dir="rtl"] {
+  --font-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --font-display: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --display-weight: 700;
+}
+[data-als-theme="blueprint"][dir="rtl"] .als-kicker::before { content: none; }
+[data-als-theme="blueprint"] { --status-bg: #f3f4f6; }
+[data-als-theme="blueprint"][data-als-mode="dark"] { --status-bg: #0b1120; }
+
 /* Folio: philosophy, literature, history, languages, arts.
-   Editorial book typography: Garamond body, Cormorant display, paper tones, oxblood ink,
-   small-caps labels, ornamented dividers, square corners. */
+   A modern literary quarterly: Fraunces headlines (soft, optical-size serif), Newsreader text set large with
+   generous leading, warm paper, plum ink with an ochre second accent, hairline rules, ink-black primary
+   buttons. No textures, no ornaments: the typography carries it. */
 
 [data-als-theme="folio"] {
-  --font-body: "EB Garamond", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --font-display: "Cormorant Garamond", "EB Garamond", "Palatino Linotype", Georgia, serif;
+  --font-body: "Newsreader", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-display: "Fraunces", "Newsreader", "Iowan Old Style", Georgia, serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
-  --font-size: 18.5px;
-  --font-features: "kern", "liga", "onum";
-  --display-weight: 600;
-  --display-tracking: -0.005em;
+  --font-size: 1.125rem;
+  --leading: 1.68;
+  --font-features: "kern", "liga", "onum", "pnum";
+  --display-weight: 560;
+  --display-tracking: -0.022em;
   --kicker-font: var(--font-body);
-  --kicker-transform: lowercase;
-  --kicker-variant: small-caps;
-  --kicker-tracking: .14em;
-  --radius: 4px;
-  --radius-sm: 3px;
-  --radius-btn: 3px;
-  --shell-max: 64rem;
+  --kicker-tracking: .16em;
+  --kicker-size: .7rem;
+  --kicker-weight: 600;
+  --radius: 6px;
+  --radius-sm: 4px;
+  --radius-btn: 4px;
+  --radius-chip: 4px;
+  --shell-max: 74rem;
 
-  --bg: #f7f3ea;
-  --bg-elev: #fbf8f1;
-  --bg-sunken: #efe8d9;
-  --text: #2a241e;
-  --text-strong: #1c1712;
-  --text-muted: #6b5e50;
-  --text-faint: #9c8f7f;
-  --border: #e3d9c6;
-  --border-strong: #cdbfa5;
-  --accent: #8c2f2b;
-  --accent-hover: #74231f;
-  --accent-contrast: #fbf8f1;
-  --accent-text: #7a2622;
-  --accent-soft: rgb(140 47 43 / .09);
-  --accent-2: #a0712a;
-  --good: #4d7a3a;   --good-text: #3f6630;  --good-soft: rgb(77 122 58 / .12);
-  --bad: #a33a2e;    --bad-text: #8e2f24;   --bad-soft: rgb(163 58 46 / .10);
-  --warn: #a8741a;   --warn-text: #8a5f12;  --warn-soft: rgb(168 116 26 / .12);
-  --shadow: 0 1px 0 rgb(80 60 30 / .06);
-  --pattern: radial-gradient(rgb(90 60 20 / .035) 1px, transparent 1.2px);
-  --pattern-size: 5px 5px;
-  --code-bg: #efe8d9;
+  --bg: #fbf8f2;
+  --bg-elev: #fffdf9;
+  --bg-sunken: #f3eee4;
+  --text: #221d18;
+  --text-strong: #15110d;
+  --text-muted: #675c50;
+  --text-faint: #9d9183;
+  --border: #e7dfd1;
+  --border-strong: #d0c5b3;
+  --accent: #7a3e6f;
+  --accent-hover: #63315a;
+  --accent-contrast: #fffdf9;
+  --accent-text: #6e3764;
+  --accent-soft: rgb(122 62 111 / .09);
+  --accent-2: #a9691f;
+  --good: #3f6f3a;   --good-text: #345d30;  --good-soft: rgb(63 111 58 / .11);
+  --bad: #b0352b;    --bad-text: #972c23;   --bad-soft: rgb(176 53 43 / .09);
+  --warn: #a9691f;   --warn-text: #8a5516;  --warn-soft: rgb(169 105 31 / .12);
+  --shadow: none;
+  --pattern: none;
+  --status-bg: #f3eee4;
+  --code-bg: #f3eee4;
+  --code-keyword: #7a3e6f;
+  --code-string: #3f6f3a;
+  --code-number: #a9691f;
 }
 
 [data-als-theme="folio"][data-als-mode="dark"] {
-  --bg: #1a1613;
-  --bg-elev: #221d19;
-  --bg-sunken: #15110f;
-  --text: #ece3d3;
-  --text-strong: #f7efe1;
-  --text-muted: #b3a691;
-  --text-faint: #7d715f;
-  --border: #352d26;
-  --border-strong: #4a3f35;
-  --accent: #d88a6c;
-  --accent-hover: #e8a487;
-  --accent-contrast: #1a1613;
-  --accent-text: #e9a588;
-  --accent-soft: rgb(216 138 108 / .14);
-  --accent-2: #d4a95a;
-  --good: #9cc27f;   --good-text: #b5d69c;  --good-soft: rgb(156 194 127 / .13);
-  --bad: #e08a7a;    --bad-text: #eba597;   --bad-soft: rgb(224 138 122 / .13);
-  --warn: #e0b25e;   --warn-text: #ecc884;  --warn-soft: rgb(224 178 94 / .13);
-  --shadow: none;
-  --pattern: radial-gradient(rgb(255 240 210 / .025) 1px, transparent 1.2px);
-  --code-bg: #15110f;
+  --bg: #171416;
+  --bg-elev: #1f1b1e;
+  --bg-sunken: #121011;
+  --text: #ebe4dc;
+  --text-strong: #f8f2ea;
+  --text-muted: #b0a59b;
+  --text-faint: #7b7169;
+  --border: #322c30;
+  --border-strong: #483f45;
+  --accent: #d59ac6;
+  --accent-hover: #e3b4d7;
+  --accent-contrast: #1b141a;
+  --accent-text: #e0add2;
+  --accent-soft: rgb(213 154 198 / .14);
+  --accent-2: #d9a85c;
+  --good: #9bc48f;   --good-text: #b3d6a9;  --good-soft: rgb(155 196 143 / .13);
+  --bad: #e8897d;    --bad-text: #f0a49a;   --bad-soft: rgb(232 137 125 / .13);
+  --warn: #d9a85c;   --warn-text: #e6bf82;  --warn-soft: rgb(217 168 92 / .13);
+  --status-bg: #121011;
+  --code-bg: #121011;
+  --code-keyword: #e0add2;
+  --code-string: #b3d6a9;
+  --code-number: #e6bf82;
 }
 
-/* Motif: italic subtitles, ornamented dividers, drop caps, hanging quotes. */
-[data-als-theme="folio"] .als-sub { font-style: italic; font-size: 1.125rem; }
-[data-als-theme="folio"] .als-h1 { font-weight: 600; line-height: 1.05; }
-[data-als-theme="folio"] .als-divider { border: 0; text-align: center; margin: 2rem 0; height: auto; }
-[data-als-theme="folio"] .als-divider::before { content: "\2766"; color: var(--accent); font-size: 1.1rem; letter-spacing: 1rem; }
-[data-als-theme="folio"] .als-dropcap > p:first-child::first-letter {
-  float: left; font-family: var(--font-display); font-size: 3.6em; line-height: .82; padding: .06em .08em 0 0; color: var(--accent); font-weight: 600;
+/* Arabic and other right-to-left scripts: Amiri headlines, Noto Naskh text. */
+[data-als-theme="folio"][dir="rtl"] {
+  --font-body: "Noto Naskh Arabic", "Amiri", "Traditional Arabic", "Times New Roman", serif;
+  --font-display: "Amiri", "Noto Naskh Arabic", "Traditional Arabic", serif;
+  --font-size: 1.2rem;
+  --display-weight: 700;
 }
+
+/* Motifs */
+[data-als-theme="folio"] .als-h1 { font-variation-settings: "opsz" 144, "SOFT" 50; line-height: 1.04; }
+[data-als-theme="folio"] .als-h2 { font-variation-settings: "opsz" 72, "SOFT" 50; }
+[data-als-theme="folio"] .als-grad, [data-als-theme="folio"] .als-h1 em, [data-als-theme="folio"] .als-h2 em { color: var(--accent-text); font-style: italic; font-weight: 480; }
+[data-als-theme="folio"] .als-sub { font-style: italic; font-size: 1.2rem; line-height: 1.5; }
+[data-als-theme="folio"] .als-kicker { display: inline-flex; align-items: center; gap: .6em; font-feature-settings: "lnum"; }
+[data-als-theme="folio"] .als-kicker::before { content: ""; width: 1.5rem; height: 1px; background: currentColor; opacity: .7; }
 [data-als-theme="folio"] .als-card { border-color: var(--border); }
-[data-als-theme="folio"] .als-btn { font-family: var(--font-body); letter-spacing: .02em; }
-[data-als-theme="folio"] .als-btn--primary { font-variant: small-caps; letter-spacing: .08em; }
-[data-als-theme="folio"] .als-grad { color: var(--accent); font-style: italic; }
-[data-als-theme="folio"] .als-kicker::before, [data-als-theme="folio"] .als-kicker::after { content: "\2014"; margin: 0 .4em; opacity: .6; }
+[data-als-theme="folio"] .als-callout { border: 0; border-inline-start: 2px solid var(--accent); border-radius: 0; background: transparent; padding: .25rem 0 .25rem 1.1rem; padding-inline: 1.1rem 0; }
+[data-als-theme="folio"] .als-callout--good, [data-als-theme="folio"] .als-callout--bad, [data-als-theme="folio"] .als-callout--warn, [data-als-theme="folio"] .als-callout--info { border-radius: var(--radius-sm); padding: .75rem 1.1rem; }
+[data-als-theme="folio"] .als-callout--good { background: var(--good-soft); border-inline-start-color: var(--good); }
+[data-als-theme="folio"] .als-callout--bad { background: var(--bad-soft); border-inline-start-color: var(--bad); }
+[data-als-theme="folio"] .als-callout--warn { background: var(--warn-soft); border-inline-start-color: var(--warn); }
+[data-als-theme="folio"] .als-callout--info { background: var(--accent-soft); }
+[data-als-theme="folio"] .als-btn { font-family: var(--font-body); font-size: 1rem; }
+[data-als-theme="folio"] .als-btn--primary { background: var(--text-strong); border-color: var(--text-strong); color: var(--bg); }
+[data-als-theme="folio"] .als-btn--primary:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); filter: none; }
+[data-als-theme="folio"] .als-divider { border: 0; height: auto; margin: 2.25rem 0; text-align: center; }
+[data-als-theme="folio"] .als-divider::before { content: "\00b7\2002\00b7\2002\00b7"; color: var(--text-faint); font-size: 1.25rem; }
+[data-als-theme="folio"] .als-dropcap > p:first-child::first-letter {
+  float: inline-start; font-family: var(--font-display); font-size: 3.7em; line-height: .8; padding: .08em .1em 0 0; color: var(--accent-text); font-weight: 560;
+}
+[data-als-theme="folio"][dir="rtl"] .als-dropcap > p:first-child::first-letter { float: none; font-size: inherit; padding: 0; color: inherit; }
+[data-als-theme="folio"][dir="rtl"] .als-sub { font-style: normal; }
+[data-als-theme="folio"] .als-rich a { text-decoration-thickness: 1px; }
 
 /* Clinic: biology, medicine, chemistry, health, environment, psychology.
    Calm, airy and diagram-first: IBM Plex, teal accent with violet secondary, soft rounded cards,
@@ -459,78 +574,114 @@ a { color: var(--accent); text-underline-offset: 3px; }
 [data-als-theme="clinic"] .als-kicker { display: inline-block; background: var(--accent-soft); color: var(--accent-text); padding: .2rem .65rem; border-radius: 999px; font-weight: 600; }
 [data-als-theme="clinic"] .als-card:focus-within { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
 [data-als-theme="clinic"] .als-grad { color: var(--accent); }
-[data-als-theme="clinic"] .als-callout { border-left-width: 0; border-radius: var(--radius-sm); }
+[data-als-theme="clinic"] .als-callout { border-inline-start-width: 0; border-radius: var(--radius-sm); }
+
+/* Arabic and other right-to-left scripts */
+[data-als-theme="clinic"][dir="rtl"] {
+  --font-body: "Tajawal", "Segoe UI", Tahoma, sans-serif;
+  --font-display: "Tajawal", "Segoe UI", Tahoma, sans-serif;
+  --display-weight: 700;
+  --font-size: 1.0625rem;
+}
+[data-als-theme="clinic"] { --status-bg: #edf4f4; }
+[data-als-theme="clinic"][data-als-mode="dark"] { --status-bg: #071416; }
 
 /* Ledger: economics, business, law, politics, social science, education.
-   Sober and structured: Libre Franklin body, Source Serif display, navy and burgundy,
-   tabular figures, strong horizontal rules, nearly square corners. */
+   The financial pages: DM Serif Display headlines over DM Sans text, salmon newsprint, Oxford-blue ink with
+   a claret second accent, section labels in small bold capitals with a short rule above each headline,
+   square clipping-style cards, tabular figures everywhere. */
 
 [data-als-theme="ledger"] {
-  --font-body: "Libre Franklin", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --font-display: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --font-body: "DM Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "DM Serif Display", "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-mono: "DM Mono", ui-monospace, Consolas, monospace;
   --font-features: "tnum", "lnum";
-  --display-weight: 650;
+  --display-weight: 400;
   --display-tracking: -0.012em;
   --kicker-font: var(--font-body);
-  --kicker-tracking: .16em;
+  --kicker-tracking: .13em;
+  --kicker-size: .6875rem;
+  --kicker-weight: 700;
+  --kicker-color: var(--accent-2);
   --radius: 3px;
   --radius-sm: 2px;
   --radius-btn: 2px;
+  --radius-chip: 2px;
 
-  --bg: #fafaf8;
-  --bg-elev: #ffffff;
-  --bg-sunken: #f2f2ee;
-  --text: #161b26;
-  --text-strong: #0b0f17;
-  --text-muted: #525a6a;
-  --text-faint: #8b92a0;
-  --border: #e3e3dd;
-  --border-strong: #c9c9c0;
-  --accent: #1f3a5f;
-  --accent-hover: #162b47;
+  --bg: #fbf0e6;
+  --bg-elev: #fff9f3;
+  --bg-sunken: #f4e5d6;
+  --text: #201b17;
+  --text-strong: #100d0b;
+  --text-muted: #5f554c;
+  --text-faint: #978a7e;
+  --border: #ead9c7;
+  --border-strong: #d3bfaa;
+  --accent: #17406f;
+  --accent-hover: #0f3059;
   --accent-contrast: #ffffff;
-  --accent-text: #1f3a5f;
-  --accent-soft: rgb(31 58 95 / .08);
-  --accent-2: #9b2c2c;
-  --good: #2f6b3a;   --good-text: #285c31;  --good-soft: rgb(47 107 58 / .10);
-  --bad: #a61b1b;    --bad-text: #8f1717;   --bad-soft: rgb(166 27 27 / .08);
-  --warn: #9a6700;   --warn-text: #7d5400;  --warn-soft: rgb(154 103 0 / .10);
+  --accent-text: #17406f;
+  --accent-soft: rgb(23 64 111 / .09);
+  --accent-2: #8f1f3f;
+  --good: #2c7343;   --good-text: #23603a;  --good-soft: rgb(44 115 67 / .12);
+  --bad: #b3261e;    --bad-text: #991f18;   --bad-soft: rgb(179 38 30 / .09);
+  --warn: #9a6200;   --warn-text: #7d5000;  --warn-soft: rgb(154 98 0 / .12);
   --shadow: none;
   --pattern: none;
-  --code-bg: #f2f2ee;
+  --status-bg: #f4e5d6;
+  --code-bg: #f4e5d6;
+  --code-keyword: #8f1f3f;
+  --code-string: #23603a;
+  --code-number: #17406f;
 }
 
 [data-als-theme="ledger"][data-als-mode="dark"] {
-  --bg: #0f141c;
-  --bg-elev: #151c27;
-  --bg-sunken: #0c1118;
-  --text: #e7e9ee;
-  --text-strong: #ffffff;
-  --text-muted: #a2aab8;
-  --text-faint: #687183;
-  --border: #232c3a;
-  --border-strong: #334055;
-  --accent: #8fb3e8;
-  --accent-hover: #b0caf0;
-  --accent-contrast: #0f141c;
-  --accent-text: #a9c5ee;
-  --accent-soft: rgb(143 179 232 / .13);
-  --accent-2: #e59a9a;
-  --good: #7cc48a;   --good-text: #9dd6a8;  --good-soft: rgb(124 196 138 / .12);
-  --bad: #f08a8a;    --bad-text: #f5a8a8;   --bad-soft: rgb(240 138 138 / .12);
-  --warn: #e8b85a;   --warn-text: #f0cc84;  --warn-soft: rgb(232 184 90 / .12);
-  --code-bg: #0c1118;
+  --bg: #15110e;
+  --bg-elev: #1d1814;
+  --bg-sunken: #100d0a;
+  --text: #efe7df;
+  --text-strong: #fffaf4;
+  --text-muted: #b5a99d;
+  --text-faint: #7f7469;
+  --border: #302923;
+  --border-strong: #473d34;
+  --accent: #8db8ea;
+  --accent-hover: #b0cdf1;
+  --accent-contrast: #0e141c;
+  --accent-text: #a5c6ee;
+  --accent-soft: rgb(141 184 234 / .14);
+  --accent-2: #ea93a8;
+  --good: #7cc48f;   --good-text: #9bd6ab;  --good-soft: rgb(124 196 143 / .13);
+  --bad: #f08e85;    --bad-text: #f6aaa2;   --bad-soft: rgb(240 142 133 / .13);
+  --warn: #e5b45c;   --warn-text: #efc983;  --warn-soft: rgb(229 180 92 / .13);
+  --status-bg: #100d0a;
+  --code-bg: #100d0a;
+  --code-keyword: #ea93a8;
+  --code-string: #9bd6ab;
+  --code-number: #a5c6ee;
 }
 
-/* Motif: heavy top rules on headings and cards, uppercase muted labels, tabular data feel. */
-[data-als-theme="ledger"] .als-h2 { border-top: 2px solid var(--text-strong); padding-top: .6rem; }
-[data-als-theme="ledger"] .als-card { border-top: 2px solid var(--text-strong); }
-[data-als-theme="ledger"] .als-kicker { color: var(--accent-2); font-weight: 600; }
-[data-als-theme="ledger"] .als-chip { border-radius: 2px; }
-[data-als-theme="ledger"] .als-grad { color: var(--accent); }
-[data-als-theme="ledger"] .als-callout { border-left-width: 4px; }
-[data-als-theme="ledger"] .als-btn--primary { text-transform: uppercase; letter-spacing: .08em; font-size: .8125rem; font-weight: 600; }
+/* Arabic and other right-to-left scripts: Noto Kufi headlines, Noto Sans Arabic text. */
+[data-als-theme="ledger"][dir="rtl"] {
+  --font-body: "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --font-display: "Noto Kufi Arabic", "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --display-weight: 700;
+}
+
+/* Motifs */
+[data-als-theme="ledger"] .als-h1 { line-height: 1.06; }
+[data-als-theme="ledger"] .als-h2::before { content: ""; display: block; width: 2.25rem; height: 3px; background: var(--accent-2); margin-bottom: .7rem; }
+[data-als-theme="ledger"] .als-grad, [data-als-theme="ledger"] .als-h1 em, [data-als-theme="ledger"] .als-h2 em { color: var(--accent-2); font-style: italic; }
+[data-als-theme="ledger"] .als-sub { font-size: 1.125rem; }
+[data-als-theme="ledger"] .als-card { border-color: var(--border-strong); }
+[data-als-theme="ledger"] .als-callout { border-inline-start-width: 3px; }
+[data-als-theme="ledger"] .als-btn { font-weight: 600; }
+[data-als-theme="ledger"] .als-btn--primary { background: var(--text-strong); border-color: var(--text-strong); color: var(--bg); }
+[data-als-theme="ledger"] .als-btn--primary:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); filter: none; }
+[data-als-theme="ledger"] .als-topbar { border-bottom: 1px solid var(--text-strong); }
+[data-als-theme="ledger"] .als-brand-title { font-size: 1.1rem; }
+[data-als-theme="ledger"] .als-divider { border-top: 1px solid var(--text-strong); }
+[data-als-theme="ledger"] th { font-family: var(--font-body); }
 </style>
 <style>
   .sh-head { max-width: 46rem; margin: 0 auto 2rem; }
@@ -540,8 +691,8 @@ a { color: var(--accent); text-underline-offset: 3px; }
   @media (min-width: 1100px) { .sh-layout.has-toc { grid-template-columns: 13rem minmax(0, 46rem); justify-content: center; } }
   .sh-toc { position: sticky; top: 4.5rem; align-self: start; font-size: .875rem; display: none; }
   @media (min-width: 1100px) { .sh-toc { display: block; } }
-  .sh-toc a { display: block; color: var(--text-muted); text-decoration: none; padding: .25rem 0 .25rem .75rem; border-left: 2px solid var(--border); }
-  .sh-toc a:hover { color: var(--text); border-left-color: var(--accent); }
+  .sh-toc a { display: block; color: var(--text-muted); text-decoration: none; padding: .25rem .75rem; border-inline-start: 2px solid var(--border); }
+  .sh-toc a:hover { color: var(--text); border-inline-start-color: var(--accent); }
   .sh-section-title { scroll-margin-top: 5rem; }
   .sh-def { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: .9rem 1.1rem; background: var(--bg-elev); }
   .sh-def .term { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.1rem; margin-bottom: .2rem; }
@@ -549,13 +700,13 @@ a { color: var(--accent); text-underline-offset: 3px; }
   .sh-formula { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: .75rem 1rem; background: var(--bg-elev); }
   .sh-formula .t { font-size: .8125rem; color: var(--text-muted); font-weight: 600; }
   .sh-formula .note { font-size: .875rem; color: var(--text-muted); }
-  .sh-kp ul { margin: .25rem 0 0; padding-left: 1.2rem; }
+  .sh-kp ul { margin: .25rem 0 0; padding-inline-start: 1.2rem; }
   .sh-example .sol { margin-top: .6rem; }
   .sh-table { width: 100%; border-collapse: collapse; font-size: .9rem; font-variant-numeric: tabular-nums; }
-  .sh-table th, .sh-table td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .sh-table th, .sh-table td { text-align: start; padding: .45rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
   .sh-table th { font-weight: 600; border-bottom: 2px solid var(--border-strong); background: var(--bg-sunken); }
   .sh-table-wrap { overflow-x: auto; }
-  .sh-quote { margin: 0; padding: .25rem 0 .25rem 1.1rem; border-left: 3px solid var(--accent); font-family: var(--font-display); font-size: 1.2rem; font-style: italic; }
+  .sh-quote { margin: 0; padding: .25rem 1.1rem; border-inline-start: 3px solid var(--accent); font-family: var(--font-display); font-size: 1.2rem; font-style: italic; }
   .sh-quote figcaption { font-family: var(--font-body); font-style: normal; font-size: .875rem; color: var(--text-muted); margin-top: .35rem; }
   .sh-block-title { font-weight: 600; margin-bottom: .35rem; }
 
@@ -581,16 +732,520 @@ a { color: var(--accent); text-underline-offset: 3px; }
 <body>
 <div id="app"></div>
 <script type="application/json" id="als-data">{"als":"1","kind":"sheet","title":"Kantian ethics","subtitle":"Summary of lecture 4 and Groundwork II","module":"ethics","subject":"Philosophy: ethics","layout":"notes","sources":[{"id":"G","title":"Kant, Groundwork of the Metaphysic of Morals (1785), tr. T. K. Abbott (1895)","locator":"4:389-445"},{"id":"L4","title":"Lecture 4: Kantian ethics","locator":"slides 1-28"}],"blocks":[{"type":"section","title":"The question","body":"Kant asks what makes an action *morally* good. His answer: not its consequences and not the inclinations behind it, but the **will** that acts from duty, that is, out of respect for a law reason gives itself.\n\nThe supreme principle of that law is the **categorical imperative**.","src":"G 4:393-403"},{"type":"definition","term":"Good will","body":"The only thing good without qualification: a will that acts from duty, whatever it achieves.","src":"G 4:393"},{"type":"definition","term":"Maxim","body":"The subjective principle of an action: *in situation S I will do A to achieve E*.","src":"G 4:421n"},{"type":"section","title":"Hypothetical and categorical imperatives","body":"A **hypothetical** imperative commands an action as a means to something one wants (\"If you want X, do Y\"). A **categorical** imperative commands unconditionally, for every rational being.","src":"G 4:414-416"},{"type":"quote","quote":"Act only on that maxim whereby thou canst at the same time will that it should become a universal law.","by":"Groundwork 4:421 (Abbott tr.)","body":"The Formula of Universal Law (FUL)."},{"type":"keypoints","title":"Applying the FUL","points":["State the maxim with the agent's real reasons.","Imagine it as a universal law of nature.","Can the world with that law be **conceived**? If not: violation of a perfect duty.","Could a rational agent **will** that world? If not: violation of an imperfect duty."],"src":"L4 s.10-14"},{"type":"table","title":"The four examples (G 4:421-423)","headers":["Example","Fails by","Duty"],"rows":[["Suicide from self-love","contradiction in conception","perfect, to oneself"],["False promise","contradiction in conception","perfect, to others"],["Neglecting one's talents","contradiction in the will","imperfect, to oneself"],["Refusing to help others","contradiction in the will","imperfect, to others"]]},{"type":"section","title":"The Formula of Humanity","body":"\"So act as to treat humanity, whether in thine own person or in that of any other, in every case as an end withal, never as means only.\" (4:429)\n\nUsing someone as a means is fine (the baker sells you bread); using them **merely** as a means, in a way they could not consent to, is not.","src":"G 4:429"},{"type":"warning","title":"Common mistake","body":"The FUL is **not** a consequence test (\"what if everyone did it? That would be bad\"). The problem is a *contradiction*: the universalised maxim undermines itself or cannot be rationally willed. Writing the consequentialist version in an exam loses most of the marks.","src":"L4 s.12"},{"type":"section","title":"Objections","body":"- **Rigorism**: the murderer at the door. Kant (1797) holds that lying is wrong even then; many Kantians instead refine the maxim or appeal to the Formula of Humanity.\n- **Empty formalism** (Hegel): the test seems to accept or reject maxims depending on how they are described.\n- **Conflicts of duty**: the theory gives little guidance when duties clash.","src":"L4 s.22-26"},{"type":"example","title":"Exam-style question","body":"Does the Formula of Universal Law forbid lying to the murderer at the door? Discuss.","solution":"Outline: (1) reconstruct the maxim and the FUL test; (2) Kant's own answer in *On a Supposed Right to Lie*; (3) the redescription strategy and its risk of formalism; (4) Korsgaard-style reply via the Formula of Humanity or a two-level reading; (5) your verdict with a reason."}]}</script>
-<script>window.ALS_THEMES={"blueprint": {"label": "Blueprint", "short": "Maths, physics, CS, engineering", "description": "Precise and technical, in the spirit of tailwindcss.com. Maths, physics, CS, engineering.", "fonts": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap", "swatch": ["#030712", "#38bdf8"]}, "folio": {"label": "Folio", "short": "Philosophy, literature, history, arts", "description": "Editorial and literary: serif type, paper tones, generous margins. Philosophy, literature, history, languages, arts.", "fonts": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap", "swatch": ["#f7f3ea", "#8c2f2b"]}, "clinic": {"label": "Clinic", "short": "Biology, medicine, chemistry, health", "description": "Clean, calm and diagram-first, teal accents. Biology, medicine, chemistry, health, environment.", "fonts": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap", "swatch": ["#f6f9f9", "#0f766e"]}, "ledger": {"label": "Ledger", "short": "Economics, business, law, social science", "description": "Structured and sober, tabular numbers, strong rules. Business, economics, law, politics, social science.", "fonts": "https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap", "swatch": ["#fafaf8", "#1f3a5f"]}};
+<script>window.ALS_THEMES={"blueprint": {"label": "Blueprint", "short": "Maths, physics, CS, engineering", "description": "Precise and technical, in the spirit of tailwindcss.com. Maths, physics, CS, engineering.", "fonts": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap", "fontsRtl": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap", "swatch": ["#030712", "#38bdf8"]}, "folio": {"label": "Folio", "short": "Philosophy, literature, history, arts", "description": "A modern literary quarterly: Fraunces headlines, Newsreader text, warm paper, plum ink. Philosophy, literature, history, languages, arts.", "fonts": "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,50;1,9..144,400..700,50&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap", "fontsRtl": "https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400..700&display=swap", "swatch": ["#fbf8f2", "#7a3e6f"]}, "clinic": {"label": "Clinic", "short": "Biology, medicine, chemistry, health", "description": "Clean, calm and diagram-first, teal accents. Biology, medicine, chemistry, health, environment.", "fonts": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap", "fontsRtl": "https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap", "swatch": ["#f6f9f9", "#0f766e"]}, "ledger": {"label": "Ledger", "short": "Economics, business, law, social science", "description": "The financial pages: DM Serif Display over DM Sans, salmon newsprint, Oxford-blue ink, tabular figures. Business, economics, law, politics, social science.", "fonts": "https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=DM+Mono:wght@400;500&display=swap", "fontsRtl": "https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@500..800&family=Noto+Sans+Arabic:wght@400..700&display=swap", "swatch": ["#fbf0e6", "#17406f"]}};
+/* Interface translations. English strings are the keys (templates call T('Show answer')); a language that
+   lacks a key falls back to English. `python tools/i18n_keys.py` lists missing and unused keys.
+   To add a language, copy a block, translate the values and keep {0}, {1} placeholders. */
+window.ALS_I18N = {
+  ar: {
+    "Switch to light mode": "الوضع الفاتح",
+    "Switch to dark mode": "الوضع الداكن",
+    "Choose design": "اختر التصميم",
+    "Focus mode: press Z to bring the panels back": "وضع التركيز: اضغط Z لإظهار اللوحات من جديد",
+    "Hide: {0}": "إخفاء: {0}",
+    "Show: {0}": "إظهار: {0}",
+    "Show or hide: {0}": "إظهار أو إخفاء: {0}",
+    "Header": "الشريط العلوي",
+    "Sidebar": "الشريط الجانبي",
+    "Controls": "أزرار التحكم",
+    "Status bar": "شريط الحالة",
+    "Toolbar": "شريط الأدوات",
+    "Study time on this page ({0} in total). Click to pause or resume.": "وقت الدراسة في هذه الصفحة (المجموع {0}). انقر للإيقاف المؤقت أو المتابعة.",
+    "Focus block finished. Take a short break.": "انتهت جلسة التركيز. خذ استراحة قصيرة.",
+    "Focus mode: hide all panels (Z)": "وضع التركيز: إخفاء كل اللوحات (Z)",
+    "Focus countdown. Click to start or stop a 25-minute block; Shift+click for 50 minutes.": "مؤقت التركيز. انقر لبدء أو إيقاف جلسة من 25 دقيقة، و Shift+نقرة لجلسة من 50 دقيقة.",
+    "Focus block started: {0} minutes": "بدأت جلسة تركيز: {0} دقيقة",
+    "Time": "الوقت",
+    "Smaller text": "تصغير الخط",
+    "Reset text size": "حجم الخط الأصلي",
+    "Larger text": "تكبير الخط",
+    "Source in your material": "المصدر في موادك الدراسية",
+    "Added beyond your course material": "إضافة من خارج موادك الدراسية",
+    "beyond your notes": "خارج ملاحظاتك",
+    "Saved {0}. Ask Claude to import it to update your progress.": "تم حفظ {0}. اطلب من Claude استيراده لتحديث تقدّمك.",
+    "Generated": "أُنشئ في",
+    "Reviews due today": "مراجعات اليوم",
+    "{0} more this week": "و{0} أخرى هذا الأسبوع",
+    "Average mastery": "متوسط الإتقان",
+    "{0} topics tracked": "{0} موضوعًا قيد المتابعة",
+    "No practice recorded yet": "لم يُسجَّل أي تمرين بعد",
+    "Next deadline": "الموعد القادم",
+    "Nothing scheduled": "لا مواعيد مسجّلة",
+    "Modules": "المواد",
+    "Next exam in {0} days": "الامتحان القادم بعد {0} يومًا",
+    "Exam in {0}d": "الامتحان بعد {0} ي",
+    "{0} due": "{0} مستحقة",
+    "No topic map yet. Ask Claude to set up this module from your material.": "لا توجد خريطة مواضيع بعد. اطلب من Claude إعداد هذه المادة انطلاقًا من دروسك.",
+    "new": "جديد",
+    "No modules yet. Ask Claude to set one up from your lecture material.": "لا توجد مواد بعد. اطلب من Claude إعداد مادة انطلاقًا من محاضراتك.",
+    "What to do next": "ماذا تفعل الآن",
+    "Nothing urgent. A short review session keeps things fresh.": "لا شيء عاجل. مراجعة قصيرة تُبقي المعلومات حاضرة.",
+    "Upcoming": "المواعيد القادمة",
+    "No deadlines imported. Import your Moodle calendar to see them here.": "لم تُستورد أي مواعيد. استورد تقويم Moodle لتظهر هنا.",
+    "pt": "نقطة",
+    "pts": "نقاط",
+    "Solution": "الحل",
+    "Solutions": "الحلول",
+    "Marking": "سلّم التنقيط",
+    "Print or save as PDF": "طباعة أو حفظ بصيغة PDF",
+    "Print or save as PDF (everything revealed)": "طباعة أو حفظ بصيغة PDF (مع إظهار كل الخطوات)",
+    "Print / PDF": "طباعة / PDF",
+    "Hidden": "مخفية",
+    "Inline": "تحت كل سؤال",
+    "At the end": "في النهاية",
+    "Answer space": "مساحة الإجابة",
+    "Lines": "سطور",
+    "None": "بدون",
+    "Total": "المجموع",
+    "Allowed": "المسموح به",
+    "Name": "الاسم",
+    "Student ID": "رقم الطالب",
+    "Date": "التاريخ",
+    "Question": "السؤال",
+    "Questions": "الأسئلة",
+    "Tap or press Space to flip": "انقر أو اضغط المسافة لقلب البطاقة",
+    "Answer": "الإجابة",
+    "Fill the gap": "املأ الفراغ",
+    "Reverse": "معكوسة",
+    "Answer side. Press 1 to 4 to grade.": "وجه الإجابة. اضغط من 1 إلى 4 للتقييم.",
+    "Question side. Press Space to show the answer.": "وجه السؤال. اضغط المسافة لإظهار الإجابة.",
+    "Study": "دراسة",
+    "Browse all": "تصفّح الكل",
+    "Shuffled": "ترتيب عشوائي",
+    "In order": "بالترتيب",
+    "{0} cards": "{0} بطاقة",
+    "All": "الكل",
+    "Due today": "مستحقة اليوم",
+    "Card {0} of {1}": "البطاقة {0} من {1}",
+    "{0} again · {1} recalled": "{0} للإعادة · {1} تم تذكّرها",
+    "Show answer": "أظهر الإجابة",
+    "Again": "أعِد",
+    "forgot": "نسيت",
+    "Hard": "صعبة",
+    "struggled": "بصعوبة",
+    "Good": "جيدة",
+    "recalled": "تذكّرت",
+    "Easy": "سهلة",
+    "instant": "فورًا",
+    "flip": "قلب",
+    "grade": "تقييم",
+    "Session complete": "انتهت الجلسة",
+    "Nice work.": "أحسنت.",
+    "Nothing to review here.": "لا شيء للمراجعة هنا.",
+    "Save your results and ask Claude to import them; it schedules each card for its next review.": "احفظ نتائجك واطلب من Claude استيرادها ليحدّد موعد المراجعة القادمة لكل بطاقة.",
+    "Pick another filter or browse all cards.": "اختر تصفية أخرى أو تصفّح كل البطاقات.",
+    "Save results": "حفظ النتائج",
+    "Review {0} missed": "راجع {0} لم تُتقَن",
+    "Restart": "ابدأ من جديد",
+    "Flashcard, press Enter to flip": "بطاقة، اضغط Enter لقلبها",
+    "Print all cards": "طباعة كل البطاقات",
+    "Card": "البطاقة",
+    "Recalled": "تم تذكّرها",
+    "Accuracy": "الدقة",
+    "Pace": "الوتيرة",
+    "min": "د",
+    "{0} slides": "{0} شريحة",
+    "From your material only": "من موادك الدراسية فقط",
+    "Depth": "العمق",
+    "Press {0} to begin": "اضغط {0} للبدء",
+    "Given": "المعطيات",
+    "Result": "النتيجة",
+    "Diagram could not be displayed.": "تعذّر عرض الرسم.",
+    "Common mistake": "خطأ شائع",
+    "Why it fails": "لماذا هو خطأ",
+    "Correct": "الصحيح",
+    "Recall": "استرجاع",
+    "Answer in your head or aloud, then press {0}": "أجب في ذهنك أو بصوت مسموع ثم اضغط {0}",
+    "Quick check": "سؤال سريع",
+    "Definition": "تعريف",
+    "Example": "مثال",
+    "Explanation": "الشرح",
+    "Intuition": "للتقريب",
+    "An analogy or example from the tutor, not from your material": "تشبيه أو مثال من المعلّم، ليس من موادك الدراسية",
+    "tutor's own": "من المعلّم",
+    "Key point": "الخلاصة",
+    "Slide": "الشريحة",
+    "Step": "الخطوة",
+    "View": "العرض",
+    "Left": "المتبقي",
+    "Estimated reading time for the rest of the lesson": "الوقت التقريبي لقراءة ما تبقّى من الدرس",
+    "Progress": "التقدّم",
+    "Notes": "ملاحظات",
+    "More detail": "تفاصيل أكثر",
+    "This lesson has one depth": "لهذا الدرس مستوى عمق واحد",
+    "Study view: explanations on the page": "عرض الدراسة: الشرح ظاهر في الصفحة",
+    "Present view: compact slides": "عرض التقديم: شرائح مختصرة",
+    "Study view": "عرض الدراسة",
+    "Present view": "عرض التقديم",
+    "Everything on a slide is shown at once": "يظهر محتوى الشريحة كله دفعة واحدة",
+    "Slides build up step by step": "تُبنى الشرائح خطوة بخطوة",
+    "Outline": "الفهرس",
+    "Previous": "السابق",
+    "Next (Space)": "التالي (المسافة)",
+    "Lesson controls": "التحكم في الدرس",
+    "Switch between study view (with explanations) and present view (V)": "التبديل بين عرض الدراسة (مع الشرح) وعرض التقديم (V)",
+    "All at once": "دفعة واحدة",
+    "Show everything on a slide at once, or build it up step by step (A)": "إظهار محتوى الشريحة دفعة واحدة أو بناؤه خطوة بخطوة (A)",
+    "Change depth (D)": "تغيير العمق (D)",
+    "More detail on this slide (E)": "تفاصيل أكثر عن هذه الشريحة (E)",
+    "Autoplay (P)": "تشغيل تلقائي (P)",
+    "Notes (N)": "ملاحظات (N)",
+    "Overview (O)": "نظرة عامة (O)",
+    "Full screen (F)": "ملء الشاشة (F)",
+    "No notes on this slide": "لا ملاحظات في هذه الشريحة",
+    "No extra detail on this slide": "لا تفاصيل إضافية في هذه الشريحة",
+    "Full screen is not available here": "ملء الشاشة غير متاح هنا",
+    "Layout": "التخطيط",
+    "Cheat sheet": "ورقة ملخّصة",
+    "Study notes": "ملخّص الدرس",
+    "Contents": "المحتويات",
+    "Sources": "المصادر",
+    "Words": "الكلمات",
+    "Reading time": "وقت القراءة",
+    "Sections": "الأقسام",
+    "All levels": "كل المستويات",
+    "Warm-up": "تمهيدي",
+    "Core": "أساسي",
+    "Challenge": "تحدٍّ",
+    "All topics ({0})": "كل المواضيع ({0})",
+    "Practice: feedback each step": "تدريب: تصحيح بعد كل سؤال",
+    "Test: feedback at the end": "اختبار: التصحيح في النهاية",
+    "{0} questions": "{0} سؤالًا",
+    "Topic": "الموضوع",
+    "Difficulty": "الصعوبة",
+    "Mode": "النمط",
+    "Last attempt: {0}% on {1}": "آخر محاولة: {0}% بتاريخ {1}",
+    "Start": "ابدأ",
+    "Test mode time limit: {0} min": "مدة الاختبار: {0} دقيقة",
+    "No questions match these filters": "لا توجد أسئلة تطابق هذه التصفية",
+    "Time is up": "انتهى الوقت",
+    "Your answer": "إجابتك",
+    "Write your answer, then compare it with the model answer.": "اكتب إجابتك ثم قارنها بالإجابة النموذجية.",
+    "Put the items in the correct order": "رتّب العناصر ترتيبًا صحيحًا",
+    "Move up": "إلى الأعلى",
+    "Move down": "إلى الأسفل",
+    "Model answer": "الإجابة النموذجية",
+    "Key ideas a full answer mentions": "أفكار أساسية تتضمنها الإجابة الكاملة",
+    "How did you do?": "كيف كانت إجابتك؟",
+    "Got it": "أصبت",
+    "Partly": "جزئيًا",
+    "Missed it": "أخطأت",
+    "Correct answer": "الإجابة الصحيحة",
+    "Expected": "المتوقَّع",
+    "Correct order": "الترتيب الصحيح",
+    "Not quite": "ليس تمامًا",
+    "Worked solution": "الحل المفصّل",
+    "Show first step": "أظهر الخطوة الأولى",
+    "Next step ({0}/{1})": "الخطوة التالية ({0}/{1})",
+    "Show all": "أظهر الكل",
+    "Answer first, or use a hint": "أجب أولًا أو استعن بتلميح",
+    "Rate your answer first": "قيّم إجابتك أولًا",
+    "{0} question(s) unanswered. Finish anyway?": "{0} سؤال بلا إجابة. هل تريد الإنهاء على أي حال؟",
+    "Question {0} of {1}": "السؤال {0} من {1}",
+    "Jump to question": "انتقل إلى سؤال",
+    "Choose one": "اختر إجابة واحدة",
+    "Choose all that apply": "اختر كل ما ينطبق",
+    "Calculate": "احسب",
+    "Explain": "اشرح",
+    "Fill the gaps": "املأ الفراغات",
+    "Put in order": "رتّب",
+    "Hint": "تلميح",
+    "Hints": "التلميحات",
+    "Finish test": "إنهاء الاختبار",
+    "Next": "التالي",
+    "See results": "عرض النتائج",
+    "Next question": "السؤال التالي",
+    "Check": "تحقّق",
+    "Back": "رجوع",
+    "Hint ({0} left)": "تلميح (بقي {0})",
+    "Stuck? Walk me through it": "عالق؟ أرِني الحل خطوة بخطوة",
+    "next": "التالي",
+    "check": "تحقّق",
+    "Test results": "نتائج الاختبار",
+    "Practice results": "نتائج التدريب",
+    "{0} of {1} correct": "{0} صحيحة من {1}",
+    "{0} written answers still to self-check below": "{0} إجابات كتابية تنتظر تقييمك أدناه",
+    "Above your pass mark": "فوق عتبة النجاح",
+    "Below your pass mark of {0}%": "دون عتبة النجاح ({0}%)",
+    "By topic": "حسب الموضوع",
+    "Retry {0} missed": "أعد {0} أخطأت فيها",
+    "New round": "جولة جديدة",
+    "Review": "مراجعة",
+    "Self-check": "تقييم ذاتي",
+    "brief": "موجز",
+    "medium": "متوسط",
+    "deep": "معمّق",
+    "study": "دراسة",
+    "present": "تقديم",
+    "practice": "تدريب",
+    "test": "اختبار",
+    "Maths, physics, CS, engineering": "رياضيات، فيزياء، معلوميات، هندسة",
+    "Philosophy, literature, history, arts": "فلسفة، أدب، تاريخ، فنون",
+    "Biology, medicine, chemistry, health": "أحياء، طب، كيمياء، صحة",
+    "Economics, business, law, social science": "اقتصاد، إدارة، قانون، علوم اجتماعية"
+  },
+  de: {
+    "Switch to light mode": "Helles Design",
+    "Switch to dark mode": "Dunkles Design",
+    "Choose design": "Design wählen",
+    "Focus mode: press Z to bring the panels back": "Fokusmodus: Z blendet die Leisten wieder ein",
+    "Hide: {0}": "Ausblenden: {0}",
+    "Show: {0}": "Einblenden: {0}",
+    "Show or hide: {0}": "Ein- oder ausblenden: {0}",
+    "Header": "Kopfleiste",
+    "Sidebar": "Seitenleiste",
+    "Controls": "Steuerung",
+    "Status bar": "Statusleiste",
+    "Toolbar": "Werkzeugleiste",
+    "Study time on this page ({0} in total). Click to pause or resume.": "Lernzeit auf dieser Seite (insgesamt {0}). Klicken zum Pausieren oder Fortsetzen.",
+    "Focus block finished. Take a short break.": "Fokusblock beendet. Mach eine kurze Pause.",
+    "Focus mode: hide all panels (Z)": "Fokusmodus: alle Leisten ausblenden (Z)",
+    "Focus countdown. Click to start or stop a 25-minute block; Shift+click for 50 minutes.": "Fokus-Countdown. Klick startet oder stoppt 25 Minuten, Umschalt+Klick 50 Minuten.",
+    "Focus block started: {0} minutes": "Fokusblock gestartet: {0} Minuten",
+    "Time": "Zeit",
+    "Smaller text": "Schrift kleiner",
+    "Reset text size": "Schriftgröße zurücksetzen",
+    "Larger text": "Schrift größer",
+    "Source in your material": "Quelle in deinen Unterlagen",
+    "Added beyond your course material": "Ergänzung außerhalb deiner Unterlagen",
+    "beyond your notes": "nicht aus deinen Unterlagen",
+    "Saved {0}. Ask Claude to import it to update your progress.": "{0} gespeichert. Bitte Claude, die Datei zu importieren, um deinen Fortschritt zu aktualisieren.",
+    "Generated": "Erstellt am",
+    "Reviews due today": "Heute fällige Wiederholungen",
+    "{0} more this week": "{0} weitere diese Woche",
+    "Average mastery": "Durchschnittliche Beherrschung",
+    "{0} topics tracked": "{0} Themen erfasst",
+    "No practice recorded yet": "Noch keine Übung erfasst",
+    "Next deadline": "Nächste Frist",
+    "Nothing scheduled": "Nichts geplant",
+    "Modules": "Module",
+    "Next exam in {0} days": "Nächste Prüfung in {0} Tagen",
+    "Exam in {0}d": "Prüfung in {0} T",
+    "{0} due": "{0} fällig",
+    "No topic map yet. Ask Claude to set up this module from your material.": "Noch keine Themenübersicht. Bitte Claude, das Modul aus deinen Unterlagen einzurichten.",
+    "new": "neu",
+    "No modules yet. Ask Claude to set one up from your lecture material.": "Noch keine Module. Bitte Claude, eines aus deinen Vorlesungsunterlagen einzurichten.",
+    "What to do next": "Was als Nächstes ansteht",
+    "Nothing urgent. A short review session keeps things fresh.": "Nichts Dringendes. Eine kurze Wiederholung hält den Stoff frisch.",
+    "Upcoming": "Demnächst",
+    "No deadlines imported. Import your Moodle calendar to see them here.": "Keine Fristen importiert. Importiere deinen Moodle-Kalender, um sie hier zu sehen.",
+    "pt": "Pkt.",
+    "pts": "Pkt.",
+    "Solution": "Lösung",
+    "Solutions": "Lösungen",
+    "Marking": "Bewertung",
+    "Print or save as PDF": "Drucken oder als PDF speichern",
+    "Print or save as PDF (everything revealed)": "Drucken oder als PDF speichern (alles aufgedeckt)",
+    "Print / PDF": "Drucken / PDF",
+    "Hidden": "Verborgen",
+    "Inline": "Bei der Aufgabe",
+    "At the end": "Am Ende",
+    "Answer space": "Platz für Antworten",
+    "Lines": "Linien",
+    "None": "Keiner",
+    "Total": "Gesamt",
+    "Allowed": "Hilfsmittel",
+    "Name": "Name",
+    "Student ID": "Matrikelnummer",
+    "Date": "Datum",
+    "Question": "Frage",
+    "Questions": "Fragen",
+    "Tap or press Space to flip": "Tippen oder Leertaste zum Umdrehen",
+    "Answer": "Antwort",
+    "Fill the gap": "Lücke füllen",
+    "Reverse": "Umgekehrt",
+    "Answer side. Press 1 to 4 to grade.": "Antwortseite. Mit 1 bis 4 bewerten.",
+    "Question side. Press Space to show the answer.": "Frageseite. Leertaste zeigt die Antwort.",
+    "Study": "Lernen",
+    "Browse all": "Alle ansehen",
+    "Shuffled": "Gemischt",
+    "In order": "Der Reihe nach",
+    "{0} cards": "{0} Karten",
+    "All": "Alle",
+    "Due today": "Heute fällig",
+    "Card {0} of {1}": "Karte {0} von {1}",
+    "{0} again · {1} recalled": "{0} nochmal · {1} gewusst",
+    "Show answer": "Antwort zeigen",
+    "Again": "Nochmal",
+    "forgot": "vergessen",
+    "Hard": "Schwer",
+    "struggled": "mit Mühe",
+    "Good": "Gut",
+    "recalled": "gewusst",
+    "Easy": "Leicht",
+    "instant": "sofort",
+    "flip": "umdrehen",
+    "grade": "bewerten",
+    "Session complete": "Sitzung beendet",
+    "Nice work.": "Gut gemacht.",
+    "Nothing to review here.": "Hier gibt es nichts zu wiederholen.",
+    "Save your results and ask Claude to import them; it schedules each card for its next review.": "Speichere deine Ergebnisse und bitte Claude, sie zu importieren; dann wird jede Karte für die nächste Wiederholung eingeplant.",
+    "Pick another filter or browse all cards.": "Wähle einen anderen Filter oder sieh dir alle Karten an.",
+    "Save results": "Ergebnisse speichern",
+    "Review {0} missed": "{0} nicht gewusste wiederholen",
+    "Restart": "Neu starten",
+    "Flashcard, press Enter to flip": "Karteikarte, Enter dreht sie um",
+    "Print all cards": "Alle Karten drucken",
+    "Card": "Karte",
+    "Recalled": "Gewusst",
+    "Accuracy": "Trefferquote",
+    "Pace": "Tempo",
+    "min": "Min.",
+    "{0} slides": "{0} Folien",
+    "From your material only": "Nur aus deinen Unterlagen",
+    "Depth": "Tiefe",
+    "Press {0} to begin": "Mit {0} starten",
+    "Given": "Gegeben",
+    "Result": "Ergebnis",
+    "Diagram could not be displayed.": "Diagramm konnte nicht angezeigt werden.",
+    "Common mistake": "Häufiger Fehler",
+    "Why it fails": "Warum das nicht stimmt",
+    "Correct": "Richtig",
+    "Recall": "Abruf",
+    "Answer in your head or aloud, then press {0}": "Erst selbst beantworten, dann {0} drücken",
+    "Quick check": "Kurze Frage",
+    "Definition": "Definition",
+    "Example": "Beispiel",
+    "Explanation": "Erklärung",
+    "Intuition": "Anschaulich",
+    "An analogy or example from the tutor, not from your material": "Ein Vergleich oder Beispiel des Tutors, nicht aus deinen Unterlagen",
+    "tutor's own": "vom Tutor",
+    "Key point": "Kernaussage",
+    "Slide": "Folie",
+    "Step": "Schritt",
+    "View": "Ansicht",
+    "Left": "Rest",
+    "Estimated reading time for the rest of the lesson": "Geschätzte Lesezeit für den Rest der Lektion",
+    "Progress": "Fortschritt",
+    "Notes": "Notizen",
+    "More detail": "Mehr Details",
+    "This lesson has one depth": "Diese Lektion hat nur eine Tiefe",
+    "Study view: explanations on the page": "Lernansicht: Erklärungen auf der Seite",
+    "Present view: compact slides": "Präsentationsansicht: kompakte Folien",
+    "Study view": "Lernansicht",
+    "Present view": "Präsentationsansicht",
+    "Everything on a slide is shown at once": "Jede Folie erscheint vollständig",
+    "Slides build up step by step": "Folien bauen sich Schritt für Schritt auf",
+    "Outline": "Gliederung",
+    "Previous": "Zurück",
+    "Next (Space)": "Weiter (Leertaste)",
+    "Lesson controls": "Steuerung der Lektion",
+    "Switch between study view (with explanations) and present view (V)": "Zwischen Lernansicht (mit Erklärungen) und Präsentationsansicht wechseln (V)",
+    "All at once": "Alles auf einmal",
+    "Show everything on a slide at once, or build it up step by step (A)": "Folie vollständig zeigen oder Schritt für Schritt aufbauen (A)",
+    "Change depth (D)": "Tiefe ändern (D)",
+    "More detail on this slide (E)": "Mehr Details zu dieser Folie (E)",
+    "Autoplay (P)": "Automatisch abspielen (P)",
+    "Notes (N)": "Notizen (N)",
+    "Overview (O)": "Übersicht (O)",
+    "Full screen (F)": "Vollbild (F)",
+    "No notes on this slide": "Keine Notizen auf dieser Folie",
+    "No extra detail on this slide": "Keine Zusatzdetails auf dieser Folie",
+    "Full screen is not available here": "Vollbild ist hier nicht verfügbar",
+    "Layout": "Layout",
+    "Cheat sheet": "Spickzettel",
+    "Study notes": "Zusammenfassung",
+    "Contents": "Inhalt",
+    "Sources": "Quellen",
+    "Words": "Wörter",
+    "Reading time": "Lesezeit",
+    "Sections": "Abschnitte",
+    "All levels": "Alle Stufen",
+    "Warm-up": "Aufwärmen",
+    "Core": "Kern",
+    "Challenge": "Knobelaufgabe",
+    "All topics ({0})": "Alle Themen ({0})",
+    "Practice: feedback each step": "Üben: Rückmeldung nach jeder Frage",
+    "Test: feedback at the end": "Test: Rückmeldung am Ende",
+    "{0} questions": "{0} Fragen",
+    "Topic": "Thema",
+    "Difficulty": "Schwierigkeit",
+    "Mode": "Modus",
+    "Last attempt: {0}% on {1}": "Letzter Versuch: {0} % am {1}",
+    "Start": "Start",
+    "Test mode time limit: {0} min": "Zeitlimit im Test: {0} Min.",
+    "No questions match these filters": "Keine Fragen passen zu diesen Filtern",
+    "Time is up": "Die Zeit ist um",
+    "Your answer": "Deine Antwort",
+    "Write your answer, then compare it with the model answer.": "Schreibe deine Antwort und vergleiche sie dann mit der Musterlösung.",
+    "Put the items in the correct order": "Bringe die Einträge in die richtige Reihenfolge",
+    "Move up": "Nach oben",
+    "Move down": "Nach unten",
+    "Model answer": "Musterlösung",
+    "Key ideas a full answer mentions": "Kernideen einer vollständigen Antwort",
+    "How did you do?": "Wie lief es?",
+    "Got it": "Gewusst",
+    "Partly": "Teilweise",
+    "Missed it": "Nicht gewusst",
+    "Correct answer": "Richtige Antwort",
+    "Expected": "Erwartet",
+    "Correct order": "Richtige Reihenfolge",
+    "Not quite": "Nicht ganz",
+    "Worked solution": "Lösungsweg",
+    "Show first step": "Ersten Schritt zeigen",
+    "Next step ({0}/{1})": "Nächster Schritt ({0}/{1})",
+    "Show all": "Alles zeigen",
+    "Answer first, or use a hint": "Erst antworten oder einen Hinweis nutzen",
+    "Rate your answer first": "Bewerte zuerst deine Antwort",
+    "{0} question(s) unanswered. Finish anyway?": "{0} Frage(n) unbeantwortet. Trotzdem beenden?",
+    "Question {0} of {1}": "Frage {0} von {1}",
+    "Jump to question": "Zur Frage springen",
+    "Choose one": "Eine Antwort wählen",
+    "Choose all that apply": "Alle zutreffenden wählen",
+    "Calculate": "Berechnen",
+    "Explain": "Erklären",
+    "Fill the gaps": "Lücken füllen",
+    "Put in order": "Ordnen",
+    "Hint": "Hinweis",
+    "Hints": "Hinweise",
+    "Finish test": "Test beenden",
+    "Next": "Weiter",
+    "See results": "Ergebnisse ansehen",
+    "Next question": "Nächste Frage",
+    "Check": "Prüfen",
+    "Back": "Zurück",
+    "Hint ({0} left)": "Hinweis (noch {0})",
+    "Stuck? Walk me through it": "Keine Idee? Zeig mir den Weg",
+    "next": "weiter",
+    "check": "prüfen",
+    "Test results": "Testergebnis",
+    "Practice results": "Übungsergebnis",
+    "{0} of {1} correct": "{0} von {1} richtig",
+    "{0} written answers still to self-check below": "{0} schriftliche Antworten unten noch selbst prüfen",
+    "Above your pass mark": "Über deiner Bestehensgrenze",
+    "Below your pass mark of {0}%": "Unter deiner Bestehensgrenze von {0} %",
+    "By topic": "Nach Thema",
+    "Retry {0} missed": "{0} falsche wiederholen",
+    "New round": "Neue Runde",
+    "Review": "Durchsicht",
+    "Self-check": "Selbstprüfung",
+    "brief": "kurz",
+    "medium": "mittel",
+    "deep": "tief",
+    "study": "Lernen",
+    "present": "Präsentation",
+    "practice": "Üben",
+    "test": "Test",
+    "Maths, physics, CS, engineering": "Mathematik, Physik, Informatik, Technik",
+    "Philosophy, literature, history, arts": "Philosophie, Literatur, Geschichte, Kunst",
+    "Biology, medicine, chemistry, health": "Biologie, Medizin, Chemie, Gesundheit",
+    "Economics, business, law, social science": "Wirtschaft, Recht, Sozialwissenschaften"
+  }
+};
+
 /* ALS core runtime, shared by every template and inlined at build time.
-   Provides: data loading, theme + light/dark switching, safe Markdown-lite with KaTeX maths,
-   code highlighting, SVG sanitising, storage, downloads, keyboard helpers and the top bar. */
+   Provides: data loading, i18n (ALS.t) and right-to-left support, theme + light/dark switching,
+   safe Markdown-lite with KaTeX maths (including automatic typesetting of plain-text maths and numbers),
+   code highlighting, SVG sanitising, storage, downloads, keyboard helpers, the top bar, collapsible
+   panels and the status bar (panel toggles, study timer, focus countdown, clock, text zoom). */
 (function () {
   'use strict';
 
   var ALS = (window.ALS = window.ALS || {});
   var THEMES = window.ALS_THEMES || {};
+  var I18N = window.ALS_I18N || {};
   var KATEX = 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/';
+  var RTL_LANGS = { ar: 1, he: 1, fa: 1, ur: 1, ps: 1, sd: 1, ckb: 1, yi: 1, dv: 1, ug: 1 };
 
   /* ---------------- small helpers ---------------- */
   ALS.$ = function (sel, root) { return (root || document).querySelector(sel); };
@@ -623,8 +1278,8 @@ a { color: var(--accent); text-underline-offset: 3px; }
   };
 
   ALS.slug = function (s) {
-    return String(s || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
-      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'item';
+    return String(s || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\u0600-\u06ff]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'item';
   };
 
   ALS.today = function () {
@@ -658,8 +1313,25 @@ a { color: var(--accent); text-underline-offset: 3px; }
     t.textContent = msg;
     t.setAttribute('data-show', 'true');
     clearTimeout(ALS._toastTimer);
-    ALS._toastTimer = setTimeout(function () { t.removeAttribute('data-show'); }, 2200);
+    ALS._toastTimer = setTimeout(function () { t.removeAttribute('data-show'); }, 2600);
   };
+
+  ALS.clock = function (sec) {
+    sec = Math.max(0, Math.round(sec));
+    var h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60), s = sec % 60;
+    return (h ? h + ':' + String(m).padStart(2, '0') : String(m)) + ':' + String(s).padStart(2, '0');
+  };
+
+  /* ---------------- i18n: English strings are the keys ---------------- */
+  ALS.lang = 'en';
+  ALS.rtl = false;
+  ALS.t = function (s) {
+    var d = I18N[ALS.lang];
+    var out = (d && d[s]) || s;
+    for (var i = 1; i < arguments.length; i++) out = out.split('{' + (i - 1) + '}').join(String(arguments[i]));
+    return out;
+  };
+  var T = ALS.t;
 
   /* ---------------- storage (never required to work) ---------------- */
   ALS.store = {
@@ -674,16 +1346,157 @@ a { color: var(--accent); text-underline-offset: 3px; }
     globalSet: function (k, v) { try { localStorage.setItem('als:' + k, v); } catch (e) { /* ignore */ } }
   };
 
-  /* ---------------- Markdown-lite + maths ---------------- */
-  var MATH_RE = /\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]|\\\(([\s\S]+?)\\\)|\$(?!\s)((?:\\\$|[^$\n])+?)(?<!\s)\$(?!\d)/g;
+  /* ---------------- maths: explicit delimiters ---------------- */
+  // $$…$$ | \[…\] | \(…\) | $…$ | \begin{env}…\end{env} | $ padded maths $ (only when it clearly is maths)
+  var MATH_RE = /\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]|\\\(([\s\S]+?)\\\)|\$(?!\s)((?:\\\$|[^$\n])+?)(?<!\s)\$(?!\d)|(\\begin\{([a-zA-Z*]+)\}[\s\S]+?\\end\{\6\})|\$[ \t]+((?:[^$\n])*?[\\^_=+{<>](?:[^$\n])*?)[ \t]+\$/g;
+  var MATHY = /[=^_]|[\u0370-\u03ff\u00b2\u00b3\u00b9\u2070-\u209f\u2190-\u21ff\u2200-\u22ff]/;
 
-  ALS.hasMath = function (s) { MATH_RE.lastIndex = 0; return MATH_RE.test(String(s || '')); };
+  ALS.hasMath = function (s) { s = String(s || ''); MATH_RE.lastIndex = 0; return MATH_RE.test(s) || MATHY.test(s); };
+
+  /* A maths field ("math", "formula", "sym") may arrive wrapped in $…$ or \[…\]: strip the wrapper. */
+  ALS.tex = function (s) {
+    s = String(s == null ? '' : s).trim();
+    var m = s.match(/^\$\$([\s\S]*)\$\$$/) || s.match(/^\\\[([\s\S]*)\\\]$/) || s.match(/^\\\(([\s\S]*)\\\)$/) || s.match(/^\$([^$]*)\$$/);
+    return m ? m[1].trim() : s;
+  };
 
   function mathSpan(tex, display) {
     return '<span class="als-math' + (display ? ' als-math-display' : '') + '" data-display="' + (display ? 1 : 0) +
-      '" data-tex="' + ALS.esc(tex) + '">' + ALS.esc(display ? tex : tex) + '</span>';
+      '" data-tex="' + ALS.esc(tex) + '">' + ALS.esc(tex) + '</span>';
   }
 
+  /* ---------------- maths: automatic typesetting of plain-text maths ----------------
+     Authors forget delimiters. Conservative rules turn obvious maths into TeX:
+       1. a token with Unicode maths (σ(z), x₁, O(n²), ∂L/∂w, ≤) and no ordinary word in it
+       2. a token with ^ or _ applied to a single symbol (x^2, a_n, 10^3)
+       3. an equation of simple terms (x = 3, f(3) = 6, p < 0.05, 2 + 3 = 5)
+     and, in any text that contains maths, 4. standalone numbers (so 0.5 matches the formula next to it). */
+  var SUP = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁺': '+', '⁻': '-', 'ⁿ': 'n', 'ⁱ': 'i', 'ᵀ': 'T', 'ᵏ': 'k', 'ˣ': 'x' };
+  var SUB = { '₀': '0', '₁': '1', '₂': '2', '₃': '3', '₄': '4', '₅': '5', '₆': '6', '₇': '7', '₈': '8', '₉': '9', '₊': '+', '₋': '-', 'ᵢ': 'i', 'ⱼ': 'j', 'ₖ': 'k', 'ₙ': 'n', 'ₘ': 'm', 'ₜ': 't', 'ₓ': 'x', 'ₐ': 'a', 'ₚ': 'p', 'ₛ': 's' };
+  var SYM = {
+    'α': '\\alpha', 'β': '\\beta', 'γ': '\\gamma', 'δ': '\\delta', 'ε': '\\varepsilon', 'ζ': '\\zeta', 'η': '\\eta', 'θ': '\\theta', 'ι': '\\iota', 'κ': '\\kappa',
+    'λ': '\\lambda', 'μ': '\\mu', 'ν': '\\nu', 'ξ': '\\xi', 'π': '\\pi', 'ρ': '\\rho', 'σ': '\\sigma', 'ς': '\\varsigma', 'τ': '\\tau', 'υ': '\\upsilon', 'φ': '\\varphi',
+    'χ': '\\chi', 'ψ': '\\psi', 'ω': '\\omega', 'ϕ': '\\phi', 'ϵ': '\\epsilon', 'ϑ': '\\vartheta',
+    'Γ': '\\Gamma', 'Δ': '\\Delta', 'Θ': '\\Theta', 'Λ': '\\Lambda', 'Ξ': '\\Xi', 'Π': '\\Pi', 'Σ': '\\Sigma', 'Φ': '\\Phi', 'Ψ': '\\Psi', 'Ω': '\\Omega',
+    '×': '\\times', '·': '\\cdot', '⋅': '\\cdot', '÷': '\\div', '±': '\\pm', '∓': '\\mp', '≤': '\\le', '≥': '\\ge', '≠': '\\ne', '≈': '\\approx', '≡': '\\equiv', '∝': '\\propto',
+    '→': '\\to', '←': '\\leftarrow', '↔': '\\leftrightarrow', '⇒': '\\Rightarrow', '⇐': '\\Leftarrow', '⇔': '\\Leftrightarrow', '↦': '\\mapsto',
+    '∈': '\\in', '∉': '\\notin', '⊂': '\\subset', '⊆': '\\subseteq', '⊃': '\\supset', '∪': '\\cup', '∩': '\\cap', '∅': '\\emptyset', '∖': '\\setminus',
+    '∞': '\\infty', '∑': '\\sum', '∏': '\\prod', '∫': '\\int', '∂': '\\partial', '∇': '\\nabla', '√': '\\surd', '∀': '\\forall', '∃': '\\exists', '¬': '\\neg', '∧': '\\land', '∨': '\\lor',
+    'ℝ': '\\mathbb{R}', 'ℕ': '\\mathbb{N}', 'ℤ': '\\mathbb{Z}', 'ℚ': '\\mathbb{Q}', 'ℂ': '\\mathbb{C}', '−': '-', '∘': '\\circ', '⊤': '\\top', '⊥': '\\bot', '′': "'", '°': '^\\circ',
+    '∥': '\\parallel', '≪': '\\ll', '≫': '\\gg', '⊕': '\\oplus', '⊗': '\\otimes', '†': '\\dagger', 'ℓ': '\\ell', 'ħ': '\\hbar', '∗': '*', '≜': '\\triangleq', '∼': '\\sim'
+  };
+  var ACCENT = { '\u0302': '\\hat', '\u0304': '\\bar', '\u0307': '\\dot', '\u20d7': '\\vec' };
+  var FUNC_NAMES = 'sin|cos|tan|cot|sec|csc|log|ln|exp|max|min|arg|det|dim|ker|lim|sup|inf|gcd|mod|tanh|sinh|cosh|argmax|argmin|sgn|var|cov|tr|rank';
+  var FUNCS = new RegExp('^(?:' + FUNC_NAMES + ')$');
+  var UNI_RE = /[\u0370-\u03ff\u00b2\u00b3\u00b9\u2070-\u209f\u1d40-\u1d7f\u2190-\u21ff\u2200-\u22ff\u2100-\u214f×÷±·°′\u0302\u0304\u0307\u20d7]/;
+
+  function uniToTex(tok) {
+    var out = '', i = 0, chars = Array.from(tok.normalize('NFD'));
+    function run(map) { var r = ''; while (i < chars.length && map[chars[i]] != null) r += map[chars[i++]]; return r; }
+    while (i < chars.length) {
+      var c = chars[i];
+      if (SUP[c] != null) { out += '^{' + run(SUP) + '}'; continue; }
+      if (SUB[c] != null) { out += '_{' + run(SUB) + '}'; continue; }
+      if (ACCENT[chars[i + 1]]) { out += ACCENT[chars[i + 1]] + '{' + (SYM[c] || c) + '}'; i += 2; continue; }
+      if (SYM[c]) { out += SYM[c] + (/[a-zA-Z]$/.test(SYM[c]) ? ' ' : ''); i++; continue; }
+      if (c === '%') { out += '\\%'; i++; continue; }
+      if (c === '*') { out += '\\cdot '; i++; continue; }
+      out += c; i++;
+    }
+    out = out.normalize('NFC').replace(/<=/g, '\\le ').replace(/>=/g, '\\ge ').replace(/!=/g, '\\ne ')
+      .replace(/\\surd\s*\(([^()]*)\)/g, '\\sqrt{$1}').replace(/(\d),(\d)/g, '$1{,}$2');
+    // function names upright: sin, log, max …
+    return out.replace(/[A-Za-z]{2,}/g, function (word, pos, all) {
+      if (/\\[A-Za-z]*$/.test(all.slice(0, pos))) return word;
+      return FUNCS.test(word) ? '\\operatorname{' + word + '}' : word;
+    });
+  }
+
+  function wordy(tok) {
+    // an ordinary word hides in the token: 3+ letters in a row that are not a function name, or 2+ Greek letters in a row
+    if (/[\u0370-\u03ff]{2,}/.test(tok)) return true;
+    var words = tok.match(/[A-Za-z\u00c0-\u024f]{3,}/g) || [];
+    return words.some(function (w) { return !FUNCS.test(w); });
+  }
+  function balance(s, open, close) { return s.split(open).length - s.split(close).length; }
+
+  var ATOM = "(?:\\d+(?:[.,]\\d+)?%?|\\d*[A-Za-z](?:'{1,2})?(?:[_^](?:\\{[^{}\\s]{1,8}\\}|[A-Za-z0-9]))*(?:\\([^()\\s]{0,14}\\))?)";
+  var EXPR = '-?' + ATOM + '(?:\\s?[+\\-*/]\\s?' + ATOM + ')*';
+  var EQ_RE = new RegExp('(^|[\\s(\\[,;:*])(' + EXPR + '(?:\\s?(?:<=|>=|!=|=|<|>)\\s?' + EXPR + ')+)(?=$|[\\s)\\],;:.!?*])', 'g');
+  var POW_RE = /^\(?(?:\d+(?:\.\d+)?)?[A-Za-z]{0,2}(?:[_^](?:\{[^{}]{1,12}\}|-?\d{1,3}|[A-Za-z]))+\)?$/;
+  var NUM_RE = /(^|[\s(\[=:,;*])(-?\d+(?:[.,]\d+)?%?)(?=$|[\s)\],;:.!?*])/g;
+  var PEEL = /^([(\["'“‘]*)([\s\S]*?)([)\]"'”’.,;:!?]*)$/;
+  var OP_TOK = /^(?:[+\-*\/=<>]|<=|>=|!=)$/;
+  var NUM_TOK = /^-?\d+(?:[.,]\d+)?%?$/;
+  var VAR_TOK = new RegExp('^-?' + ATOM + '$');
+  var FN_TOK = new RegExp('^(?:' + FUNC_NAMES + ')\\([^()\\s]*\\)$');
+  var CHEM = /^(?:[A-Z][a-z]?[\u2080-\u2089]*){1,6}$/;
+
+  /* Split a token into leading punctuation, body and trailing punctuation, keeping balanced brackets in the body. */
+  function peel(tok) {
+    var m = tok.match(PEEL), pre = m[1], body = m[2], post = m[3];
+    while (post && /^[)\]]/.test(post) && (post.charAt(0) === ')' ? balance(body, '(', ')') > 0 : balance(body, '[', ']') > 0)) { body += post.charAt(0); post = post.slice(1); }
+    while (pre && /[(\[]$/.test(pre) && (pre.slice(-1) === '(' ? balance(body, ')', '(') > 0 : balance(body, ']', '[') > 0)) { body = pre.slice(-1) + body; pre = pre.slice(0, -1); }
+    return { pre: pre, body: body, post: post };
+  }
+  /* M = unmistakable maths, O = operator, N = number, V = single symbol or call, C = chemical formula, X = ordinary text */
+  function kind(body) {
+    if (!body || /[\u0590-\u06ff]/.test(body)) return 'X';
+    if (CHEM.test(body) && /[\u2080-\u2089]/.test(body)) return 'C';
+    if ((UNI_RE.test(body.normalize('NFD')) && !wordy(body)) || POW_RE.test(body)) return 'M';
+    if (OP_TOK.test(body)) return 'O';
+    if (NUM_TOK.test(body)) return 'N';
+    if (VAR_TOK.test(body) || FN_TOK.test(body)) return 'V';
+    return 'X';
+  }
+
+  function autoMath(s, hold, hadMath) {
+    var found = hadMath;
+    function put(tex) { found = true; return hold(mathSpan(tex, false)); }
+    // rules 1 and 2: the longest run of maths-like tokens around at least one unmistakable one
+    var parts = s.split(/(\s+)/), out = [], i = 0;
+    while (i < parts.length) {
+      var tok = parts[i];
+      if (i % 2 === 1 || !tok) { out.push(tok); i++; continue; }
+      var j = i, kinds = [];
+      while (j < parts.length) {
+        var t = parts[j];
+        if (!t || t.indexOf('\u0000') > -1 || t.indexOf('](') > -1 || /^https?:/.test(t)) break;
+        var p = peel(t), k = kind(p.body || t.replace(/[.,;:!?]+$/, ''));
+        if (k === 'X' || (k === 'C' && j > i)) break;
+        kinds.push(k);
+        j += 2;
+        if (k === 'C' || /[.;:!?"'”’]/.test(p.post) || /\n/.test(parts[j - 1] || '')) break;
+      }
+      var n = kinds.length;
+      while (n > 0 && kinds[n - 1] === 'O') n--;                    // no trailing operator
+      var lead = kinds[0] === 'O' && !(tok === '-' && n > 1);       // no leading operator, except a minus sign
+      if (!lead && n > 0 && kinds.slice(0, n).some(function (x) { return x === 'M' || x === 'C'; })) {
+        var q = peel(parts.slice(i, i + 2 * n - 1).join(''));
+        out.push(q.pre + put(kinds[0] === 'C' ? '\\mathrm{' + uniToTex(q.body) + '}' : uniToTex(q.body)) + q.post);
+        i += 2 * n - 1;
+      } else { out.push(tok); i++; }
+    }
+    s = out.join('');
+    // rule 3: equations of simple terms
+    s = s.replace(EQ_RE, function (all, lead2, eq) {
+      if (/^[A-Za-z]\s?=\s?[A-Za-z]{2,}/.test(eq)) return all;
+      return lead2 + put(uniToTex(eq));
+    });
+    // rule 4: numbers, only where the text already has maths
+    if (found) {
+      s = s.replace(/(^|\n)(\s*\d+[.)])(?=\s)/g, function (m, x, y) { return x + y.replace(/\d/g, function (d) { return String.fromCharCode(0xE000 + +d); }); }); // protect list markers
+      s = s.replace(NUM_RE, function (all, lead3, num) {
+        if (/^\d{4}$/.test(num) && +num >= 1000 && +num <= 2100) return all; // years
+        return lead3 + put(num.replace('%', '\\%').replace(/,(?=\d)/, '{,}'));
+      });
+      s = s.replace(/[\uE000-\uE009]/g, function (c) { return String(c.charCodeAt(0) - 0xE000); });
+    }
+    return s;
+  }
+  ALS.autoMathOn = true;
+
+  /* ---------------- Markdown-lite ---------------- */
   function inline(s) {
     // s is already escaped. Order matters: links, bold, italic.
     s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, function (_, t, u) {
@@ -695,19 +1508,23 @@ a { color: var(--accent); text-underline-offset: 3px; }
     return s;
   }
 
-  /* Render a rich-text string to safe HTML. opts.inline = no paragraph wrapping. */
+  /* Render a rich-text string to safe HTML. opts.inline = no paragraph wrapping; opts.plain = no automatic maths. */
   ALS.md = function (text, opts) {
     opts = opts || {};
     if (text == null) return '';
     var store = [];
     var hold = function (html) { store.push(html); return '\u0000' + (store.length - 1) + '\u0000'; };
-    var s = String(text).replace(/\r\n?/g, '\n');
+    var s = String(text).replace(/\r\n?/g, '\n').replace(/[\u0000\uE000-\uE009]/g, '');
 
     s = s.replace(/`([^`\n]+)`/g, function (_, c) { return hold('<code>' + ALS.esc(c) + '</code>'); });
-    s = s.replace(MATH_RE, function (m, d1, d2, i1, i2) {
-      if (d1 != null || d2 != null) return hold(mathSpan((d1 != null ? d1 : d2).trim(), true));
-      return hold(mathSpan((i1 != null ? i1 : i2).trim(), false));
+    var nCode = store.length;
+    s = s.replace(MATH_RE, function (m, d1, d2, i1, i2, env, envName, i3) {
+      if (d1 != null) return hold(mathSpan(d1.trim(), true));
+      if (d2 != null) return hold(mathSpan(d2.trim(), true));
+      if (env != null) return hold(mathSpan(env.trim(), true));
+      return hold(mathSpan((i1 != null ? i1 : i2 != null ? i2 : i3).trim(), false));
     });
+    if (ALS.autoMathOn && !opts.plain) s = autoMath(s, hold, store.length > nCode);
     s = ALS.esc(s);
 
     var out;
@@ -730,6 +1547,12 @@ a { color: var(--accent); text-underline-offset: 3px; }
     return out.replace(/\u0000(\d+)\u0000/g, function (_, i) { return store[+i]; });
   };
 
+  /* Plain text of a rich string (browser tab title, outlines, word counts). */
+  ALS.plain = function (text) {
+    return String(text == null ? '' : text).replace(/\$\$?|\*\*|`/g, '').replace(/\\[a-zA-Z]+\s?/g, ' ').replace(/[{}]/g, '').replace(/\s+/g, ' ').trim();
+  };
+  ALS.words = function (text) { var p = ALS.plain(text); return p ? p.split(/\s+/).length : 0; };
+
   /* Set rich HTML on an element and typeset its maths. */
   ALS.rich = function (node, text, opts) {
     node.innerHTML = ALS.md(text, opts);
@@ -740,20 +1563,33 @@ a { color: var(--accent); text-underline-offset: 3px; }
 
   ALS.renderMath = function (root) {
     var nodes = ALS.$$('.als-math:not([data-done])', root || document);
-    if (!nodes.length) return;
-    if (!window.katex) {
-      nodes.forEach(function (n) { n.classList.add('als-math-raw'); });
-      ALS.loadKatex();
-      return;
+    if (nodes.length) {
+      if (!window.katex) {
+        nodes.forEach(function (n) { n.classList.add('als-math-raw'); });
+        ALS.loadKatex();
+      } else {
+        nodes.forEach(function (n) {
+          try {
+            window.katex.render(n.getAttribute('data-tex'), n, { displayMode: n.getAttribute('data-display') === '1', throwOnError: false, strict: 'ignore', macros: ALS.macros });
+            n.classList.remove('als-math-raw');
+            n.setAttribute('data-done', '1');
+          } catch (e) { n.classList.add('als-math-raw'); }
+        });
+      }
     }
-    nodes.forEach(function (n) {
-      try {
-        window.katex.render(n.getAttribute('data-tex'), n, { displayMode: n.getAttribute('data-display') === '1', throwOnError: false, strict: 'ignore', macros: ALS.macros });
-        n.classList.remove('als-math-raw');
-        n.setAttribute('data-done', '1');
-      } catch (e) { n.classList.add('als-math-raw'); }
+    ALS.fitMath(root);
+  };
+
+  /* Display maths never scrolls: it is scaled down to the width it has (to half size at most). */
+  ALS.fitMath = function (root) {
+    ALS.$$('.als-math-display[data-done]', root || document).forEach(function (n) {
+      n.style.fontSize = '';
+      var avail = n.clientWidth, need = n.scrollWidth;
+      if (avail > 0 && need > avail + 1) n.style.fontSize = Math.max(0.5, avail / need * 0.985).toFixed(3) + 'em';
     });
   };
+  var fitTimer;
+  window.addEventListener('resize', function () { clearTimeout(fitTimer); fitTimer = setTimeout(function () { ALS.fitMath(document); }, 150); });
 
   ALS.loadKatex = function () {
     if (ALS._katexLoading || window.katex) return;
@@ -816,8 +1652,9 @@ a { color: var(--accent); text-underline-offset: 3px; }
     });
   };
 
-  /* ---------------- SVG sanitising (diagram slides) ---------------- */
-  ALS.safeSvg = function (svgText) {
+  /* ---------------- SVG sanitising (diagram slides) ----------------
+     allowHtml keeps <foreignObject>; only for drawings this toolkit generates itself, whose labels are escaped. */
+  ALS.safeSvg = function (svgText, allowHtml) {
     try {
       var doc = new DOMParser().parseFromString(String(svgText), 'image/svg+xml');
       var svg = doc.documentElement;
@@ -825,7 +1662,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
       var walk = function (n) {
         Array.prototype.slice.call(n.children || []).forEach(function (c) {
           var name = c.nodeName.toLowerCase();
-          if (name === 'script' || name === 'foreignobject' || name === 'iframe') { c.remove(); return; }
+          if (name === 'script' || name === 'iframe' || (name === 'foreignobject' && !allowHtml)) { c.remove(); return; }
           Array.prototype.slice.call(c.attributes).forEach(function (a) {
             var an = a.name.toLowerCase();
             if (an.indexOf('on') === 0) c.removeAttribute(a.name);
@@ -871,7 +1708,19 @@ a { color: var(--accent); text-underline-offset: 3px; }
     eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
     notes: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
     play: '<path d="m6 4 14 8-14 8z"/>',
-    pause: '<path d="M7 4h3v16H7zM14 4h3v16h-3z"/>'
+    pause: '<path d="M7 4h3v16H7zM14 4h3v16h-3z"/>',
+    panelTop: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/>',
+    panelLeft: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/>',
+    panelBottom: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15h18"/>',
+    zen: '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>',
+    timer: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/>',
+    target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+    book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>',
+    layers: '<path d="m12 2 9 5-9 5-9-5z"/><path d="m3 12 9 5 9-5M3 17l9 5 9-5"/>',
+    down: '<path d="m6 9 6 6 6-6"/>',
+    up: '<path d="m18 15-6-6-6 6"/>',
+    minus: '<path d="M5 12h14"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>'
   };
   ALS.icon = function (name) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (P[name] || '') + '</svg>';
@@ -886,8 +1735,11 @@ a { color: var(--accent); text-underline-offset: 3px; }
 
   ALS.loadFonts = function (name) {
     var t = THEMES[name];
-    if (!t || !t.fonts || ALS.$('link[data-als-fonts="' + name + '"]')) return;
-    document.head.appendChild(ALS.el('link', { rel: 'stylesheet', href: t.fonts, 'data-als-fonts': name }));
+    if (!t) return;
+    [['fonts', name], ['fontsRtl', name + '-rtl']].forEach(function (f) {
+      if (!t[f[0]] || (f[0] === 'fontsRtl' && !ALS.rtl) || ALS.$('link[data-als-fonts="' + f[1] + '"]')) return;
+      document.head.appendChild(ALS.el('link', { rel: 'stylesheet', href: t[f[0]], 'data-als-fonts': f[1] }));
+    });
   };
 
   ALS.setTheme = function (name, persist) {
@@ -896,6 +1748,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
     ALS.loadFonts(name);
     if (persist) ALS.store.set('theme', name);
     ALS.$$('[data-theme-option]').forEach(function (b) { b.setAttribute('aria-checked', String(b.getAttribute('data-theme-option') === name)); });
+    setTimeout(function () { ALS.fitMath(document); }, 400);
   };
 
   ALS.applyMode = function () {
@@ -905,7 +1758,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
     var btn = ALS.$('#als-mode-btn');
     if (btn) {
       btn.innerHTML = ALS.icon(dark ? 'sun' : 'moon');
-      btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+      btn.setAttribute('aria-label', dark ? T('Switch to light mode') : T('Switch to dark mode'));
       btn.title = btn.getAttribute('aria-label');
     }
   };
@@ -913,7 +1766,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 
   function themeMenu() {
     var wrap = ALS.el('div', { class: 'als-menu als-noprint' });
-    var btn = ALS.iconBtn('palette', 'Choose design', function (e) {
+    var btn = ALS.iconBtn('palette', T('Choose design'), function (e) {
       e.stopPropagation();
       wrap.setAttribute('data-open', wrap.getAttribute('data-open') === 'true' ? 'false' : 'true');
     });
@@ -922,7 +1775,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
     Object.keys(THEMES).forEach(function (name) {
       var t = THEMES[name];
       var sw = ALS.el('span', { class: 'als-swatch', style: 'background: linear-gradient(135deg,' + t.swatch[0] + ' 50%,' + t.swatch[1] + ' 50%)' });
-      var label = ALS.el('span', { html: ALS.esc(t.label) + '<small>' + ALS.esc(t.short || '') + '</small>' });
+      var label = ALS.el('span', { html: ALS.esc(t.label) + '<small>' + ALS.esc(T(t.short || '')) + '</small>' });
       panel.appendChild(ALS.el('button', {
         type: 'button', class: 'als-menu-item', role: 'menuitemradio', 'data-theme-option': name,
         onclick: function () { ALS.setTheme(name, true); wrap.setAttribute('data-open', 'false'); }
@@ -934,36 +1787,190 @@ a { color: var(--accent); text-underline-offset: 3px; }
     return wrap;
   }
 
+  /* ---------------- collapsible panels ----------------
+     A panel is any element tagged with ALS.panel(id, node). Ids: header, sidebar, controls, status.
+     Hidden panels are listed in <html data-als-hide="…"> and remembered per page kind. */
+  ALS.panels = {};
+  var PANEL_META = {
+    header: ['panelTop', 'Header'], sidebar: ['panelLeft', 'Sidebar'], controls: ['panelBottom', 'Controls'], status: ['up', 'Status bar']
+  };
+  function hideKey() { return 'hide:' + ((ALS.data && ALS.data.kind) || 'page'); }
+  function hiddenList() { return (root.getAttribute('data-als-hide') || '').split(' ').filter(Boolean); }
+  function others() { return Object.keys(ALS.panels).filter(function (p) { return p !== 'status'; }); }
+  function setHidden(list, persist) {
+    root.setAttribute('data-als-hide', list.join(' '));
+    if (persist !== false) ALS.store.globalSet(hideKey(), list.join(' '));
+    ALS.$$('[data-panel-toggle]').forEach(function (b) { b.setAttribute('aria-pressed', String(list.indexOf(b.getAttribute('data-panel-toggle')) < 0)); });
+    var z = ALS.$('#als-zen'); if (z) z.setAttribute('aria-pressed', String(ALS.isZen()));
+    document.dispatchEvent(new Event('als:panels'));
+    setTimeout(function () { ALS.fitMath(document); }, 60);
+  }
+  ALS.panel = function (id, node, label) {
+    node.setAttribute('data-als-panel', id);
+    ALS.panels[id] = label || T((PANEL_META[id] || [0, id])[1]);
+    return node;
+  };
+  ALS.panelHidden = function (id) { return hiddenList().indexOf(id) > -1; };
+  ALS.togglePanel = function (id, show) {
+    var list = hiddenList(), at = list.indexOf(id);
+    var want = show == null ? at > -1 : show;
+    if (want && at > -1) list.splice(at, 1);
+    if (!want && at < 0) list.push(id);
+    setHidden(list);
+  };
+  ALS.isZen = function () {
+    var list = hiddenList(), o = others();
+    return o.length > 0 && o.every(function (p) { return list.indexOf(p) > -1; });
+  };
+  ALS.zen = function () {
+    var o = others(), list = hiddenList();
+    if (!o.length) return;
+    if (ALS.isZen()) {
+      var before = ALS._beforeZen || [];
+      setHidden(list.filter(function (p) { return o.indexOf(p) < 0 || before.indexOf(p) > -1; }));
+    } else {
+      ALS._beforeZen = list;
+      setHidden(list.filter(function (p) { return o.indexOf(p) < 0; }).concat(o));
+      ALS.toast(T('Focus mode: press Z to bring the panels back'));
+    }
+  };
+
   /* Top bar: title, optional actions, theme menu and mode toggle. */
   ALS.topbar = function (actions) {
     var d = ALS.data;
-    var bar = ALS.el('header', { class: 'als-topbar' });
+    var bar = ALS.panel('header', ALS.el('header', { class: 'als-topbar' }));
     var shell = ALS.el('div', { class: 'als-shell' });
+    var sub = d.subtitle || d.subject;
     var brand = ALS.el('div', { class: 'als-brand' }, [
-      ALS.el('span', { class: 'als-brand-title', text: d.title }),
-      d.subtitle || d.subject ? ALS.el('span', { class: 'als-brand-sub', text: d.subtitle || d.subject }) : null
+      ALS.el('span', { class: 'als-brand-title', html: ALS.md(d.title, { inline: true }) }),
+      sub ? ALS.el('span', { class: 'als-brand-sub', html: ALS.md(sub, { inline: true }) }) : null
     ]);
     shell.appendChild(brand);
     shell.appendChild(ALS.el('div', { class: 'als-spacer' }));
     (actions || []).forEach(function (a) { if (a) shell.appendChild(a); });
     shell.appendChild(themeMenu());
-    var modeBtn = ALS.iconBtn('moon', 'Toggle dark mode', function () {
+    var modeBtn = ALS.iconBtn('moon', T('Switch to dark mode'), function () {
       var dark = root.getAttribute('data-als-mode') === 'dark';
       ALS.store.globalSet('mode', dark ? 'light' : 'dark');
       ALS.applyMode();
     }, 'als-noprint');
     modeBtn.id = 'als-mode-btn';
     shell.appendChild(modeBtn);
+    shell.appendChild(ALS.iconBtn('up', T('Hide: {0}', T('Header')), function () { ALS.togglePanel('header', false); }, 'als-noprint als-panel-close'));
     bar.appendChild(shell);
     return bar;
+  };
+
+  /* ---------------- status bar ----------------
+     ALS.dock([controls…]) returns the bottom dock: optional controls above the status bar.
+     ALS.status([{ k: 'Slide', v: '4 / 12' }, …]) fills the middle of the bar. */
+  var timer = { sec: 0, total: 0, running: true, focusEnd: 0, focusLen: 25 * 60 };
+  function seg(cls, title, kids, onclick) {
+    return ALS.el(onclick ? 'button' : 'span', { class: 'als-seg-item ' + (cls || ''), title: title || null, type: onclick ? 'button' : null, onclick: onclick || null }, kids);
+  }
+  function ico(name) { return ALS.el('span', { class: 'i', html: ALS.icon(name) }); }
+  ALS.status = function (items) {
+    var box = ALS.$('#als-status-info'); if (!box) return;
+    box.innerHTML = '';
+    (items || []).forEach(function (it) {
+      if (!it) return;
+      box.appendChild(ALS.el('span', { class: 'als-seg-item' + (it.cls ? ' ' + it.cls : ''), title: it.title || null, html: (it.k ? '<span class="k">' + ALS.esc(it.k) + '</span> ' : '') + '<span class="v">' + ALS.esc(it.v) + '</span>' }));
+    });
+  };
+  function paintTimer() {
+    var a = ALS.$('#als-timer'), b = ALS.$('#als-focus'), c = ALS.$('#als-clock .v');
+    if (a) {
+      ALS.$('.v', a).textContent = ALS.clock(timer.sec);
+      a.classList.toggle('is-paused', !timer.running);
+      a.title = T('Study time on this page ({0} in total). Click to pause or resume.', ALS.clock(timer.total + timer.sec));
+    }
+    if (b) {
+      var left = timer.focusEnd ? Math.max(0, Math.round((timer.focusEnd - Date.now()) / 1000)) : timer.focusLen;
+      ALS.$('.v', b).textContent = ALS.clock(left);
+      b.classList.toggle('is-on', !!timer.focusEnd);
+    }
+    if (c) { var d = new Date(); c.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+  }
+  function tick() {
+    if (!document.hidden && timer.running) { timer.sec++; if (timer.sec % 15 === 0) ALS.store.set('time', timer.total + timer.sec); }
+    if (timer.focusEnd && Date.now() >= timer.focusEnd) {
+      timer.focusEnd = 0;
+      ALS.toast(T('Focus block finished. Take a short break.'));
+      var f = ALS.$('#als-focus'); if (f) { f.classList.add('is-done'); setTimeout(function () { f.classList.remove('is-done'); }, 6000); }
+    }
+    paintTimer();
+    document.dispatchEvent(new Event('als:tick'));
+  }
+  ALS.elapsed = function () { return timer.sec; };
+  function applyZoom() {
+    var z = parseFloat(ALS.store.globalGet('zoom', '100')) || 100;
+    root.style.fontSize = z === 100 ? '' : z + '%';
+    var v = ALS.$('#als-zoom-value'); if (v) v.textContent = z + '%';
+    setTimeout(function () { ALS.fitMath(document); }, 60);
+  }
+  function setZoom(delta) {
+    var z = delta === 0 ? 100 : Math.round((parseFloat(ALS.store.globalGet('zoom', '100')) || 100) + delta);
+    ALS.store.globalSet('zoom', String(Math.max(70, Math.min(180, z))));
+    applyZoom();
+  }
+  ALS.statusbar = function () {
+    var bar = ALS.panel('status', ALS.el('div', { class: 'als-status als-noprint', role: 'toolbar', 'aria-label': T('Status bar') }));
+    var left = ALS.el('div', { class: 'als-status-group' });
+    others().forEach(function (id) {
+      var label = T('Show or hide: {0}', ALS.panels[id]);
+      var b = seg('als-seg-btn', label, [ico((PANEL_META[id] || ['panelTop'])[0])], function () { ALS.togglePanel(id); });
+      b.setAttribute('data-panel-toggle', id);
+      b.setAttribute('aria-label', label);
+      left.appendChild(b);
+    });
+    var zen = seg('als-seg-btn', T('Focus mode: hide all panels (Z)'), [ico('zen')], ALS.zen);
+    zen.id = 'als-zen'; zen.setAttribute('aria-label', T('Focus mode: hide all panels (Z)'));
+    left.appendChild(zen);
+    var info = ALS.el('div', { class: 'als-status-group als-status-info', id: 'als-status-info' });
+    var right = ALS.el('div', { class: 'als-status-group als-status-end' });
+    var t1 = seg('als-seg-btn', '', [ico('timer'), ALS.el('span', { class: 'v', text: '0:00' })], function () { timer.running = !timer.running; paintTimer(); });
+    t1.id = 'als-timer';
+    var t2 = seg('als-seg-btn', T('Focus countdown. Click to start or stop a 25-minute block; Shift+click for 50 minutes.'), [ico('target'), ALS.el('span', { class: 'v', text: '25:00' })], function (e) {
+      if (timer.focusEnd) timer.focusEnd = 0;
+      else { timer.focusLen = (e && e.shiftKey ? 50 : 25) * 60; timer.focusEnd = Date.now() + timer.focusLen * 1000; ALS.toast(T('Focus block started: {0} minutes', timer.focusLen / 60)); }
+      paintTimer();
+    });
+    t2.id = 'als-focus';
+    var clock = seg('als-hide-sm', T('Time'), [ALS.el('span', { class: 'v', text: '' })]); clock.id = 'als-clock';
+    var zv = ALS.el('span', { class: 'v', id: 'als-zoom-value', text: '100%' });
+    var zoom = ALS.el('span', { class: 'als-seg-group als-hide-sm' }, [
+      seg('als-seg-btn', T('Smaller text'), [ico('minus')], function () { setZoom(-10); }),
+      seg('als-seg-btn', T('Reset text size'), [zv], function () { setZoom(0); }),
+      seg('als-seg-btn', T('Larger text'), [ico('plus')], function () { setZoom(10); })
+    ]);
+    var hide = seg('als-seg-btn', T('Hide: {0}', T('Status bar')) + ' (B)', [ico('down')], function () { ALS.togglePanel('status', false); });
+    hide.setAttribute('aria-label', T('Hide: {0}', T('Status bar')));
+    [t1, t2, clock, zoom, hide].forEach(function (n) { right.appendChild(n); });
+    bar.appendChild(left); bar.appendChild(info); bar.appendChild(right);
+    return bar;
+  };
+  ALS.dock = function (controls) {
+    var dock = ALS.el('div', { class: 'als-dock als-noprint' });
+    (controls || []).forEach(function (c) { if (c) dock.appendChild(c); });
+    dock.appendChild(ALS.statusbar());
+    var old = ALS.$('.als-handles'); if (old) old.remove();
+    var handles = ALS.el('div', { class: 'als-handles als-noprint' });
+    Object.keys(ALS.panels).forEach(function (id) {
+      var label = T('Show: {0}', ALS.panels[id]);
+      handles.appendChild(ALS.el('button', { type: 'button', class: 'als-handle', 'data-handle': id, title: label, 'aria-label': label, html: ALS.icon((PANEL_META[id] || ['panelTop'])[0]), onclick: function () { ALS.togglePanel(id, true); } }));
+    });
+    document.body.appendChild(handles);
+    setTimeout(function () { setHidden(hiddenList(), false); applyZoom(); paintTimer(); }, 0);
+    if (!ALS._ticking) ALS._ticking = setInterval(tick, 1000);
+    return dock;
   };
 
   /* Source + grounding badges for an item. */
   ALS.provenance = function (item) {
     if (!item) return null;
     var bits = [];
-    if (item.src) bits.push('<span class="als-src" title="Source in your material">' + ALS.esc(item.src) + '</span>');
-    if (item.grounded === false) bits.push('<span class="als-beyond" title="Added beyond your course material">beyond your notes</span>');
+    if (item.src) bits.push('<span class="als-src" title="' + ALS.esc(T('Source in your material')) + '">' + ALS.esc(item.src) + '</span>');
+    if (item.grounded === false) bits.push('<span class="als-beyond" title="' + ALS.esc(T('Added beyond your course material')) + '">' + ALS.esc(T('beyond your notes')) + '</span>');
     if (!bits.length) return null;
     return ALS.el('div', { class: 'als-row als-provenance', html: bits.join(' ') });
   };
@@ -973,11 +1980,11 @@ a { color: var(--accent); text-underline-offset: 3px; }
     var d = ALS.data;
     var payload = Object.assign({
       als: '1', kind: 'results', source: kind, title: d.title, module: d.module || null,
-      date: ALS.today(), exported: new Date().toISOString(), items: items
+      date: ALS.today(), exported: new Date().toISOString(), studySeconds: timer.sec, items: items
     }, extra || {});
     var name = (d.module ? d.module + '-' : '') + ALS.slug(d.title) + '-results-' + ALS.today() + '.json';
     ALS.download(name, JSON.stringify(payload, null, 2));
-    ALS.toast('Saved ' + name + '. Ask Claude to import it to update your progress.');
+    ALS.toast(T('Saved {0}. Ask Claude to import it to update your progress.', name));
   };
 
   /* ---------------- boot ---------------- */
@@ -988,12 +1995,24 @@ a { color: var(--accent); text-underline-offset: 3px; }
       document.body.innerHTML = '<p style="padding:2rem;font-family:sans-serif">This page has no valid data block. Rebuild it with <code>als.py build</code>.</p>';
       return;
     }
-    ALS.pageKey = ALS.slug((ALS.data.module || '') + '-' + ALS.data.kind + '-' + ALS.data.title);
-    ALS.macros = Object.assign({}, ALS.data.macros || {}); // LaTeX shorthands defined once per data file
+    var d = ALS.data;
+    ALS.pageKey = ALS.slug((d.module || '') + '-' + d.kind + '-' + d.title);
+    ALS.macros = Object.assign({}, d.macros || {}); // LaTeX shorthands defined once per data file
+    ALS.autoMathOn = d.autoMath !== false;
+    var code = String(d.lang || root.getAttribute('lang') || 'en').toLowerCase();
+    ALS.lang = I18N[code] ? code : code.split('-')[0];
+    ALS.rtl = d.dir ? d.dir === 'rtl' : !!RTL_LANGS[code.split('-')[0]];
+    root.setAttribute('dir', ALS.rtl ? 'rtl' : 'ltr');
+    document.title = ALS.plain(d.title);
+    var stored = ALS.store.globalGet(hideKey(), null);
+    root.setAttribute('data-als-hide', stored != null ? stored : (window.innerWidth < 1000 ? 'sidebar' : ''));
+    timer.total = ALS.store.get('time', 0) || 0;
     ALS.setTheme(ALS.store.get('theme', root.getAttribute('data-als-theme')));
     ALS.applyMode();
     if (ALS.hasMath(node.textContent)) ALS.loadKatex();
-    render(ALS.data);
+    ALS.onKey({ 'z': ALS.zen, 'Z': ALS.zen, 'b': function () { ALS.togglePanel('status'); }, 'B': function () { ALS.togglePanel('status'); } });
+    window.addEventListener('beforeunload', function () { ALS.store.set('time', timer.total + timer.sec); });
+    render(d);
     ALS.applyMode();
     ALS.renderMath(document);
   };
@@ -1001,7 +2020,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 </script>
 <script>
 ALS.boot(function (sh) {
-  var E = ALS.el, $ = ALS.$;
+  var E = ALS.el, $ = ALS.$, T = ALS.t;
   var app = $('#app');
   var layout = ALS.store.get('layout', sh.layout || 'notes');
 
@@ -1032,10 +2051,10 @@ ALS.boot(function (sh) {
         break;
       case 'example':
         var ex = E('div', { class: 'als-card als-card--flat sh-example' });
-        ex.appendChild(E('div', { class: 'als-kicker', text: b.title || 'Example' }));
+        ex.appendChild(E('div', { class: 'als-kicker', text: b.title || T('Example') }));
         if (b.body) ex.appendChild(richDiv(b.body));
         if (b.solution) {
-          var det = E('details', { class: 'sol', open: layout === 'cheatsheet' || null }, [E('summary', { style: 'cursor:pointer;color:var(--accent);font-weight:500', text: 'Solution' })]);
+          var det = E('details', { class: 'sol', open: layout === 'cheatsheet' || null }, [E('summary', { style: 'cursor:pointer;color:var(--accent);font-weight:500', text: T('Solution') })]);
           det.appendChild(richDiv(b.solution));
           ex.appendChild(det);
         }
@@ -1043,7 +2062,7 @@ ALS.boot(function (sh) {
         break;
       case 'warning':
         var w = E('div', { class: 'als-callout als-callout--warn' });
-        w.appendChild(E('div', { class: 'sh-block-title', text: b.title || 'Common mistake' }));
+        w.appendChild(E('div', { class: 'sh-block-title', text: b.title || T('Common mistake') }));
         if (b.body) w.appendChild(richDiv(b.body));
         wrap.appendChild(w);
         break;
@@ -1066,13 +2085,13 @@ ALS.boot(function (sh) {
 
   function render() {
     app.innerHTML = '';
-    var seg = E('div', { class: 'als-seg als-noprint', role: 'group', 'aria-label': 'Layout' }, [['notes', 'Notes'], ['cheatsheet', 'Cheat sheet']].map(function (o) {
+    var seg = E('div', { class: 'als-seg als-noprint', role: 'group', 'aria-label': T('Layout') }, [['notes', T('Notes')], ['cheatsheet', T('Cheat sheet')]].map(function (o) {
       return E('button', { type: 'button', 'aria-pressed': String(layout === o[0]), text: o[1], onclick: function () { layout = o[0]; ALS.store.set('layout', layout); render(); } });
     }));
-    app.appendChild(ALS.topbar([seg, ALS.iconBtn('print', 'Print or save as PDF', function () { window.print(); }, 'als-noprint')]));
+    app.appendChild(ALS.topbar([seg, ALS.iconBtn('print', T('Print or save as PDF'), function () { window.print(); }, 'als-noprint')]));
     var main = E('main', { class: 'als-shell als-frame' });
     var head = E('header', { class: 'sh-head' + (layout === 'cheatsheet' ? '' : '') , style: layout === 'cheatsheet' ? 'max-width:none' : '' }, [
-      E('div', { class: 'als-kicker', text: [sh.module, layout === 'cheatsheet' ? 'Cheat sheet' : 'Study notes'].filter(Boolean).join(' · ') }),
+      E('div', { class: 'als-kicker', text: [sh.module, layout === 'cheatsheet' ? T('Cheat sheet') : T('Study notes')].filter(Boolean).join(' · ') }),
       E('h1', { class: 'als-h1', text: sh.title }),
       sh.subtitle ? E('p', { class: 'als-sub', text: sh.subtitle }) : null
     ]);
@@ -1082,19 +2101,23 @@ ALS.boot(function (sh) {
     var body = E('div', { class: layout === 'cheatsheet' ? 'sh-cheat' : 'sh-notes' });
     sh.blocks.forEach(function (b, k) { body.appendChild(block(b, k)); });
     if (layout === 'notes' && sections.length >= 4) {
-      var toc = E('nav', { class: 'sh-toc', 'aria-label': 'Contents' }, [E('div', { class: 'als-kicker', style: 'margin-bottom:.5rem', text: 'Contents' })].concat(sections.map(function (s) {
+      var toc = ALS.panel('sidebar', E('nav', { class: 'sh-toc', 'aria-label': T('Contents') }), T('Contents'));
+      [E('div', { class: 'als-kicker', style: 'margin-bottom:.5rem', text: T('Contents') })].concat(sections.map(function (s) {
         return E('a', { href: '#sec-' + s.k, html: ALS.md(s.title, { inline: true }) });
-      })));
+      })).forEach(function (n) { toc.appendChild(n); });
       main.appendChild(E('div', { class: 'sh-layout has-toc' }, [toc, body]));
     } else main.appendChild(body);
     if (sh.sources && sh.sources.length) {
-      var src = E('footer', { class: layout === 'cheatsheet' ? '' : 'sh-notes', style: 'margin-top:2.5rem;font-size:.8125rem;color:var(--text-muted)' }, [E('hr', { class: 'als-divider' }), E('div', { class: 'als-kicker', text: 'Sources' })]);
-      var ul = E('ul', { style: 'padding-left:1.1rem' });
+      var src = E('footer', { class: layout === 'cheatsheet' ? '' : 'sh-notes', style: 'margin-top:2.5rem;font-size:.8125rem;color:var(--text-muted)' }, [E('hr', { class: 'als-divider' }), E('div', { class: 'als-kicker', text: T('Sources') })]);
+      var ul = E('ul', { style: 'padding-inline-start:1.1rem' });
       sh.sources.forEach(function (s) { ul.appendChild(E('li', { html: '<span class="als-mono">' + ALS.esc(s.id) + '</span> ' + ALS.esc(s.title) + (s.locator ? ', ' + ALS.esc(s.locator) : '') })); });
       src.appendChild(ul);
       main.appendChild(src);
     }
     app.appendChild(main);
+    app.appendChild(ALS.dock());
+    var words = sh.blocks.reduce(function (a, b) { return a + Object.keys(b).reduce(function (x, k) { return x + (k === 'type' || k === 'src' ? 0 : ALS.words(typeof b[k] === 'string' ? b[k] : JSON.stringify(b[k]))); }, 0); }, 0);
+    ALS.status([{ k: T('Words'), v: words }, { k: T('Reading time'), v: '~' + Math.max(1, Math.round(words / 190)) + ' ' + T('min') }, { k: T('Sections'), v: sections.length }, { k: T('Layout'), v: layout === 'cheatsheet' ? T('Cheat sheet') : T('Notes') }]);
     ALS.applyMode();
     ALS.renderMath(app);
   }

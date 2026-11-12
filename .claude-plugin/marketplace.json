@@ -9,7 +9,7 @@
     {
       "name": "academic-learning-skills",
       "description": "Module setup, explanations, animated lessons, flashcards (HTML + Anki), practice and mock exams, study plans (.ics), Moodle sync, resources and a persistent learner profile.",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "source": "./",
       "category": "education"
     }

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{lang}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
+<html lang="{{lang}}" dir="{{dir}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,48 +10,103 @@
 <style>/*ALS:CSS*/</style>
 <style>
   html, body { overflow-x: clip; } /* slide-in animation must never cause a horizontal scrollbar */
+  html { --als-dir: 1; } html[dir="rtl"] { --als-dir: -1; }
   .ls-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 40; background: transparent; }
   .ls-progress span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .4s ease; }
-  .ls-stage { min-height: calc(100vh - 3.5rem - 4rem); display: flex; align-items: center; justify-content: center; padding: 2rem 0 1rem; }
+
+  /* workspace: outline sidebar + stage */
+  .ls-work { display: flex; flex: 1 0 auto; min-height: 0; align-items: stretch; }
+  .ls-side { flex: none; width: 17rem; border-inline-end: 1px solid var(--border); background: color-mix(in srgb, var(--bg-elev) 70%, transparent); }
+  .ls-side-in { position: sticky; top: 3.3rem; max-height: calc(100vh - 3.3rem - 5.4rem); overflow-y: auto; padding: .9rem .6rem 1.5rem; }
+  [data-als-hide~="header"] .ls-side-in { top: 0; max-height: calc(100vh - 5.4rem); }
+  .ls-side-head { display: flex; align-items: center; justify-content: space-between; padding: 0 .4rem .5rem; }
+  .ls-out { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+  .ls-out button { display: grid; grid-template-columns: 1.6rem 1fr; gap: .35rem; width: 100%; text-align: start; border: 0; background: none; color: var(--text-muted); padding: .32rem .4rem; border-radius: var(--radius-sm); cursor: pointer; font-size: .82rem; line-height: 1.35; }
+  .ls-out button:hover { background: var(--bg-sunken); color: var(--text); }
+  .ls-out button .n { font-family: var(--font-mono); font-size: .68rem; color: var(--text-faint); padding-top: .12rem; }
+  .ls-out li.is-seen button .n { color: var(--good); }
+  .ls-out li.is-current button { background: var(--accent-soft); color: var(--text); font-weight: 600; }
+  .ls-out li.is-current button .n { color: var(--accent-text, var(--accent)); }
+  .ls-out li.is-section { margin-top: .7rem; }
+  .ls-out li.is-section button { font-family: var(--font-display); font-weight: var(--display-weight, 600); color: var(--text); font-size: .86rem; }
+  .ls-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+  @media (max-width: 900px) {
+    .ls-side { position: fixed; inset-block: 0; inset-inline-start: 0; z-index: 35; width: min(86vw, 19rem); background: var(--bg-elev); box-shadow: 0 0 60px rgba(0,0,0,.35); }
+    .ls-side-in { top: 0; max-height: 100vh; }
+  }
+
+  .ls-stage { flex: 1 0 auto; display: flex; align-items: center; justify-content: center; padding: 1.75rem 0 1.25rem; }
   .ls-slide { width: 100%; }
   .ls-inner { width: 100%; max-width: 60rem; margin: 0 auto; }
-  .ls-slide .als-h2 { font-size: clamp(1.6rem, 4vw, 2.6rem); margin-bottom: 1.25rem; }
-  .ls-big { font-size: clamp(1.1rem, 2.2vw, 1.45rem); line-height: 1.55; }
+  .ls-inner.is-wide { max-width: 78rem; }
+  .ls-slide .als-h2 { font-size: clamp(1.5rem, 3.4vw, 2.3rem); margin-bottom: .75rem; }
+  .ls-big { font-size: clamp(1.05rem, 1.9vw, 1.3rem); line-height: 1.55; }
+  [dir="rtl"] .ls-big { line-height: 1.85; }
+  .ls-lead { font-size: clamp(1.02rem, 1.7vw, 1.18rem); color: var(--text-muted); max-width: 54rem; margin: 0 0 1.25rem; }
+  .ls-lead strong { color: var(--text); }
+
+  /* body: the slide's main element, with the tutor's explanation beside it on wide screens */
+  .ls-body { display: grid; gap: 1.5rem; grid-template-columns: minmax(0, 1fr); align-items: start; }
+  @media (min-width: 1080px) { .ls-body.has-aside { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 2rem; } }
+  .ls-aside { display: grid; gap: .9rem; }
+  .ls-tutor { background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.15rem 1.1rem; font-size: 1.02rem; line-height: 1.68; }
+  [dir="rtl"] .ls-tutor { line-height: 1.95; }
+  .ls-tutor .als-kicker, .ls-intuition .als-kicker { display: block; margin-bottom: .45rem; }
+  .ls-intuition-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .35rem; }
+  .ls-intuition-head .als-kicker { margin: 0; }
+  .ls-intuition { font-size: 1rem; line-height: 1.65; }
+  .ls-takeaway { margin-top: 1.25rem; display: grid; grid-template-columns: auto 1fr; gap: .75rem; align-items: baseline; padding: .7rem 1rem; border-radius: var(--radius-sm); background: var(--accent-soft); font-size: 1.05rem; }
+  .ls-takeaway .als-kicker { white-space: nowrap; }
+  .ls-detail { color: var(--text-muted); font-size: .98rem; line-height: 1.6; margin-top: .2rem; }
+  .ls-prose { font-size: clamp(1.05rem, 1.6vw, 1.2rem); line-height: 1.75; max-width: 50rem; }
+  [dir="rtl"] .ls-prose { line-height: 2; }
+  .ls-section-n { font-family: var(--font-display); font-size: clamp(3rem, 9vw, 6rem); line-height: 1; color: var(--accent); opacity: .35; font-weight: var(--display-weight); }
+
+  /* present view: the compact lecture look (explanations hidden) */
+  [data-ls-view="present"] .ls-aside, [data-ls-view="present"] .ls-detail, [data-ls-view="present"] .ls-lead, [data-ls-view="present"] .ls-takeaway { display: none; }
+  [data-ls-view="present"] .ls-body.has-aside { grid-template-columns: minmax(0, 1fr); }
+  [data-ls-view="present"] .ls-inner.is-wide { max-width: 60rem; }
+  [data-ls-view="present"] .ls-big { font-size: clamp(1.15rem, 2.3vw, 1.5rem); }
 
   /* step reveal */
   .ls-step { transition: opacity .5s ease, transform .5s cubic-bezier(.2,.7,.2,1), filter .5s ease; }
   .ls-step.is-hidden { opacity: 0; transform: translateY(14px); pointer-events: none; }
-  .ls-step.is-past { opacity: .55; }
+  .ls-step.is-past { opacity: .6; }
   .ls-step.is-current { opacity: 1; }
+  /* a freshly inserted slide takes its starting state without animating into it (no flash of later steps) */
+  .ls-init, .ls-init * { transition: none !important; }
+  .ls-init .ls-svg-el { animation: none !important; }
 
   /* title */
-  .ls-title { text-align: left; }
-  .ls-title .als-h1 { font-size: clamp(2.3rem, 7vw, 4.75rem); max-width: 18ch; }
+  .ls-title .als-h1 { font-size: clamp(2.2rem, 6.4vw, 4.5rem); max-width: 20ch; }
   .ls-title .als-sub { font-size: clamp(1.05rem, 2.2vw, 1.35rem); margin-top: 1rem; }
-  .ls-title-meta { margin-top: 2.5rem; display: flex; gap: .5rem; flex-wrap: wrap; }
+  .ls-title-meta { margin-top: 2.25rem; display: flex; gap: .5rem; flex-wrap: wrap; }
 
-  /* points / summary */
-  .ls-points { list-style: none; padding: 0; margin: 0; display: grid; gap: .9rem; }
+  /* points / summary / objectives */
+  .ls-points { list-style: none; padding: 0; margin: 0; display: grid; gap: .95rem; }
   .ls-points li { display: grid; grid-template-columns: 2rem 1fr; gap: .75rem; align-items: start; }
-  .ls-points .n { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); padding-top: .35rem; }
-  .ls-summary li .n { color: var(--good); }
+  .ls-points .n { font-family: var(--font-mono); font-size: .8rem; color: var(--accent-text, var(--accent)); padding-top: .38rem; }
+  .ls-summary li .n, .ls-objectives li .n { color: var(--good); }
 
   /* derivation steps */
   .ls-deriv { display: grid; gap: .5rem; }
-  .ls-deriv-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: .25rem; padding: .7rem 1rem; border-radius: var(--radius-sm); border: 1px solid transparent; }
+  .ls-deriv-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: .2rem; padding: .65rem 1rem; border-radius: var(--radius-sm); border: 1px solid transparent; }
   .ls-deriv-row.is-current { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
-  .ls-deriv-row .t { color: var(--text-muted); font-size: .98rem; }
-  .ls-deriv-row .m { font-size: 1.2rem; overflow-x: auto; }
+  .ls-deriv-row .t { font-size: 1.02rem; }
+  .ls-deriv-row .m { font-size: 1.2rem; min-width: 0; }
+  .ls-deriv-row .w { color: var(--text-muted); font-size: .95rem; line-height: 1.55; }
+  .ls-deriv-row .w::before { content: "\21B3\00a0"; color: var(--accent-text, var(--accent)); }
+  [dir="rtl"] .ls-deriv-row .w::before { content: "\21B2\00a0"; }
+  .ls-given, .ls-result { font-size: 1.08rem; }
 
   /* diagram */
-  .ls-diagram { display: grid; gap: 1rem; }
+  .ls-diagram { display: grid; gap: .9rem; }
   .ls-svg { background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; display: flex; justify-content: center; }
-  .ls-svg svg { width: 100%; height: auto; max-height: 58vh; color: var(--text); font-family: var(--font-body); }
+  .ls-svg svg { width: 100%; height: auto; max-height: 56vh; color: var(--text); font-family: var(--font-body); direction: ltr; overflow: visible; }
   .ls-svg [data-ls-hidden="1"] { opacity: 0; }
-  .ls-svg .ls-svg-el { transition: opacity .55s ease; }
-  .ls-svg .ls-svg-el.is-current { animation: ls-pulse 1.2s ease 1; }
-  @keyframes ls-pulse { 0% { opacity: .2; } 100% { opacity: 1; } }
-  .ls-caption { min-height: 3.2rem; font-size: 1.05rem; }
+  .ls-svg .ls-svg-el.is-current { animation: ls-pulse 1.1s ease 1; }
+  @keyframes ls-pulse { 0% { opacity: .15; } 100% { opacity: 1; } }
+  .ls-caption { min-height: 3.2rem; font-size: 1.06rem; line-height: 1.6; }
   /* diagram colour classes that follow the theme */
   .ls-svg .d-line { stroke: var(--text); fill: none; }
   .ls-svg .d-muted { stroke: var(--text-faint); fill: none; }
@@ -70,55 +125,70 @@
   .ls-svg .d-text { fill: var(--text); stroke: none; font-size: 14px; }
   .ls-svg .d-text-muted { fill: var(--text-muted); stroke: none; font-size: 12px; }
   .ls-svg .d-text-accent { fill: var(--accent); stroke: none; font-size: 14px; font-weight: 600; }
+  /* numbers inside drawings use the maths font, so they match the formulas around them */
+  .ls-svg .d-num { font-family: KaTeX_Main, "Latin Modern Roman", "CMU Serif", "STIX Two Text", "Cambria Math", "Times New Roman", serif; font-size: 15px; }
+  .ls-svg .d-text-muted.d-num { font-size: 13px; }
+  /* labels that contain maths are typeset by KaTeX inside the drawing */
+  .ls-svg foreignObject { overflow: visible; }
+  .d-fo { display: flex; align-items: center; height: 24px; font-size: 14px; line-height: 1; white-space: nowrap; color: var(--text); font-family: var(--font-body); }
+  .d-fo.a-middle { justify-content: center; } .d-fo.a-end { justify-content: flex-end; } .d-fo.a-start { justify-content: flex-start; }
+  .d-fo.d-text-muted { color: var(--text-muted); font-size: 12px; }
+  .d-fo.d-text-accent { color: var(--accent); font-weight: 600; }
+  .is-mark .d-fo { color: var(--accent); }
+  .d-fo .katex { font-size: 1.1em; }
 
   /* code */
   .ls-code { display: grid; gap: 1rem; }
   @media (min-width: 900px) { .ls-code.has-explain { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: start; } }
-  .ls-explain { font-size: 1.05rem; }
+  .ls-explain { font-size: 1.05rem; line-height: 1.6; }
 
   /* compare */
   .ls-compare { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
-  .ls-compare .als-card ul { margin: 0; padding-left: 1.1rem; }
+  .ls-compare .als-card ul { margin: 0; padding-inline-start: 1.1rem; }
   .ls-compare .als-card li + li { margin-top: .4rem; }
+  .ls-compare .ls-detail { margin: 0 0 .6rem; }
 
   /* quote */
-  .ls-quote { font-family: var(--font-display); font-size: clamp(1.5rem, 4vw, 2.6rem); line-height: 1.3; margin: 0; max-width: 32ch; text-wrap: balance; }
+  .ls-quote { font-family: var(--font-display); font-size: clamp(1.4rem, 3.4vw, 2.3rem); line-height: 1.32; margin: 0; max-width: 34ch; text-wrap: balance; }
+  [dir="rtl"] .ls-quote { line-height: 1.7; }
   .ls-quote::before { content: "\201C"; display: block; font-size: 4rem; line-height: .6; color: var(--accent); margin-bottom: .5rem; }
-  .ls-quote-by { margin-top: 1.25rem; color: var(--text-muted); font-size: 1.05rem; }
+  .ls-quote-by { margin-top: 1.1rem; color: var(--text-muted); font-size: 1.02rem; }
 
   /* check */
   .ls-options { display: grid; gap: .6rem; margin-top: 1rem; }
-  .ls-option { text-align: left; justify-content: flex-start; min-height: 3rem; font-size: 1.02rem; padding: .6rem 1rem; }
+  .ls-option { text-align: start; justify-content: flex-start; align-items: baseline; min-height: 3rem; font-size: 1.02rem; padding: .6rem 1rem; gap: .75rem; }
+  .ls-option-text { flex: 1 1 auto; min-width: 0; }
   .ls-option.is-right { background: var(--good-soft); border-color: var(--good); }
   .ls-option.is-wrong { background: var(--bad-soft); border-color: var(--bad); }
 
   /* timeline */
-  .ls-timeline { position: relative; display: grid; gap: 1rem; padding-left: 1.75rem; }
-  .ls-timeline::before { content: ""; position: absolute; left: .45rem; top: .4rem; bottom: .4rem; width: 2px; background: var(--border-strong); }
+  .ls-timeline { position: relative; display: grid; gap: 1rem; padding-inline-start: 1.75rem; }
+  .ls-timeline::before { content: ""; position: absolute; inset-inline-start: .45rem; top: .4rem; bottom: .4rem; width: 2px; background: var(--border-strong); }
   .ls-event { position: relative; }
-  .ls-event::before { content: ""; position: absolute; left: -1.62rem; top: .45rem; width: .8rem; height: .8rem; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+  .ls-event::before { content: ""; position: absolute; inset-inline-start: -1.62rem; top: .45rem; width: .8rem; height: .8rem; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
   .ls-event.is-current::before { background: var(--accent); }
-  .ls-event .when { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); }
+  .ls-event .when { font-family: var(--font-mono); font-size: .8rem; color: var(--accent-text, var(--accent)); }
 
   /* definition */
-  .ls-term { font-family: var(--font-display); font-size: clamp(2rem, 6vw, 3.5rem); font-weight: var(--display-weight); letter-spacing: var(--display-tracking); line-height: 1.05; margin: .25rem 0 1rem; }
-  .ls-def { font-size: clamp(1.1rem, 2.4vw, 1.5rem); max-width: 42rem; }
-  .ls-example { margin-top: 1.5rem; }
+  .ls-term { font-family: var(--font-display); font-size: clamp(1.8rem, 5vw, 3.1rem); font-weight: var(--display-weight); letter-spacing: var(--display-tracking); line-height: 1.08; margin: .25rem 0 .9rem; }
+  [dir="rtl"] .ls-term { line-height: 1.5; }
+  .ls-def { font-size: clamp(1.08rem, 2.1vw, 1.4rem); max-width: 44rem; }
+  .ls-example { margin-top: 1.25rem; }
 
-  /* chrome */
-  .ls-bottom { position: sticky; bottom: 0; z-index: 15; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid var(--border); }
-  .ls-bottom .als-shell { display: flex; align-items: center; gap: .5rem; min-height: 3.5rem; }
-  .ls-count { font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
-  .ls-notes { max-width: 60rem; margin: 0 auto 1rem; }
-  .ls-overview { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); padding: 2rem 0 4rem; }
-  .ls-thumb { text-align: left; cursor: pointer; min-height: 7rem; display: flex; flex-direction: column; gap: .35rem; }
+  /* controls */
+  .ls-bottom { background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid var(--border); }
+  .ls-bottom .als-shell { display: flex; align-items: center; gap: .35rem; min-height: 3.1rem; max-width: none; }
+  .ls-count { font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); font-variant-numeric: tabular-nums; direction: ltr; padding: 0 .35rem; }
+  .ls-notes, .ls-more { max-width: 60rem; margin: 0 auto 1rem; }
+  .ls-overview { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); padding: 1.5rem 0 3rem; width: 100%; align-self: start; }
+  .ls-thumb { text-align: start; cursor: pointer; min-height: 7rem; display: flex; flex-direction: column; gap: .35rem; }
   .ls-thumb[aria-current="true"] { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
   .ls-thumb .n { font-family: var(--font-mono); font-size: .7rem; color: var(--text-faint); }
   .ls-thumb .t { font-weight: 600; font-family: var(--font-display); }
-  .ls-anim-in { animation: ls-in .5s cubic-bezier(.2,.7,.2,1) both; }
-  .ls-anim-back { animation: ls-back .5s cubic-bezier(.2,.7,.2,1) both; }
-  @keyframes ls-in { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
-  @keyframes ls-back { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+  .ls-anim-in { animation: ls-in .45s cubic-bezier(.2,.7,.2,1) both; }
+  .ls-anim-back { animation: ls-back .45s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes ls-in { from { opacity: 0; transform: translateX(calc(28px * var(--als-dir))); } to { opacity: 1; transform: none; } }
+  @keyframes ls-back { from { opacity: 0; transform: translateX(calc(-28px * var(--als-dir))); } to { opacity: 1; transform: none; } }
 
   /* diagram engine: emphasis, focus, line drawing */
   .ls-svg .d-halo { paint-order: stroke; stroke: var(--bg-elev); stroke-width: 4px; stroke-linejoin: round; }
@@ -131,52 +201,51 @@
   @keyframes ls-draw { to { stroke-dashoffset: 0; } }
 
   /* formula with named parts */
-  .ls-formula { font-size: clamp(1.3rem, 3.2vw, 2.1rem); padding: 1.1rem 1rem; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); overflow-x: auto; }
-  .ls-parts { display: grid; gap: .55rem; margin-top: 1.1rem; }
+  .ls-formula { font-size: clamp(1.25rem, 2.9vw, 2rem); padding: 1.1rem 1rem; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .ls-parts { display: grid; gap: .5rem; margin-top: 1.1rem; }
   .ls-part { display: grid; grid-template-columns: minmax(4.5rem, max-content) 1fr; gap: 1rem; align-items: baseline; padding: .45rem .8rem; border-radius: var(--radius-sm); border: 1px solid transparent; }
   .ls-part.is-current { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
-  .ls-part .sym { font-size: 1.2rem; color: var(--accent); }
-  .ls-part .means { font-size: 1.08rem; }
+  .ls-part .sym { font-size: 1.2rem; color: var(--accent-text, var(--accent)); }
+  .ls-part .means { font-size: 1.06rem; }
   .ls-formula-note { margin-top: 1rem; }
 
-  /* worked example frame around a derivation */
-  .ls-deriv-row .w { color: var(--text-faint); font-size: .88rem; font-style: italic; }
-  .ls-given, .ls-result { font-size: 1.08rem; }
-
   /* table */
-  .ls-table { width: 100%; border-collapse: collapse; font-size: clamp(1rem, 1.8vw, 1.2rem); }
-  .ls-table th { text-align: left; font-family: var(--font-mono); font-size: .76rem; letter-spacing: .05em; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--border-strong); padding: .5rem .75rem; }
+  .ls-table { width: 100%; border-collapse: collapse; font-size: clamp(.98rem, 1.6vw, 1.15rem); }
+  .ls-table th { text-align: start; font-family: var(--font-mono); font-size: .76rem; letter-spacing: .05em; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--border-strong); padding: .5rem .75rem; }
   .ls-table td { padding: .6rem .75rem; border-bottom: 1px solid var(--border); vertical-align: top; transition: background .35s ease; }
   .ls-table tr.is-current td { background: var(--accent-soft); }
-  .ls-table-wrap { overflow-x: auto; }
+  .ls-table-wrap { overflow-x: auto; overflow-y: hidden; }
 
   /* pitfall, recall */
   .ls-pitfall { display: grid; gap: .8rem; }
   .ls-hint { margin-top: .75rem; font-size: .95rem; }
 
-  /* figure from the source with spotlight marks */
+  /* figure from the source with spotlight marks (image coordinates stay physical) */
   .ls-fig { display: flex; justify-content: center; }
-  .ls-fig-frame { position: relative; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-elev); max-width: 100%; }
-  .ls-fig-frame img { display: block; max-width: 100%; max-height: 58vh; height: auto; }
+  .ls-fig-frame { position: relative; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-elev); max-width: 100%; direction: ltr; }
+  .ls-fig-frame img { display: block; max-width: 100%; max-height: 56vh; height: auto; }
   .ls-fig-mark { position: absolute; border: 2px solid var(--accent); border-radius: 6px; transition: opacity .4s ease, box-shadow .5s ease; }
   .ls-fig-mark .n { position: absolute; top: 2px; left: 2px; min-width: 1.35rem; padding: 0 .3rem; border-radius: 999px; background: var(--accent); color: var(--accent-contrast); font-family: var(--font-mono); font-size: .72rem; line-height: 1.35rem; text-align: center; }
   .ls-fig-mark.is-off { opacity: 0; }
   .ls-fig-mark.is-past { opacity: .5; }
   .ls-fig-mark.is-current { box-shadow: 0 0 0 200vmax color-mix(in srgb, var(--bg) 62%, transparent); }
 
-  /* optional deeper explanation */
-  .ls-more { max-width: 60rem; margin: 0 auto 1rem; }
   .ls-bottom [hidden], .ls-more[hidden], .ls-notes[hidden] { display: none !important; }
-  .ls-level { font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); }
-  #ls-depth { font-family: var(--font-mono); font-size: .76rem; white-space: nowrap; }
+  .ls-level { font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--accent-text, var(--accent)); }
+  .ls-textbtn { font-family: var(--font-mono); font-size: .74rem; white-space: nowrap; }
+  @media (max-width: 640px) { .ls-textbtn .lbl { display: none; } }
 
   @media print {
-    .ls-progress, .ls-bottom, .ls-overview { display: none !important; }
+    .ls-progress, .ls-overview, .ls-side { display: none !important; }
+    .ls-work { display: block; }
     .ls-stage { min-height: 0; display: block; padding: 0; }
-    .ls-print-slide { break-after: page; padding: 8mm 0; }
+    .ls-print-slide { break-after: page; padding: 6mm 0; }
     .ls-step.is-hidden, .ls-step.is-past { opacity: 1 !important; transform: none !important; }
     .ls-svg [data-ls-hidden="1"] { opacity: 1 !important; }
     .ls-fig-mark { opacity: 1 !important; box-shadow: none !important; }
+    .ls-body.has-aside { grid-template-columns: minmax(0, 1fr) !important; }
+    .ls-aside, .ls-detail, .ls-lead, .ls-takeaway { display: revert !important; }
+    .ls-aside { display: grid !important; }
   }
 </style>
 </head>
@@ -187,22 +256,10 @@
 <script>/*ALS:VIZ*/</script>
 <script>
 ALS.boot(function (lesson) {
-  var E = ALS.el, $ = ALS.$, $$ = ALS.$$, V = ALS.viz;
+  var E = ALS.el, $ = ALS.$, $$ = ALS.$$, V = ALS.viz, T = ALS.t;
   var app = $('#app');
   var all = lesson.slides;
-
-  /* ---------- labels (English, German) ---------- */
-  var TEXT = {
-    en: { check: 'Quick check', answer: 'Answer', example: 'Example', notes: 'Notes', given: 'Given', result: 'Result', mistake: 'Common mistake', why: 'Why it fails', correct: 'Correct',
-      recall: 'Recall', recallHint: 'Answer in your head or aloud, then press →', more: 'More detail', slides: 'slides', begin: 'Press <span class="als-kbd">→</span> to begin',
-      strict: 'From your material only', depth: 'Depth', brief: 'brief', medium: 'medium', standard: 'medium', deep: 'deep', oneDepth: 'This lesson has one depth', noNotes: 'No notes on this slide',
-      noMore: 'No extra detail on this slide', definition: 'Definition', badSvg: 'Diagram could not be displayed.' },
-    de: { check: 'Kurze Frage', answer: 'Antwort', example: 'Beispiel', notes: 'Notizen', given: 'Gegeben', result: 'Ergebnis', mistake: 'Häufiger Fehler', why: 'Warum das nicht stimmt', correct: 'Richtig',
-      recall: 'Abruf', recallHint: 'Erst selbst beantworten, dann → drücken', more: 'Mehr Details', slides: 'Folien', begin: 'Mit <span class="als-kbd">→</span> starten',
-      strict: 'Nur aus deinen Unterlagen', depth: 'Tiefe', brief: 'kurz', medium: 'mittel', standard: 'mittel', deep: 'tief', oneDepth: 'Diese Lektion hat nur eine Tiefe', noNotes: 'Keine Notizen auf dieser Folie',
-      noMore: 'Keine Zusatzdetails auf dieser Folie', definition: 'Definition', badSvg: 'Diagramm konnte nicht angezeigt werden.' }
-  };
-  var L = TEXT[String(lesson.lang || 'en').slice(0, 2).toLowerCase()] || TEXT.en;
+  var FWD = ALS.rtl ? '←' : '→';
 
   /* ---------- depth: untagged content is core; "medium" and "deep" tags mark optional material ("standard" = older name for medium) ---------- */
   var RANK = { core: 0, medium: 1, standard: 1, deep: 2 }, DEPTH = { brief: 0, medium: 1, standard: 1, deep: 2 };
@@ -219,7 +276,12 @@ ALS.boot(function (lesson) {
   var startDepth = depthName(ALS.store.get('depth', null) || lesson.depth || 'medium');
   if (depths.indexOf(startDepth) < 0) startDepth = 'medium';
 
-  var st = { i: 0, step: 0, notes: ALS.store.get('notes', false), more: ALS.store.get('more', false), depth: startDepth, overview: false, playing: false, timer: null, dir: 1 };
+  var st = {
+    i: 0, step: 0, notes: ALS.store.get('notes', false), more: ALS.store.get('more', false), depth: startDepth,
+    view: ALS.store.get('view', lesson.view === 'present' ? 'present' : 'study'), all: ALS.store.get('all', false),
+    overview: false, playing: false, timer: null, dir: 1, seen: {}
+  };
+  document.documentElement.setAttribute('data-ls-view', st.view);
   var slides = [];
   function refilter() {
     var d = DEPTH[st.depth];
@@ -232,6 +294,20 @@ ALS.boot(function (lesson) {
   function rich(tag, text, cls) { var n = E(tag, { class: cls || '' }); ALS.rich(n, text); return n; }
   function inlineRich(tag, text, cls) { var n = E(tag, { class: cls || '' }); ALS.rich(n, text, { inline: true }); return n; }
   function stepEl(node) { node.classList.add('ls-step'); return node; }
+  /* a point is a string, or { text, detail }: the claim and the sentence or two that explain it */
+  function pt(p) { return p && typeof p === 'object' ? p : { text: String(p == null ? '' : p) }; }
+  function slideTitle(s) { return s.title || s.term || s.question || s.quote || (s.formula ? '$' + ALS.tex(s.formula) + '$' : '') || lesson.title; }
+
+  /* words on a slide, for the reading-time estimate in the status bar */
+  var SKIP = { svg: 1, image: 1, code: 1, src: 1, layout: 1, notes: 1, level: 1, lang: 1, fn: 1, id: 1, style: 1, alt: 1 };
+  function wordsOf(x, key) {
+    if (x == null || SKIP[key]) return 0;
+    if (typeof x === 'string') return ALS.words(x);
+    if (Array.isArray(x)) return x.reduce(function (a, y) { return a + wordsOf(y); }, 0);
+    if (typeof x === 'object') return Object.keys(x).reduce(function (a, k) { return a + wordsOf(x[k], k); }, 0);
+    return 0;
+  }
+  all.forEach(function (s) { s._words = wordsOf(s); });
 
   /* ---------- diagram engine shared by `diagram` and the visual components ---------- */
   function isDiagram(s) { return s.layout === 'diagram' || V.kinds.indexOf(s.layout) > -1; }
@@ -252,10 +328,10 @@ ALS.boot(function (lesson) {
   var ARROWS = '<defs>' + [['', 'line'], ['-accent', 'accent'], ['-accent2', 'accent2'], ['-muted', 'muted'], ['-good', 'good'], ['-bad', 'bad']].map(function (a) {
     return '<marker id="als-arrow' + a[0] + '" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-solid-' + a[1] + '" d="M0 0L10 5L0 10z"/></marker>';
   }).join('') + '</defs>';
-  function prepSvg(src) {
+  function prepSvg(src, trusted) {
     src = String(src || '');
     if (src.indexOf('url(#als-arrow') > -1) src = src.replace(/<svg\b[^>]*>/, function (m) { return m + ARROWS; });
-    var svg = ALS.safeSvg(src);
+    var svg = ALS.safeSvg(src, trusted);
     if (!svg) return null;
     $$('.ls-draw', svg).forEach(function (el) { if (!el.getAttribute('stroke-dasharray')) el.classList.add('ls-drawable'); });
     return svg;
@@ -264,9 +340,9 @@ ALS.boot(function (lesson) {
 
   function stepCount(s) {
     switch (s.layout) {
-      case 'points': case 'summary': return s.points.length;
+      case 'points': case 'summary': case 'objectives': return s.points.length;
       case 'steps': return Math.max(1, (s.given ? 1 : 0) + rows(s).length + (s.result ? 1 : 0));
-      case 'code': return Math.max(1, (s.highlight || []).length, (s.explain || []).length);
+      case 'code': return Math.max(1, (s.highlight || []).length, (s.explain_steps || (Array.isArray(s.explain) ? s.explain : [])).length);
       case 'compare': return s.columns.length;
       case 'check': case 'recall': return 2;
       case 'timeline': return s.events.length;
@@ -278,8 +354,11 @@ ALS.boot(function (lesson) {
       default: return isDiagram(s) ? Math.max(1, dsteps(s).length) : 1;
     }
   }
-  /* number of → presses before the first .ls-step element appears */
+  /* number of presses before the first .ls-step element appears */
   function lead(s) { return s.layout === 'definition' || s.layout === 'formula' || s.layout === 'recall' ? 1 : 0; }
+  /* on a code slide `explain` is the per-step commentary (a list); elsewhere it is the tutor's explanation (text) */
+  function codeExplain(s) { return s.explain_steps || (Array.isArray(s.explain) ? s.explain : []); }
+  function tutorText(s) { return typeof s.explain === 'string' ? s.explain : (s.layout === 'code' ? s.about : ''); }
 
   /* ---------- builders: each returns a node; steps are .ls-step elements in order ---------- */
   var build = {
@@ -287,42 +366,52 @@ ALS.boot(function (lesson) {
       return E('div', { class: 'ls-title' }, [
         s.kicker || lesson.module ? E('div', { class: 'als-kicker', text: s.kicker || lesson.module }) : null,
         E('h1', { class: 'als-h1', html: ALS.md(s.title || lesson.title, { inline: true }) }),
-        s.subtitle || lesson.subtitle ? E('p', { class: 'als-sub', text: s.subtitle || lesson.subtitle }) : null,
+        s.subtitle || lesson.subtitle ? E('p', { class: 'als-sub', html: ALS.md(s.subtitle || lesson.subtitle, { inline: true }) }) : null,
         E('div', { class: 'ls-title-meta' }, [
-          E('span', { class: 'als-chip', text: slides.length + ' ' + L.slides }),
+          E('span', { class: 'als-chip', text: T('{0} slides', slides.length) }),
           lesson.subject ? E('span', { class: 'als-chip als-chip--accent', text: lesson.subject }) : null,
-          lesson.grounding === 'strict' ? E('span', { class: 'als-chip als-chip--good', text: L.strict }) : null,
-          depths.length > 1 ? E('span', { class: 'als-chip', text: L.depth + ': ' + L[st.depth] }) : null,
-          E('span', { class: 'als-chip', html: L.begin })
+          lesson.grounding === 'strict' ? E('span', { class: 'als-chip als-chip--good', text: T('From your material only') }) : null,
+          depths.length > 1 ? E('span', { class: 'als-chip', text: T('Depth') + ': ' + T(st.depth) }) : null,
+          E('span', { class: 'als-chip', html: T('Press {0} to begin', '<span class="als-kbd">' + FWD + '</span>') })
         ])
       ]);
     },
-    points: function (s, summary) {
-      var ul = E('ul', { class: 'ls-points ls-big' + (summary ? ' ls-summary' : '') });
+    points: function (s, mark, cls) {
+      var ul = E('ul', { class: 'ls-points ls-big' + (cls ? ' ' + cls : '') });
       s.points.forEach(function (p, k) {
-        var li = E('li', {}, [E('span', { class: 'n', text: summary ? '✓' : String(k + 1).padStart(2, '0') }), inlineRich('div', p)]);
-        ul.appendChild(stepEl(li));
+        p = pt(p);
+        var body = E('div', {}, [inlineRich('div', p.text), p.detail ? rich('div', p.detail, 'ls-detail') : null]);
+        ul.appendChild(stepEl(E('li', {}, [E('span', { class: 'n', text: mark || String(k + 1).padStart(2, '0') }), body])));
       });
       return ul;
     },
-    summary: function (s) { return build.points(s, true); },
+    summary: function (s) { return build.points(s, '✓', 'ls-summary'); },
+    objectives: function (s) { return build.points(s, '◎', 'ls-objectives'); },
+    text: function (s) { return rich('div', s.body || '', 'ls-prose'); },
+    section: function (s) {
+      return E('div', {}, [
+        E('div', { class: 'ls-section-n', text: s.number != null ? String(s.number) : '§' }),
+        E('h2', { class: 'als-h1', html: ALS.md(s.title || '', { inline: true }) }),
+        s.lead ? rich('p', s.lead, 'ls-lead') : null
+      ]);
+    },
     steps: function (s) {
       var wrap = E('div', { class: 'ls-deriv' });
-      if (s.given) wrap.appendChild(stepEl(rich('div', '**' + L.given + '.** ' + s.given, 'als-callout ls-given')));
+      if (s.given) wrap.appendChild(stepEl(rich('div', '**' + T('Given') + '.** ' + s.given, 'als-callout ls-given')));
       rows(s).forEach(function (row) {
         var r = E('div', { class: 'ls-deriv-row' });
         if (row.text) r.appendChild(inlineRich('div', row.text, 't'));
-        if (row.math) { var m = E('div', { class: 'm' }); ALS.rich(m, '$$' + row.math + '$$'); r.appendChild(m); }
+        if (row.math) { var m = E('div', { class: 'm' }); ALS.rich(m, '$$' + ALS.tex(row.math) + '$$'); r.appendChild(m); }
         if (row.why) r.appendChild(inlineRich('div', row.why, 'w'));
         wrap.appendChild(stepEl(r));
       });
-      if (s.result) wrap.appendChild(stepEl(rich('div', '**' + L.result + '.** ' + s.result, 'als-callout als-callout--good ls-result')));
+      if (s.result) wrap.appendChild(stepEl(rich('div', '**' + T('Result') + '.** ' + s.result, 'als-callout als-callout--good ls-result')));
       return wrap;
     },
     diagram: function (s) {
       var box = E('div', { class: 'ls-svg' + (s.focus ? ' has-focus' : '') });
-      var svg = prepSvg(s.layout === 'diagram' ? s.svg : viz(s).svg);
-      if (svg) box.appendChild(svg); else box.appendChild(E('p', { class: 'als-muted', text: L.badSvg }));
+      var svg = s.layout === 'diagram' ? prepSvg(s.svg, false) : prepSvg(viz(s).svg, true);
+      if (svg) box.appendChild(svg); else box.appendChild(E('p', { class: 'als-muted', text: T('Diagram could not be displayed.') }));
       return E('div', { class: 'ls-diagram' }, [box, E('div', { class: 'ls-caption als-rich' })]);
     },
     figure: function (s) {
@@ -335,11 +424,11 @@ ALS.boot(function (lesson) {
     },
     formula: function (s) {
       var f = E('div', { class: 'ls-formula' });
-      ALS.rich(f, '$$' + s.formula + '$$');
+      ALS.rich(f, '$$' + ALS.tex(s.formula) + '$$');
       var parts = E('div', { class: 'ls-parts' });
       (s.parts || []).forEach(function (p) {
         var sym = E('div', { class: 'sym' });
-        ALS.rich(sym, '$' + p.sym + '$', { inline: true });
+        ALS.rich(sym, '$' + ALS.tex(p.sym) + '$', { inline: true });
         parts.appendChild(stepEl(E('div', { class: 'ls-part' }, [sym, inlineRich('div', p.means, 'means')])));
       });
       return E('div', {}, [f, parts, s.note ? rich('div', s.note, 'als-muted ls-formula-note') : null]);
@@ -356,37 +445,37 @@ ALS.boot(function (lesson) {
       return E('div', { class: 'ls-table-wrap' }, [t]);
     },
     pitfall: function (s) {
-      var kids = [stepEl(rich('div', '**' + L.mistake + '.** ' + s.wrong, 'als-callout als-callout--bad ls-big'))];
-      if (s.why) kids.push(stepEl(rich('div', '**' + L.why + '.** ' + s.why, 'als-callout ls-big')));
-      kids.push(stepEl(rich('div', '**' + L.correct + '.** ' + s.right, 'als-callout als-callout--good ls-big')));
+      var kids = [stepEl(rich('div', '**' + T('Common mistake') + '.** ' + s.wrong, 'als-callout als-callout--bad ls-big'))];
+      if (s.why) kids.push(stepEl(rich('div', '**' + T('Why it fails') + '.** ' + s.why, 'als-callout ls-big')));
+      kids.push(stepEl(rich('div', '**' + T('Correct') + '.** ' + s.right, 'als-callout als-callout--good ls-big')));
       return E('div', { class: 'ls-pitfall' }, kids);
     },
     recall: function (s) {
-      return E('div', {}, [E('div', { class: 'als-kicker', text: L.recall }), inlineRich('div', s.question, 'ls-big'),
-        E('p', { class: 'als-muted ls-hint', text: L.recallHint }),
-        stepEl(rich('div', '**' + L.answer + '.** ' + s.answer, 'als-callout als-callout--good ls-big'))]);
+      return E('div', {}, [E('div', { class: 'als-kicker', text: T('Recall') }), inlineRich('div', s.question, 'ls-big'),
+        E('p', { class: 'als-muted ls-hint', text: T('Answer in your head or aloud, then press {0}', FWD) }),
+        stepEl(rich('div', '**' + T('Answer') + '.** ' + s.answer, 'als-callout als-callout--good ls-big'))]);
     },
     code: function (s) {
       var lines = ALS.highlight(s.code, s.lang);
       var pre = E('pre', { class: 'als-code' });
       lines.forEach(function (l, k) { pre.appendChild(E('span', { class: 'ln', 'data-line': String(k + 1), html: l })); });
       var kids = [E('div', {}, [s.lang ? E('div', { class: 'als-kicker', style: 'margin-bottom:.5rem', text: s.lang }) : null, pre])];
-      var hasExplain = s.explain && s.explain.length;
+      var hasExplain = codeExplain(s).length;
       if (hasExplain) kids.push(E('div', { class: 'ls-explain als-rich' }));
       return E('div', { class: 'ls-code' + (hasExplain ? ' has-explain' : '') }, kids);
     },
     compare: function (s) {
       var g = E('div', { class: 'ls-compare' });
       s.columns.forEach(function (c) {
-        var ul = E('ul'); c.points.forEach(function (p) { ul.appendChild(inlineRich('li', p)); });
-        g.appendChild(stepEl(E('div', { class: 'als-card' }, [E('h3', { class: 'als-h3', html: ALS.md(c.heading, { inline: true }) }), ul])));
+        var ul = E('ul'); (c.points || []).forEach(function (p) { p = pt(p); var li = inlineRich('li', p.text); if (p.detail) li.appendChild(rich('div', p.detail, 'ls-detail')); ul.appendChild(li); });
+        g.appendChild(stepEl(E('div', { class: 'als-card' }, [E('h3', { class: 'als-h3', html: ALS.md(c.heading, { inline: true }) }), c.text ? rich('div', c.text, 'ls-detail') : null, ul])));
       });
       return g;
     },
     quote: function (s) {
       return E('figure', { style: 'margin:0' }, [
-        E('blockquote', { class: 'ls-quote', html: ALS.md(s.quote, { inline: true }) }),
-        s.by ? E('figcaption', { class: 'ls-quote-by', html: '— ' + ALS.md(s.by, { inline: true }) }) : null,
+        E('blockquote', { class: 'ls-quote', html: ALS.md(s.quote, { inline: true, plain: true }) }),
+        s.by ? E('figcaption', { class: 'ls-quote-by', html: '— ' + ALS.md(s.by, { inline: true, plain: true }) }) : null,
         s.comment ? rich('div', s.comment, 'ls-big als-muted') : null
       ]);
     },
@@ -394,25 +483,24 @@ ALS.boot(function (lesson) {
       var opts = E('div', { class: 'ls-options' });
       var fb = stepEl(E('div', { class: 'als-callout als-callout--info', style: 'margin-top:1rem' }));
       s.options.forEach(function (o, k) {
-        opts.appendChild(E('button', {
-          type: 'button', class: 'als-btn ls-option', 'data-k': String(k),
-          html: '<span class="als-mono als-faint">' + String.fromCharCode(65 + k) + '</span>&nbsp;&nbsp;' + ALS.md(o, { inline: true }),
-          onclick: function (e) { e.stopPropagation(); answerCheck(s, k); }
-        }));
+        opts.appendChild(E('button', { type: 'button', class: 'als-btn ls-option', 'data-k': String(k), onclick: function (e) { e.stopPropagation(); answerCheck(s, k); } }, [
+          E('span', { class: 'als-mono als-faint', text: String.fromCharCode(65 + k) }),
+          E('span', { class: 'ls-option-text als-rich', html: ALS.md(o, { inline: true }) })
+        ]));
       });
-      ALS.rich(fb, '**' + L.answer + ': ' + String.fromCharCode(65 + s.answer) + '.** ' + (s.explain || ''));
-      return E('div', {}, [E('div', { class: 'als-kicker', text: L.check }), inlineRich('div', s.question, 'ls-big'), opts, fb]);
+      ALS.rich(fb, '**' + T('Answer') + ': ' + String.fromCharCode(65 + s.answer) + '.** ' + (typeof s.explain === 'string' ? s.explain : ''));
+      return E('div', {}, [E('div', { class: 'als-kicker', text: T('Quick check') }), inlineRich('div', s.question, 'ls-big'), opts, fb]);
     },
     timeline: function (s) {
       var t = E('div', { class: 'ls-timeline' });
       s.events.forEach(function (ev) {
-        t.appendChild(stepEl(E('div', { class: 'ls-event' }, [E('div', { class: 'when', text: ev.when }), inlineRich('div', ev.what, 'ls-big')])));
+        t.appendChild(stepEl(E('div', { class: 'ls-event' }, [E('div', { class: 'when', text: ev.when }), inlineRich('div', ev.what, 'ls-big'), ev.detail ? rich('div', ev.detail, 'ls-detail') : null])));
       });
       return t;
     },
     definition: function (s) {
-      var kids = [E('div', { class: 'als-kicker', text: s.kind || L.definition }), E('div', { class: 'ls-term', html: ALS.md(s.term, { inline: true }) }), rich('div', s.definition, 'ls-def')];
-      if (s.example) kids.push(stepEl(rich('div', '**' + L.example + '.** ' + s.example, 'als-callout ls-example')));
+      var kids = [E('div', { class: 'als-kicker', text: s.kind || T('Definition') }), E('div', { class: 'ls-term', html: ALS.md(s.term, { inline: true }) }), rich('div', s.definition, 'ls-def')];
+      if (s.example) kids.push(stepEl(rich('div', '**' + T('Example') + '.** ' + s.example, 'als-callout ls-example')));
       return E('div', {}, kids);
     }
   };
@@ -429,18 +517,31 @@ ALS.boot(function (lesson) {
     st.step = 1; applySteps();
   }
 
-  var OWN_HEAD = { title: 1, quote: 1, definition: 1, check: 1, recall: 1 };
+  /* the tutor's explanation: what a lecturer would say about this slide, in full sentences, on the page */
+  function aside(s) {
+    var kids = [], text = s.layout === 'check' ? '' : tutorText(s);
+    if (text) kids.push(E('div', { class: 'ls-tutor' }, [E('div', { class: 'als-kicker', text: T('Explanation') }), rich('div', text)]));
+    if (s.intuition) kids.push(E('div', { class: 'ls-intuition als-callout' }, [
+      E('div', { class: 'ls-intuition-head' }, [E('span', { class: 'als-kicker', text: T('Intuition') }), E('span', { class: 'als-beyond', title: T('An analogy or example from the tutor, not from your material'), text: T("tutor's own") })]),
+      rich('div', s.intuition)]));
+    return kids.length ? E('div', { class: 'ls-aside' }, kids) : null;
+  }
+
+  var OWN_HEAD = { title: 1, quote: 1, definition: 1, check: 1, recall: 1, section: 1 };
   function slideNode(s, idx, forPrint) {
-    var inner = E('div', { class: 'ls-inner' });
+    var side = s.layout === 'title' || s.layout === 'section' ? null : aside(s);
+    var inner = E('div', { class: 'ls-inner' + (side ? ' is-wide' : '') });
     if (!OWN_HEAD[s.layout]) {
       inner.appendChild(E('div', { class: 'als-kicker', style: 'margin-bottom:.5rem', text: (lesson.module ? lesson.module + ' · ' : '') + String(idx + 1).padStart(2, '0') }));
       if (s.title) inner.appendChild(E('h2', { class: 'als-h2', html: ALS.md(s.title, { inline: true }) }));
+      if (s.lead) inner.appendChild(rich('div', s.lead, 'ls-lead'));
     }
     var b = build[s.layout] || build.points;
-    inner.appendChild(b(s));
+    inner.appendChild(E('div', { class: 'ls-body' + (side ? ' has-aside' : '') }, [E('div', { class: 'ls-primary' }, [b(s)]), side]));
+    if (s.takeaway) inner.appendChild(E('div', { class: 'ls-takeaway' }, [E('span', { class: 'als-kicker', text: T('Key point') }), inlineRich('div', s.takeaway)]));
     var prov = ALS.provenance(s);
-    if (prov) { prov.style.marginTop = '1.5rem'; inner.appendChild(prov); }
-    return E('section', { class: 'ls-slide' + (forPrint ? ' ls-print-slide' : ''), 'aria-roledescription': 'slide', 'aria-label': 'Slide ' + (idx + 1) + ' of ' + slides.length }, [inner]);
+    if (prov) { prov.style.marginTop = '1.25rem'; inner.appendChild(prov); }
+    return E('section', { class: 'ls-slide' + (forPrint ? ' ls-print-slide' : ''), 'aria-roledescription': 'slide', 'aria-label': T('Slide') + ' ' + (idx + 1) + ' / ' + slides.length }, [inner]);
   }
 
   /* ---------- step application ---------- */
@@ -448,10 +549,6 @@ ALS.boot(function (lesson) {
     var svg = node.querySelector('.ls-svg svg');
     var groups = dsteps(s);
     if (svg) {
-      $$('.ls-drawable', svg).forEach(function (el) { // measured once the SVG is in the page
-        if (el.style.getPropertyValue('--len')) return;
-        try { el.style.setProperty('--len', String(Math.ceil(el.getTotalLength()) + 1)); } catch (e) { el.classList.remove('ls-drawable'); }
-      });
       var first = {}, state = {}, cur = {}, mark = {};
       groups.forEach(function (g, k) {
         g.forEach(function (t) {
@@ -475,9 +572,13 @@ ALS.boot(function (lesson) {
       });
       $$('.is-mark', svg).forEach(function (el) { el.classList.remove('is-mark'); });
       Object.keys(mark).forEach(function (id) { var el = byId(svg, id); if (el) el.classList.add('is-mark'); });
+      $$('.ls-drawable', svg).forEach(function (el) { // measured after the visibility state is set
+        if (el.style.getPropertyValue('--len')) return;
+        try { el.style.setProperty('--len', String(Math.ceil(el.getTotalLength()) + 1)); } catch (e) { el.classList.remove('ls-drawable'); }
+      });
     }
     var cap = $('.ls-caption', node);
-    if (cap) ALS.rich(cap, (s.captions || [])[st.step] || s.caption || '');
+    if (cap) ALS.rich(cap, st.all && s.captions ? s.captions.join(' ') : ((s.captions || [])[st.step] || s.caption || ''));
   }
 
   function applySteps() {
@@ -487,8 +588,8 @@ ALS.boot(function (lesson) {
     var showUpTo = s.layout === 'check' ? (st.step >= 1 ? steps.length : 0) : st.step + 1 - lead(s);
     steps.forEach(function (el, k) {
       el.classList.toggle('is-hidden', k >= showUpTo);
-      el.classList.toggle('is-current', k === showUpTo - 1);
-      el.classList.toggle('is-past', s.layout === 'steps' && k < showUpTo - 1);
+      el.classList.toggle('is-current', k === showUpTo - 1 && !st.all);
+      el.classList.toggle('is-past', s.layout === 'steps' && k < showUpTo - 1 && !st.all);
     });
     if (s.layout === 'check' && st.step >= 1) {
       $$('.ls-option', node).forEach(function (b) { b.disabled = true; if (+b.getAttribute('data-k') === s.answer) b.classList.add('is-right'); });
@@ -498,43 +599,75 @@ ALS.boot(function (lesson) {
       var marks = s.marks || [];
       $$('.ls-fig-mark', node).forEach(function (m, k) {
         m.classList.toggle('is-off', k > st.step - 1);
-        m.classList.toggle('is-current', k === st.step - 1);
+        m.classList.toggle('is-current', k === st.step - 1 && !st.all);
         m.classList.toggle('is-past', k < st.step - 1);
       });
       var fc = $('.ls-caption', node), mk = marks[st.step - 1];
-      if (fc) ALS.rich(fc, mk ? '**' + (mk.label || st.step) + '.** ' + (mk.text || '') : (s.caption || ''));
+      if (fc) {
+        if (st.all) ALS.rich(fc, [s.caption || ''].concat(marks.map(function (m, j) { return '**' + (m.label || j + 1) + '.** ' + (m.text || ''); })).join('\n\n'));
+        else ALS.rich(fc, mk ? '**' + (mk.label || st.step) + '.** ' + (mk.text || '') : (s.caption || ''));
+      }
     }
     if (s.layout === 'code') {
-      var pre = $('.als-code', node);
+      var pre = $('.als-code', node), ce = codeExplain(s);
       var hl = (s.highlight || [])[st.step];
-      $$('.ln', pre).forEach(function (ln) { ln.classList.toggle('is-focus', !!hl && hl.indexOf(+ln.getAttribute('data-line')) > -1); });
-      pre.classList.toggle('has-focus', !!(hl && hl.length));
+      $$('.ln', pre).forEach(function (ln) { ln.classList.toggle('is-focus', !st.all && !!hl && hl.indexOf(+ln.getAttribute('data-line')) > -1); });
+      pre.classList.toggle('has-focus', !st.all && !!(hl && hl.length));
       var ex = $('.ls-explain', node);
-      if (ex) ALS.rich(ex, (s.explain || [])[st.step] || '');
+      if (ex) ALS.rich(ex, st.all ? ce.map(function (x, k) { return (k + 1) + '. ' + x; }).join('\n') : (ce[st.step] || ''));
     }
+    st.seen[all.indexOf(s)] = 1;
+    paintChrome();
+    ALS.renderMath(node);
+  }
+
+  /* progress bar, counter, outline highlight and status bar */
+  function paintChrome() {
+    var s = slides[st.i];
     var total = slides.reduce(function (a, x) { return a + stepCount(x); }, 0);
     var done = slides.slice(0, st.i).reduce(function (a, x) { return a + stepCount(x); }, 0) + st.step + 1;
     var bar = $('.ls-progress span'); if (bar) bar.style.width = (done / total * 100) + '%';
     var cnt = $('.ls-count'); if (cnt) cnt.textContent = String(st.i + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
-    ALS.renderMath(node);
+    $$('.ls-out li').forEach(function (li) {
+      var k = +li.getAttribute('data-k');
+      li.classList.toggle('is-current', k === st.i);
+      li.classList.toggle('is-seen', !!st.seen[all.indexOf(slides[k])] && k !== st.i);
+      if (k === st.i && li.scrollIntoView && !ALS.panelHidden('sidebar')) { try { li.scrollIntoView({ block: 'nearest' }); } catch (e) { /* older browsers */ } }
+    });
+    var left = slides.slice(st.i).reduce(function (a, x, j) {
+      var steps = stepCount(x) - (j === 0 ? st.step + 1 : 0);
+      return a + x._words / 190 * 60 * (j === 0 ? Math.max(0, 1 - (st.step + 1) / stepCount(x)) : 1) + steps * 4;
+    }, 0);
+    ALS.status([
+      { k: T('Slide'), v: (st.i + 1) + ' / ' + slides.length },
+      { k: T('Step'), v: (st.step + 1) + ' / ' + stepCount(s) },
+      depths.length > 1 ? { k: T('Depth'), v: T(st.depth) } : null,
+      { k: T('View'), v: T(st.view) },
+      { k: T('Left'), v: '~' + Math.max(0, Math.round(left / 60)) + ' ' + T('min'), title: T('Estimated reading time for the rest of the lesson') },
+      { v: Math.round(done / total * 100) + '%', title: T('Progress') }
+    ]);
   }
 
   function go(i, step, dir) {
     i = Math.max(0, Math.min(slides.length - 1, i));
     var changed = i !== st.i || !$('#ls-current');
-    st.i = i; st.step = step == null ? 0 : step; st.dir = dir || 1;
+    st.i = i; st.dir = dir || 1;
+    st.step = st.all ? stepCount(slides[i]) - 1 : (step == null ? 0 : step);
     try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) { /* file:// in some browsers */ }
     if (changed || st.overview) { st.overview = false; renderStage(true); } else applySteps();
     ALS.store.set('pos', i);
+    if (window.innerWidth <= 900 && !ALS.panelHidden('sidebar')) ALS.togglePanel('sidebar', false);
   }
   function next() {
     var s = slides[st.i];
+    if (st.overview) return toggleOverview();
     if (st.step < stepCount(s) - 1) { st.step++; applySteps(); }
     else if (st.i < slides.length - 1) go(st.i + 1, 0, 1);
     else stopPlay();
   }
   function prev() {
-    if (st.step > 0) { st.step--; applySteps(); }
+    if (st.overview) return toggleOverview();
+    if (st.step > 0 && !st.all) { st.step--; applySteps(); }
     else if (st.i > 0) go(st.i - 1, stepCount(slides[st.i - 1]) - 1, -1);
   }
   function stopPlay() { st.playing = false; clearInterval(st.timer); var b = $('#ls-play'); if (b) b.innerHTML = ALS.icon('play'); }
@@ -556,8 +689,8 @@ ALS.boot(function (lesson) {
       slides.forEach(function (s, k) {
         grid.appendChild(E('button', { type: 'button', class: 'als-card ls-thumb', 'aria-current': String(k === st.i), onclick: function () { st.overview = false; go(k, 0, 1); } }, [
           E('span', { class: 'n', text: String(k + 1).padStart(2, '0') + ' · ' + s.layout }),
-          E('span', { class: 't', html: ALS.md(s.title || s.term || s.question || s.quote || (s.formula ? '$' + s.formula + '$' : '') || lesson.title, { inline: true }) }),
-          s.level && s.level !== 'core' ? E('span', { class: 'ls-level', text: L[s.level] || s.level }) : null
+          E('span', { class: 't', html: ALS.md(slideTitle(s), { inline: true }) }),
+          s.level && s.level !== 'core' ? E('span', { class: 'ls-level', text: T(depthName(s.level)) }) : null
         ]));
       });
       stage.appendChild(grid);
@@ -567,74 +700,129 @@ ALS.boot(function (lesson) {
     var cur = slides[st.i];
     var node = slideNode(cur, st.i);
     node.id = 'ls-current';
+    node.classList.add('ls-init');
     if (animate) node.classList.add(st.dir < 0 ? 'ls-anim-back' : 'ls-anim-in');
     stage.appendChild(node);
     if (notes) {
       notes.hidden = !(st.notes && cur.notes);
-      if (cur.notes) ALS.rich(notes, '**' + L.notes + '.** ' + cur.notes);
+      if (cur.notes) ALS.rich(notes, '**' + T('Notes') + '.** ' + cur.notes);
     }
     if (more) {
       more.hidden = !(st.more && cur.more);
-      if (cur.more) ALS.rich(more, '**' + L.more + '.** ' + cur.more);
+      if (cur.more) ALS.rich(more, '**' + T('More detail') + '.** ' + cur.more);
     }
     if (moreBtn) { moreBtn.hidden = !cur.more; moreBtn.setAttribute('aria-pressed', String(!!st.more)); }
     applySteps();
+    void node.offsetWidth; // commit the starting state before transitions are allowed again
+    setTimeout(function () { node.classList.remove('ls-init'); }, 90); // not requestAnimationFrame: it never fires in a background tab
   }
 
-  function depthLabel() { return L.depth + ': ' + L[st.depth]; }
+  function renderOutline() {
+    var ol = $('#ls-out'); if (!ol) return;
+    ol.innerHTML = '';
+    slides.forEach(function (s, k) {
+      var li = E('li', { 'data-k': String(k), class: s.layout === 'section' || s.layout === 'title' ? 'is-section' : '' }, [
+        E('button', { type: 'button', onclick: function () { go(k, 0, k >= st.i ? 1 : -1); } }, [
+          E('span', { class: 'n', text: String(k + 1).padStart(2, '0') }),
+          E('span', { class: 'als-rich', html: ALS.md(slideTitle(s), { inline: true }) })
+        ])
+      ]);
+      ol.appendChild(li);
+    });
+    ALS.renderMath(ol);
+  }
+
+  function depthLabel() { return T('Depth') + ': ' + T(st.depth); }
   function setDepth(d) {
     var cur = slides[st.i], at = all.indexOf(cur);
     st.depth = d; ALS.store.set('depth', d); refilter();
     var k = slides.indexOf(cur);
     if (k < 0) { k = 0; slides.forEach(function (s, j) { if (all.indexOf(s) <= at) k = j; }); }
-    st.i = k; st.step = 0; st.overview = false;
-    var b = $('#ls-depth'); if (b) b.textContent = depthLabel();
+    st.i = k; st.step = st.all ? stepCount(slides[k]) - 1 : 0; st.overview = false;
+    var b = $('#ls-depth .lbl'); if (b) b.textContent = depthLabel();
+    renderOutline();
     renderStage(true);
-    ALS.toast(depthLabel() + ' · ' + slides.length + ' ' + L.slides);
+    ALS.toast(depthLabel() + ' · ' + T('{0} slides', slides.length));
   }
   function cycleDepth() {
-    if (depths.length < 2) return ALS.toast(L.oneDepth);
+    if (depths.length < 2) return ALS.toast(T('This lesson has one depth'));
     setDepth(depths[(depths.indexOf(st.depth) + 1) % depths.length]);
+  }
+  function toggleView() {
+    st.view = st.view === 'study' ? 'present' : 'study';
+    ALS.store.set('view', st.view);
+    document.documentElement.setAttribute('data-ls-view', st.view);
+    var b = $('#ls-view'); if (b) { b.setAttribute('aria-pressed', String(st.view === 'study')); $('.lbl', b).textContent = viewLabel(); }
+    ALS.toast(st.view === 'study' ? T('Study view: explanations on the page') : T('Present view: compact slides'));
+    paintChrome(); ALS.fitMath(document);
+  }
+  function viewLabel() { return st.view === 'study' ? T('Study view') : T('Present view'); }
+  function toggleAll() {
+    st.all = !st.all; ALS.store.set('all', st.all);
+    var b = $('#ls-all'); if (b) b.setAttribute('aria-pressed', String(st.all));
+    st.step = st.all ? stepCount(slides[st.i]) - 1 : 0;
+    renderStage(false);
+    ALS.toast(st.all ? T('Everything on a slide is shown at once') : T('Slides build up step by step'));
+  }
+
+  function textBtn(id, icon, label, title, fn, pressed) {
+    var b = E('button', { type: 'button', id: id, class: 'als-btn als-btn--ghost als-btn--sm ls-textbtn', title: title, 'aria-pressed': pressed == null ? null : String(pressed), onclick: fn }, [
+      E('span', { html: ALS.icon(icon), style: 'display:inline-grid' }), E('span', { class: 'lbl', text: label })
+    ]);
+    b.querySelector('svg').style.cssText = 'width:1rem;height:1rem';
+    return b;
   }
 
   function render() {
     app.innerHTML = '';
     app.appendChild(E('div', { class: 'ls-progress als-noprint' }, [E('span')]));
     app.appendChild(ALS.topbar([
-      ALS.iconBtn('print', 'Print or save as PDF (all steps revealed)', printAll, 'als-noprint')
+      ALS.iconBtn('print', T('Print or save as PDF (everything revealed)'), printAll, 'als-noprint')
     ]));
-    var main = E('main', { class: 'als-shell' }, [E('div', { id: 'ls-stage', class: 'ls-stage' })]);
-    app.appendChild(main);
-    app.appendChild(E('div', { class: 'als-shell' }, [
-      E('div', { id: 'ls-more', class: 'ls-more als-callout als-callout--info als-rich', hidden: true }),
-      E('div', { id: 'ls-notes', class: 'ls-notes als-callout als-rich', hidden: true })
-    ]));
-    var bottom = E('nav', { class: 'ls-bottom als-noprint', 'aria-label': 'Lesson controls' }, [E('div', { class: 'als-shell' }, [
-      ALS.iconBtn('left', 'Previous (←)', prev),
-      ALS.iconBtn('right', 'Next (→ or Space)', next),
+    var side = ALS.panel('sidebar', E('aside', { class: 'ls-side als-noprint', 'aria-label': T('Outline') }, [E('div', { class: 'ls-side-in' }, [
+      E('div', { class: 'ls-side-head' }, [E('span', { class: 'als-kicker', text: T('Outline') }),
+        ALS.iconBtn('x', T('Hide: {0}', T('Outline')), function () { ALS.togglePanel('sidebar', false); }, 'als-btn--sm')]),
+      E('ol', { class: 'ls-out', id: 'ls-out' })
+    ])]), T('Outline'));
+    var main = E('div', { class: 'ls-main' }, [
+      E('div', { class: 'als-shell', style: 'display:flex;flex:1 0 auto' }, [E('div', { id: 'ls-stage', class: 'ls-stage', style: 'width:100%' })]),
+      E('div', { class: 'als-shell' }, [
+        E('div', { id: 'ls-more', class: 'ls-more als-callout als-callout--info als-rich', hidden: true }),
+        E('div', { id: 'ls-notes', class: 'ls-notes als-callout als-rich', hidden: true })
+      ])
+    ]);
+    app.appendChild(E('div', { class: 'ls-work als-main' }, [side, main]));
+    var prevBtn = ALS.iconBtn('left', T('Previous'), prev, 'als-flip'), nextBtn = ALS.iconBtn('right', T('Next (Space)'), next, 'als-flip');
+    var bottom = ALS.panel('controls', E('nav', { class: 'ls-bottom', 'aria-label': T('Lesson controls') }, [E('div', { class: 'als-shell' }, [
+      prevBtn, nextBtn,
       E('span', { class: 'ls-count' }),
       E('div', { class: 'als-spacer' }),
-      depths.length > 1 ? E('button', { type: 'button', id: 'ls-depth', class: 'als-btn als-btn--ghost als-btn--sm', title: 'Change depth (D)', text: depthLabel(), onclick: cycleDepth }) : null,
-      (function () { var b = ALS.iconBtn('bulb', 'More detail on this slide (E)', toggleMore); b.id = 'ls-more-btn'; b.hidden = true; return b; })(),
-      (function () { var b = ALS.iconBtn('play', 'Autoplay (P)', togglePlay); b.id = 'ls-play'; return b; })(),
-      ALS.iconBtn('notes', 'Speaker notes (N)', toggleNotes),
-      ALS.iconBtn('grid', 'Overview (O)', toggleOverview),
-      ALS.iconBtn('expand', 'Full screen (F)', fullscreen)
-    ])]);
-    app.appendChild(bottom);
+      textBtn('ls-view', 'book', viewLabel(), T('Switch between study view (with explanations) and present view (V)'), toggleView, st.view === 'study'),
+      textBtn('ls-all', 'layers', T('All at once'), T('Show everything on a slide at once, or build it up step by step (A)'), toggleAll, st.all),
+      depths.length > 1 ? textBtn('ls-depth', 'eye', depthLabel(), T('Change depth (D)'), cycleDepth) : null,
+      (function () { var b = ALS.iconBtn('bulb', T('More detail on this slide (E)'), toggleMore); b.id = 'ls-more-btn'; b.hidden = true; return b; })(),
+      (function () { var b = ALS.iconBtn('play', T('Autoplay (P)'), togglePlay); b.id = 'ls-play'; return b; })(),
+      ALS.iconBtn('notes', T('Notes (N)'), toggleNotes),
+      ALS.iconBtn('grid', T('Overview (O)'), toggleOverview),
+      ALS.iconBtn('expand', T('Full screen (F)'), fullscreen),
+      ALS.iconBtn('down', T('Hide: {0}', T('Controls')), function () { ALS.togglePanel('controls', false); }, 'als-panel-close')
+    ])]));
+    app.appendChild(ALS.dock([bottom]));
+    renderOutline();
     renderStage(false);
   }
 
-  function toggleNotes() { st.notes = !st.notes; ALS.store.set('notes', st.notes); renderStage(false); if (st.notes && !slides[st.i].notes) ALS.toast(L.noNotes); }
-  function toggleMore() { st.more = !st.more; ALS.store.set('more', st.more); var keep = st.step; renderStage(false); st.step = keep; applySteps(); if (st.more && !slides[st.i].more) ALS.toast(L.noMore); }
+  function toggleNotes() { st.notes = !st.notes; ALS.store.set('notes', st.notes); var keep = st.step; renderStage(false); st.step = keep; applySteps(); if (st.notes && !slides[st.i].notes) ALS.toast(T('No notes on this slide')); }
+  function toggleMore() { st.more = !st.more; ALS.store.set('more', st.more); var keep = st.step; renderStage(false); st.step = keep; applySteps(); if (st.more && !slides[st.i].more) ALS.toast(T('No extra detail on this slide')); }
   function toggleOverview() { st.overview = !st.overview; renderStage(true); }
   function fullscreen() {
     try { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
-    catch (e) { ALS.toast('Full screen is not available here'); }
+    catch (e) { ALS.toast(T('Full screen is not available here')); }
   }
   function printAll() {
     var stage = $('#ls-stage');
     var withMore = st.more || new URLSearchParams(location.search).get('more') === '1';
+    var keepAll = st.all; st.all = true;
     stage.innerHTML = '';
     slides.forEach(function (s, k) {
       var n = slideNode(s, k, true);
@@ -644,30 +832,35 @@ ALS.boot(function (lesson) {
       if (cap && s.layout === 'figure') {
         ALS.rich(cap, [s.caption || ''].concat((s.marks || []).map(function (m, j) { return '**' + (m.label || j + 1) + '.** ' + (m.text || ''); })).join('\n\n'));
       }
-      if (s.layout === 'code' && s.explain) { var ex = $('.ls-explain', n); if (ex) ALS.rich(ex, s.explain.join('\n\n')); }
-      if (withMore && s.more) $('.ls-inner', n).appendChild(rich('div', '**' + L.more + '.** ' + s.more, 'als-callout als-callout--info ls-more'));
+      if (s.layout === 'code' && codeExplain(s).length) { var ex = $('.ls-explain', n); if (ex) ALS.rich(ex, codeExplain(s).join('\n\n')); }
+      if (withMore && s.more) $('.ls-inner', n).appendChild(rich('div', '**' + T('More detail') + '.** ' + s.more, 'als-callout als-callout--info ls-more'));
     });
+    st.all = keepAll;
     ALS.renderMath(stage);
     if (new URLSearchParams(location.search).get('print') === '1') return; // headless PDF: leave everything revealed
     setTimeout(function () { window.print(); renderStage(false); }, 250);
   }
 
-  ALS.onKey({
-    'ArrowRight': next, ' ': next, 'PageDown': next, 'Enter': next,
-    'ArrowLeft': prev, 'PageUp': prev, 'Backspace': prev,
+  var keys = {
+    ' ': next, 'PageDown': next, 'Enter': next, 'PageUp': prev, 'Backspace': prev,
     'Home': function () { go(0, 0, -1); }, 'End': function () { go(slides.length - 1, 0, 1); },
     'n': toggleNotes, 'N': toggleNotes, 'o': toggleOverview, 'O': toggleOverview,
     'f': fullscreen, 'F': fullscreen, 'p': togglePlay, 'P': togglePlay,
     'd': cycleDepth, 'D': cycleDepth, 'e': toggleMore, 'E': toggleMore,
+    'v': toggleView, 'V': toggleView, 'a': toggleAll, 'A': toggleAll,
+    't': function () { ALS.togglePanel('sidebar'); }, 'T': function () { ALS.togglePanel('sidebar'); },
     'Escape': function () { if (st.overview) toggleOverview(); }
-  });
+  };
+  keys.ArrowRight = ALS.rtl ? prev : next; // arrows follow the reading direction
+  keys.ArrowLeft = ALS.rtl ? next : prev;
+  ALS.onKey(keys);
 
   // touch swipe
   var tx = null;
   document.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
   document.addEventListener('touchend', function (e) {
     if (tx == null) return;
-    var dx = e.changedTouches[0].clientX - tx; tx = null;
+    var dx = (e.changedTouches[0].clientX - tx) * (ALS.rtl ? -1 : 1); tx = null;
     if (Math.abs(dx) > 50) { if (dx < 0) next(); else prev(); }
   });
 
@@ -675,12 +868,16 @@ ALS.boot(function (lesson) {
     var h = parseInt((location.hash || '').slice(1), 10);
     if (!isNaN(h) && h - 1 !== st.i) go(h - 1, 0, h - 1 > st.i ? 1 : -1);
   });
+  document.addEventListener('als:panels', function () { if ($('#ls-current')) paintChrome(); });
+  document.addEventListener('als:math', function () { renderOutline(); paintChrome(); });
 
   var params = new URLSearchParams(location.search);
   var askedDepth = depthName(params.get('depth'));
   if (depths.indexOf(askedDepth) > -1) { st.depth = askedDepth; refilter(); }
+  if (params.get('view') === 'present' || params.get('view') === 'study') { st.view = params.get('view'); document.documentElement.setAttribute('data-ls-view', st.view); }
   var start = parseInt((location.hash || '').slice(1), 10);
   st.i = isNaN(start) ? 0 : Math.max(0, Math.min(slides.length - 1, start - 1));
+  if (st.all) st.step = stepCount(slides[st.i]) - 1;
   render();
   if (params.get('print') === '1') printAll();
 });

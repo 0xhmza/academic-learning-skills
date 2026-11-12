@@ -40,9 +40,9 @@ Every page picks a design from its subject and can switch theme and light/dark m
 | Theme | Subjects | Look |
 |---|---|---|
 | **Blueprint** | maths, physics, CS, engineering | inspired by tailwindcss.com: near-black/white, sky accent, Inter + mono labels, hairline grid |
-| **Folio** | philosophy, literature, history, languages, arts | editorial book typography, Garamond, paper tones, oxblood ink |
+| **Folio** | philosophy, literature, history, languages, arts | a literary quarterly: Fraunces and Newsreader, warm paper, plum ink |
 | **Clinic** | biology, medicine, chemistry, psychology | IBM Plex, teal and violet, soft cards, diagram-first |
-| **Ledger** | economics, business, law, social science | Libre Franklin + Source Serif, navy and burgundy, tabular figures |
+| **Ledger** | economics, business, law, social science | the financial pages: DM Serif Display over DM Sans, newsprint, Oxford blue, tabular figures |
 
 See `examples/showcase/` for one page of each (build them with `python tools/build_examples.py`).
 
@@ -103,6 +103,11 @@ It is plain Markdown and JSON in your own folder: readable, editable, and yours.
 it somewhere else. A session-start hook shows Claude a short status (due reviews, deadlines, your
 preferences) when you open Claude in a folder that has a workspace.
 
+## Languages
+
+English, German and Arabic interface text. Set `"lang": "ar"` (or `he`, `fa`, `ur`) in a data file and the page
+is laid out right-to-left, with maths, code and diagrams kept left-to-right.
+
 ## Learning science
 
 The defaults follow well-replicated findings: retrieval practice, spacing (Leitner intervals 1–32 days),
@@ -133,7 +138,9 @@ Reference: `shared/references/cli.md`.
 ## Development
 
 ```
-python -m unittest discover tests -v     # 22 tests: schemas, build, themes, SRS, ICS, Anki, workspace, CLI, plugin layout
+python -m unittest discover tests -v     # 38 tests: schemas, build, themes, SRS, ICS, Anki, workspace, CLI, RTL, i18n, plugin layout
+node tests/js/test_core.js               # maths conversion and translations (also run by the unittest suite)
+python tools/i18n_keys.py                # interface strings missing from a language
 python tools/build_examples.py           # rebuild examples/showcase/
 ```
 

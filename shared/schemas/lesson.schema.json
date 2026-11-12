@@ -111,7 +111,10 @@
               "tree",
               "bars",
               "layers",
-              "grid"
+              "grid",
+              "text",
+              "section",
+              "objectives"
             ]
           },
           "title": {
@@ -136,6 +139,24 @@
               "deep",
               "standard"
             ]
+          },
+          "lead": {
+            "type": "string"
+          },
+          "explain": {
+            "type": [
+              "string",
+              "array"
+            ]
+          },
+          "intuition": {
+            "type": "string"
+          },
+          "takeaway": {
+            "type": "string"
+          },
+          "about": {
+            "type": "string"
           }
         },
         "allOf": [
@@ -156,7 +177,21 @@
                   "type": "array",
                   "minItems": 1,
                   "items": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "object"
+                    ],
+                    "required": [
+                      "text"
+                    ],
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      },
+                      "detail": {
+                        "type": "string"
+                      }
+                    }
                   }
                 }
               }
@@ -179,7 +214,21 @@
                   "type": "array",
                   "minItems": 1,
                   "items": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "object"
+                    ],
+                    "required": [
+                      "text"
+                    ],
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      },
+                      "detail": {
+                        "type": "string"
+                      }
+                    }
                   }
                 }
               }
@@ -305,7 +354,10 @@
                   }
                 },
                 "explain": {
-                  "type": "array",
+                  "type": [
+                    "array",
+                    "string"
+                  ],
                   "items": {
                     "type": "string"
                   }
@@ -1314,9 +1366,110 @@
                 }
               }
             }
+          },
+          {
+            "if": {
+              "properties": {
+                "layout": {
+                  "const": "text"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "body"
+              ],
+              "properties": {
+                "body": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "layout": {
+                  "const": "section"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "title"
+              ],
+              "properties": {
+                "number": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "layout": {
+                  "const": "objectives"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "points"
+              ],
+              "properties": {
+                "points": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": [
+                      "string",
+                      "object"
+                    ],
+                    "required": [
+                      "text"
+                    ],
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      },
+                      "detail": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         ]
       }
+    },
+    "dir": {
+      "enum": [
+        "ltr",
+        "rtl"
+      ]
+    },
+    "autoMath": {
+      "type": "boolean"
+    },
+    "view": {
+      "enum": [
+        "study",
+        "present"
+      ]
+    },
+    "explain": {
+      "enum": [
+        "full",
+        "short",
+        "off"
+      ]
     }
   }
 }

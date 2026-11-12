@@ -17,6 +17,15 @@
 - `explain` says why the answer is right **and** what thinking leads to each tempting distractor.
 - Randomise the position of the correct answer across the set.
 
+## Find the error
+
+- Show a short worked solution in which exactly one step is wrong, and ask which step fails and why
+  (`mcq` with the steps as options, or `text` with a model answer). Studying incorrect examples next to
+  correct ones sharpens the conditions under which a method applies.
+- Take the error from a real misconception (the entries in `errors.md` are the best source), never
+  from an arithmetic slip that teaches nothing.
+- The `explain` field names the misconception and gives the corrected step.
+
 ## Numeric
 
 - State units and the required precision in the prompt ("to 2 significant figures").

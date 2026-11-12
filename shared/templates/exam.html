@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{lang}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
+<html lang="{{lang}}" dir="{{dir}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,15 +29,15 @@
   .ex-space { margin-top: .6rem; background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(1.9rem - 1px), var(--border-strong) calc(1.9rem - 1px), var(--border-strong) 1.9rem); }
   .ex-space.small { height: 3.8rem; } .ex-space.medium { height: 7.6rem; } .ex-space.large { height: 15.2rem; }
   body[data-space="off"] .ex-space { display: none; }
-  .ex-sol { margin-top: .75rem; border-left: 3px solid var(--good); background: var(--good-soft); padding: .65rem .9rem; border-radius: var(--radius-sm); }
+  .ex-sol { margin-top: .75rem; border-inline-start: 3px solid var(--good); background: var(--good-soft); padding: .65rem .9rem; border-radius: var(--radius-sm); }
   .ex-sol .als-kicker { color: var(--good-text, var(--good)); }
-  .ex-sol ul { margin: .35rem 0 0; padding-left: 1.2rem; font-size: .9rem; }
+  .ex-sol ul { margin: .35rem 0 0; padding-inline-start: 1.2rem; font-size: .9rem; }
   body[data-sol="off"] .ex-sol, body[data-sol="end"] .ex-body .ex-sol { display: none; }
   .ex-appendix { display: none; margin-top: 2.5rem; border-top: 2px solid var(--text); padding-top: 1.25rem; }
   body[data-sol="end"] .ex-appendix { display: block; }
   body[data-sol="end"] .ex-appendix { break-before: page; page-break-before: always; }
   .ex-appendix .ex-sol-item { margin-bottom: 1.25rem; break-inside: avoid; }
-  .ex-total { text-align: right; font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); margin-top: 1rem; }
+  .ex-total { text-align: end; font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); margin-top: 1rem; }
   @media print {
     .ex-paper { border: 0; box-shadow: none; padding: 0; max-width: none; background: #fff; }
     .ex-toolbar { display: none !important; }
@@ -52,7 +52,7 @@
 <script>/*ALS:CORE*/</script>
 <script>
 ALS.boot(function (ex) {
-  var E = ALS.el, $ = ALS.$;
+  var E = ALS.el, $ = ALS.$, T = ALS.t;
   var app = $('#app');
   var meta = ex.meta || {};
   var qp = new URLSearchParams(location.search);
@@ -61,18 +61,18 @@ ALS.boot(function (ex) {
   document.body.setAttribute('data-sol', solMode);
   document.body.setAttribute('data-space', space);
 
-  function pts(p) { return p == null ? '' : p + (p === 1 ? ' pt' : ' pts'); }
+  function pts(p) { return p == null ? '' : p + ' ' + (p === 1 ? T('pt') : T('pts')); }
   function qPoints(q) { return q.points != null ? q.points : (q.parts || []).reduce(function (a, p) { return a + (p.points || 0); }, 0) || null; }
   var total = ex.sections.reduce(function (a, s) { return a + s.questions.reduce(function (b, q) { return b + (qPoints(q) || 0); }, 0); }, 0);
   var hasSol = ex.sections.some(function (s) { return s.questions.some(function (q) { return q.solution || (q.parts || []).some(function (p) { return p.solution; }); }); });
 
   function solBox(text, marking) {
     if (!text && !(marking && marking.length)) return null;
-    var b = E('div', { class: 'ex-sol' }, [E('div', { class: 'als-kicker', text: 'Solution' })]);
+    var b = E('div', { class: 'ex-sol' }, [E('div', { class: 'als-kicker', text: T('Solution') })]);
     if (text) { var t = E('div'); ALS.rich(t, text); b.appendChild(t); }
     if (marking && marking.length) {
       var ul = E('ul'); marking.forEach(function (m) { var li = E('li'); ALS.rich(li, m, { inline: true }); ul.appendChild(li); });
-      b.appendChild(E('div', { style: 'margin-top:.5rem;font-size:.8rem;font-weight:600', text: 'Marking' })); b.appendChild(ul);
+      b.appendChild(E('div', { style: 'margin-top:.5rem;font-size:.8rem;font-weight:600', text: T('Marking') })); b.appendChild(ul);
     }
     return b;
   }
@@ -85,17 +85,18 @@ ALS.boot(function (ex) {
 
   function render() {
     app.innerHTML = '';
-    app.appendChild(ALS.topbar([ALS.iconBtn('print', 'Print or save as PDF', function () { window.print(); }, 'als-noprint')]));
+    app.appendChild(ALS.topbar([ALS.iconBtn('print', T('Print or save as PDF'), function () { window.print(); }, 'als-noprint')]));
     var main = E('main', { class: 'als-shell als-frame' });
 
-    var tb = E('div', { class: 'ex-toolbar als-noprint' }, [
-      hasSol ? E('span', { class: 'lbl', text: 'Solutions' }) : null,
-      hasSol ? seg('Solutions', [['off', 'Hidden'], ['inline', 'Inline'], ['end', 'At the end']], solMode, function (v) { solMode = v; ALS.store.set('sol', v); document.body.setAttribute('data-sol', v); render(); }) : null,
-      E('span', { class: 'lbl', text: 'Answer space' }),
-      seg('Answer space', [['on', 'Lines'], ['off', 'None']], space, function (v) { space = v; ALS.store.set('space', v); document.body.setAttribute('data-space', v); render(); }),
+    var tb = ALS.panel('controls', E('div', { class: 'ex-toolbar als-noprint' }), T('Toolbar'));
+    [
+      hasSol ? E('span', { class: 'lbl', text: T('Solutions') }) : null,
+      hasSol ? seg(T('Solutions'), [['off', T('Hidden')], ['inline', T('Inline')], ['end', T('At the end')]], solMode, function (v) { solMode = v; ALS.store.set('sol', v); document.body.setAttribute('data-sol', v); render(); }) : null,
+      E('span', { class: 'lbl', text: T('Answer space') }),
+      seg(T('Answer space'), [['on', T('Lines')], ['off', T('None')]], space, function (v) { space = v; ALS.store.set('space', v); document.body.setAttribute('data-space', v); render(); }),
       E('div', { class: 'als-spacer' }),
-      E('button', { type: 'button', class: 'als-btn als-btn--primary als-btn--sm', html: ALS.icon('print') + ' Print / PDF', onclick: function () { window.print(); } })
-    ]);
+      E('button', { type: 'button', class: 'als-btn als-btn--primary als-btn--sm', html: ALS.icon('print') + ' ' + T('Print / PDF'), onclick: function () { window.print(); } })
+    ].forEach(function (n) { if (n) tb.appendChild(n); });
     tb.querySelectorAll('svg').forEach(function (s) { s.style.width = '1rem'; });
     main.appendChild(tb);
 
@@ -105,11 +106,11 @@ ALS.boot(function (ex) {
       E('h1', { class: 'als-h1', style: 'font-size:clamp(1.7rem,4.5vw,2.6rem)', text: ex.title }),
       ex.subtitle ? E('p', { class: 'als-sub', text: ex.subtitle }) : null,
       E('div', { class: 'ex-facts' }, [
-        meta.duration ? E('span', { html: 'Time <b>' + ALS.esc(meta.duration) + '</b>' }) : null,
-        total ? E('span', { html: 'Total <b>' + total + ' pts</b>' }) : null,
-        meta.allowed ? E('span', { html: 'Allowed <b>' + ALS.esc(meta.allowed) + '</b>' }) : null
+        meta.duration ? E('span', { html: ALS.esc(T('Time')) + ' <b>' + ALS.esc(meta.duration) + '</b>' }) : null,
+        total ? E('span', { html: ALS.esc(T('Total')) + ' <b>' + total + ' ' + ALS.esc(T('pts')) + '</b>' }) : null,
+        meta.allowed ? E('span', { html: ALS.esc(T('Allowed')) + ' <b>' + ALS.esc(meta.allowed) + '</b>' }) : null
       ]),
-      E('div', { class: 'ex-ident' }, [E('div', { text: 'Name' }), E('div', { text: 'Student ID' }), E('div', { text: 'Date' })])
+      E('div', { class: 'ex-ident' }, [E('div', { text: T('Name') }), E('div', { text: T('Student ID') }), E('div', { text: T('Date') })])
     ]);
     if (meta.instructions && meta.instructions.length) {
       var ins = E('div', { class: 'ex-instr als-rich' });
@@ -118,7 +119,7 @@ ALS.boot(function (ex) {
     }
     paper.appendChild(cover);
 
-    var appendix = E('section', { class: 'ex-appendix' }, [E('h2', { class: 'als-h2', text: 'Solutions' })]);
+    var appendix = E('section', { class: 'ex-appendix' }, [E('h2', { class: 'als-h2', text: T('Solutions') })]);
     var n = 0;
     ex.sections.forEach(function (sec) {
       var s = E('section', { class: 'ex-section' });
@@ -143,7 +144,7 @@ ALS.boot(function (ex) {
         s.appendChild(E('div', { class: 'ex-q' }, [E('span', { class: 'ex-num', text: n + '.' }), body, E('span', { class: 'ex-pts', text: q.parts && q.parts.length && q.points == null ? '' : pts(qPoints(q)) })]));
 
         // appendix copy
-        var item = E('div', { class: 'ex-sol-item' }, [E('div', { class: 'als-h3', text: 'Question ' + n })]);
+        var item = E('div', { class: 'ex-sol-item' }, [E('div', { class: 'als-h3', text: T('Question') + ' ' + n })]);
         var any = false;
         if (q.parts) q.parts.forEach(function (p) { var b = solBox(p.solution); if (b) { any = true; item.appendChild(E('div', { style: 'font-weight:600;margin-top:.5rem', text: '(' + p.label + ')' })); item.appendChild(b); } });
         var main2 = solBox(q.solution, q.marking); if (main2) { any = true; item.appendChild(main2); }
@@ -151,10 +152,13 @@ ALS.boot(function (ex) {
       });
       paper.appendChild(s);
     });
-    if (total) paper.appendChild(E('div', { class: 'ex-total', text: 'Total: ' + total + ' pts' }));
+    if (total) paper.appendChild(E('div', { class: 'ex-total', text: T('Total') + ': ' + total + ' ' + T('pts') }));
     if (hasSol) paper.appendChild(appendix);
     main.appendChild(paper);
     app.appendChild(main);
+    app.appendChild(ALS.dock());
+    ALS.status([{ k: T('Questions'), v: n }, total ? { k: T('Total'), v: total + ' ' + T('pts') } : null, meta.duration ? { k: T('Time'), v: meta.duration } : null,
+      hasSol ? { k: T('Solutions'), v: T({ off: 'Hidden', inline: 'Inline', end: 'At the end' }[solMode]) } : null]);
     ALS.applyMode();
     ALS.renderMath(app);
   }

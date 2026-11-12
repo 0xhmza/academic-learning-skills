@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{lang}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
+<html lang="{{lang}}" dir="{{dir}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,8 +16,8 @@
   @media (min-width: 1100px) { .sh-layout.has-toc { grid-template-columns: 13rem minmax(0, 46rem); justify-content: center; } }
   .sh-toc { position: sticky; top: 4.5rem; align-self: start; font-size: .875rem; display: none; }
   @media (min-width: 1100px) { .sh-toc { display: block; } }
-  .sh-toc a { display: block; color: var(--text-muted); text-decoration: none; padding: .25rem 0 .25rem .75rem; border-left: 2px solid var(--border); }
-  .sh-toc a:hover { color: var(--text); border-left-color: var(--accent); }
+  .sh-toc a { display: block; color: var(--text-muted); text-decoration: none; padding: .25rem .75rem; border-inline-start: 2px solid var(--border); }
+  .sh-toc a:hover { color: var(--text); border-inline-start-color: var(--accent); }
   .sh-section-title { scroll-margin-top: 5rem; }
   .sh-def { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: .9rem 1.1rem; background: var(--bg-elev); }
   .sh-def .term { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.1rem; margin-bottom: .2rem; }
@@ -25,13 +25,13 @@
   .sh-formula { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: .75rem 1rem; background: var(--bg-elev); }
   .sh-formula .t { font-size: .8125rem; color: var(--text-muted); font-weight: 600; }
   .sh-formula .note { font-size: .875rem; color: var(--text-muted); }
-  .sh-kp ul { margin: .25rem 0 0; padding-left: 1.2rem; }
+  .sh-kp ul { margin: .25rem 0 0; padding-inline-start: 1.2rem; }
   .sh-example .sol { margin-top: .6rem; }
   .sh-table { width: 100%; border-collapse: collapse; font-size: .9rem; font-variant-numeric: tabular-nums; }
-  .sh-table th, .sh-table td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .sh-table th, .sh-table td { text-align: start; padding: .45rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
   .sh-table th { font-weight: 600; border-bottom: 2px solid var(--border-strong); background: var(--bg-sunken); }
   .sh-table-wrap { overflow-x: auto; }
-  .sh-quote { margin: 0; padding: .25rem 0 .25rem 1.1rem; border-left: 3px solid var(--accent); font-family: var(--font-display); font-size: 1.2rem; font-style: italic; }
+  .sh-quote { margin: 0; padding: .25rem 1.1rem; border-inline-start: 3px solid var(--accent); font-family: var(--font-display); font-size: 1.2rem; font-style: italic; }
   .sh-quote figcaption { font-family: var(--font-body); font-style: normal; font-size: .875rem; color: var(--text-muted); margin-top: .35rem; }
   .sh-block-title { font-weight: 600; margin-bottom: .35rem; }
 
@@ -60,7 +60,7 @@
 <script>/*ALS:CORE*/</script>
 <script>
 ALS.boot(function (sh) {
-  var E = ALS.el, $ = ALS.$;
+  var E = ALS.el, $ = ALS.$, T = ALS.t;
   var app = $('#app');
   var layout = ALS.store.get('layout', sh.layout || 'notes');
 
@@ -91,10 +91,10 @@ ALS.boot(function (sh) {
         break;
       case 'example':
         var ex = E('div', { class: 'als-card als-card--flat sh-example' });
-        ex.appendChild(E('div', { class: 'als-kicker', text: b.title || 'Example' }));
+        ex.appendChild(E('div', { class: 'als-kicker', text: b.title || T('Example') }));
         if (b.body) ex.appendChild(richDiv(b.body));
         if (b.solution) {
-          var det = E('details', { class: 'sol', open: layout === 'cheatsheet' || null }, [E('summary', { style: 'cursor:pointer;color:var(--accent);font-weight:500', text: 'Solution' })]);
+          var det = E('details', { class: 'sol', open: layout === 'cheatsheet' || null }, [E('summary', { style: 'cursor:pointer;color:var(--accent);font-weight:500', text: T('Solution') })]);
           det.appendChild(richDiv(b.solution));
           ex.appendChild(det);
         }
@@ -102,7 +102,7 @@ ALS.boot(function (sh) {
         break;
       case 'warning':
         var w = E('div', { class: 'als-callout als-callout--warn' });
-        w.appendChild(E('div', { class: 'sh-block-title', text: b.title || 'Common mistake' }));
+        w.appendChild(E('div', { class: 'sh-block-title', text: b.title || T('Common mistake') }));
         if (b.body) w.appendChild(richDiv(b.body));
         wrap.appendChild(w);
         break;
@@ -125,13 +125,13 @@ ALS.boot(function (sh) {
 
   function render() {
     app.innerHTML = '';
-    var seg = E('div', { class: 'als-seg als-noprint', role: 'group', 'aria-label': 'Layout' }, [['notes', 'Notes'], ['cheatsheet', 'Cheat sheet']].map(function (o) {
+    var seg = E('div', { class: 'als-seg als-noprint', role: 'group', 'aria-label': T('Layout') }, [['notes', T('Notes')], ['cheatsheet', T('Cheat sheet')]].map(function (o) {
       return E('button', { type: 'button', 'aria-pressed': String(layout === o[0]), text: o[1], onclick: function () { layout = o[0]; ALS.store.set('layout', layout); render(); } });
     }));
-    app.appendChild(ALS.topbar([seg, ALS.iconBtn('print', 'Print or save as PDF', function () { window.print(); }, 'als-noprint')]));
+    app.appendChild(ALS.topbar([seg, ALS.iconBtn('print', T('Print or save as PDF'), function () { window.print(); }, 'als-noprint')]));
     var main = E('main', { class: 'als-shell als-frame' });
     var head = E('header', { class: 'sh-head' + (layout === 'cheatsheet' ? '' : '') , style: layout === 'cheatsheet' ? 'max-width:none' : '' }, [
-      E('div', { class: 'als-kicker', text: [sh.module, layout === 'cheatsheet' ? 'Cheat sheet' : 'Study notes'].filter(Boolean).join(' · ') }),
+      E('div', { class: 'als-kicker', text: [sh.module, layout === 'cheatsheet' ? T('Cheat sheet') : T('Study notes')].filter(Boolean).join(' · ') }),
       E('h1', { class: 'als-h1', text: sh.title }),
       sh.subtitle ? E('p', { class: 'als-sub', text: sh.subtitle }) : null
     ]);
@@ -141,19 +141,23 @@ ALS.boot(function (sh) {
     var body = E('div', { class: layout === 'cheatsheet' ? 'sh-cheat' : 'sh-notes' });
     sh.blocks.forEach(function (b, k) { body.appendChild(block(b, k)); });
     if (layout === 'notes' && sections.length >= 4) {
-      var toc = E('nav', { class: 'sh-toc', 'aria-label': 'Contents' }, [E('div', { class: 'als-kicker', style: 'margin-bottom:.5rem', text: 'Contents' })].concat(sections.map(function (s) {
+      var toc = ALS.panel('sidebar', E('nav', { class: 'sh-toc', 'aria-label': T('Contents') }), T('Contents'));
+      [E('div', { class: 'als-kicker', style: 'margin-bottom:.5rem', text: T('Contents') })].concat(sections.map(function (s) {
         return E('a', { href: '#sec-' + s.k, html: ALS.md(s.title, { inline: true }) });
-      })));
+      })).forEach(function (n) { toc.appendChild(n); });
       main.appendChild(E('div', { class: 'sh-layout has-toc' }, [toc, body]));
     } else main.appendChild(body);
     if (sh.sources && sh.sources.length) {
-      var src = E('footer', { class: layout === 'cheatsheet' ? '' : 'sh-notes', style: 'margin-top:2.5rem;font-size:.8125rem;color:var(--text-muted)' }, [E('hr', { class: 'als-divider' }), E('div', { class: 'als-kicker', text: 'Sources' })]);
-      var ul = E('ul', { style: 'padding-left:1.1rem' });
+      var src = E('footer', { class: layout === 'cheatsheet' ? '' : 'sh-notes', style: 'margin-top:2.5rem;font-size:.8125rem;color:var(--text-muted)' }, [E('hr', { class: 'als-divider' }), E('div', { class: 'als-kicker', text: T('Sources') })]);
+      var ul = E('ul', { style: 'padding-inline-start:1.1rem' });
       sh.sources.forEach(function (s) { ul.appendChild(E('li', { html: '<span class="als-mono">' + ALS.esc(s.id) + '</span> ' + ALS.esc(s.title) + (s.locator ? ', ' + ALS.esc(s.locator) : '') })); });
       src.appendChild(ul);
       main.appendChild(src);
     }
     app.appendChild(main);
+    app.appendChild(ALS.dock());
+    var words = sh.blocks.reduce(function (a, b) { return a + Object.keys(b).reduce(function (x, k) { return x + (k === 'type' || k === 'src' ? 0 : ALS.words(typeof b[k] === 'string' ? b[k] : JSON.stringify(b[k]))); }, 0); }, 0);
+    ALS.status([{ k: T('Words'), v: words }, { k: T('Reading time'), v: '~' + Math.max(1, Math.round(words / 190)) + ' ' + T('min') }, { k: T('Sections'), v: sections.length }, { k: T('Layout'), v: layout === 'cheatsheet' ? T('Cheat sheet') : T('Notes') }]);
     ALS.applyMode();
     ALS.renderMath(app);
   }

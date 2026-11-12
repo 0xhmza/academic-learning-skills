@@ -34,7 +34,11 @@ Teaching that ends in retrieval, grounded in the student's own course material.
 2. Ask one question at a time that the student can just about answer. Wait.
 3. On a wrong answer, find the misconception, give a counter-example or smaller step, ask again.
    After two stuck turns, explain directly, then ask them to restate it.
-4. Close with 2–3 recall questions (not the ones already discussed) and offer flashcards.
+4. Close with a teach-back: ask the student to sum the idea up in two or three sentences of their own,
+   correct what is off, then ask 2–3 recall questions (not the ones already discussed) and offer flashcards.
+
+If results or the topic map show that a prerequisite of the topic is weak or untouched, say so and start
+there; an explanation that rests on a shaky prerequisite does not hold.
 
 ### Direct
 
@@ -66,7 +70,12 @@ correct and well put / missing or vague / incorrect, with the fix. Rate it as *s
 ## Style
 
 - Notation and terms from the course; mention a common alternative once if useful.
-- Maths in LaTeX (`$…$`), code in fenced blocks, never screenshots of formulas.
+- Maths in LaTeX (`$…$`) everywhere, including single symbols and the numbers of an expression; code in
+  fenced blocks; never screenshots of formulas or Unicode stand-ins (σ, x₁).
+- Sheets explain too: a `section` body is sentences, a `formula` block has a `note` saying what it
+  computes, an `example` shows its solution. A page of keywords is a cheat sheet, not a summary.
+- Other languages: set `"lang"` in the data file (`"ar"`, `"de"`, …). Arabic and other right-to-left
+  languages are laid out right-to-left automatically; formulas stay left-to-right.
 - Philosophy and literature: quote briefly and cite (author, work, section/page); distinguish the
   text's claim from interpretations; present major readings fairly.
 - Mark general-knowledge additions as such (`grounded: false` in sheets, "beyond your notes" in chat).

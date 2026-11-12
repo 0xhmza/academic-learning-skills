@@ -29,6 +29,12 @@ LESSON: dict[str, tuple[list[str] | None, str, str]] = {
                        "minimal = text and formulas; balanced = a visual where the source has one; rich = a visual for every mechanism the source describes"),
     "lesson_notes": (["off", "short", "full"], "short",
                      "speaker notes: none, one or two sentences, or the full spoken explanation"),
+    "lesson_explain": (["full", "short", "off"], "full",
+                       "explanation written on the slides: full = what a lecturer would say, on every content slide; short = a sentence or two; off = keywords only (classic slides)"),
+    "lesson_intuition": (["labelled", "off"], "labelled",
+                         "analogies and examples of the tutor's own, always marked as not from the material: labelled = allowed, off = never"),
+    "lesson_view": (["study", "present"], "study",
+                    "how the page opens: study = explanations on the slide, present = compact slides (the reader can switch with V)"),
     "lesson_language": (None, "source",
                         "source = same language as the material; or a language name, e.g. German"),
 }

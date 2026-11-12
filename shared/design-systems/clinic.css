@@ -70,4 +70,14 @@
 [data-als-theme="clinic"] .als-kicker { display: inline-block; background: var(--accent-soft); color: var(--accent-text); padding: .2rem .65rem; border-radius: 999px; font-weight: 600; }
 [data-als-theme="clinic"] .als-card:focus-within { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
 [data-als-theme="clinic"] .als-grad { color: var(--accent); }
-[data-als-theme="clinic"] .als-callout { border-left-width: 0; border-radius: var(--radius-sm); }
+[data-als-theme="clinic"] .als-callout { border-inline-start-width: 0; border-radius: var(--radius-sm); }
+
+/* Arabic and other right-to-left scripts */
+[data-als-theme="clinic"][dir="rtl"] {
+  --font-body: "Tajawal", "Segoe UI", Tahoma, sans-serif;
+  --font-display: "Tajawal", "Segoe UI", Tahoma, sans-serif;
+  --display-weight: 700;
+  --font-size: 1.0625rem;
+}
+[data-als-theme="clinic"] { --status-bg: #edf4f4; }
+[data-als-theme="clinic"][data-als-mode="dark"] { --status-bg: #071416; }

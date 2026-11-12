@@ -6,6 +6,7 @@
       "short": "Maths, physics, CS, engineering",
       "description": "Precise and technical, in the spirit of tailwindcss.com. Maths, physics, CS, engineering.",
       "fonts": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
+      "fontsRtl": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap",
       "swatch": [
         "#030712",
         "#38bdf8"
@@ -63,17 +64,29 @@
         "logic",
         "theoretical computer science",
         "astronomy",
-        "astrophysics"
+        "astrophysics",
+        "رياضيات",
+        "فيزياء",
+        "جبر",
+        "تحليل",
+        "هندسة",
+        "برمجة",
+        "خوارزميات",
+        "إحصاء",
+        "احتمالات",
+        "معلوميات",
+        "حاسوب"
       ]
     },
     "folio": {
       "label": "Folio",
       "short": "Philosophy, literature, history, arts",
-      "description": "Editorial and literary: serif type, paper tones, generous margins. Philosophy, literature, history, languages, arts.",
-      "fonts": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap",
+      "description": "A modern literary quarterly: Fraunces headlines, Newsreader text, warm paper, plum ink. Philosophy, literature, history, languages, arts.",
+      "fonts": "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,50;1,9..144,400..700,50&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap",
+      "fontsRtl": "https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400..700&display=swap",
       "swatch": [
-        "#f7f3ea",
-        "#8c2f2b"
+        "#fbf8f2",
+        "#7a3e6f"
       ],
       "subjects": [
         "philosophy",
@@ -117,7 +130,17 @@
         "archaeology",
         "humanities",
         "hermeneutics",
-        "phenomenology"
+        "phenomenology",
+        "فلسفة",
+        "أدب",
+        "تاريخ",
+        "لغة",
+        "بلاغة",
+        "نحو",
+        "شعر",
+        "أخلاق",
+        "منطق فلسفي",
+        "فنون"
       ]
     },
     "clinic": {
@@ -125,6 +148,7 @@
       "short": "Biology, medicine, chemistry, health",
       "description": "Clean, calm and diagram-first, teal accents. Biology, medicine, chemistry, health, environment.",
       "fonts": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap",
+      "fontsRtl": "https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap",
       "swatch": [
         "#f6f9f9",
         "#0f766e"
@@ -166,17 +190,25 @@
         "sport science",
         "kinesiology",
         "psychology",
-        "cognitive science"
+        "cognitive science",
+        "أحياء",
+        "بيولوجيا",
+        "طب",
+        "كيمياء",
+        "صيدلة",
+        "علم النفس",
+        "تشريح"
       ]
     },
     "ledger": {
       "label": "Ledger",
       "short": "Economics, business, law, social science",
-      "description": "Structured and sober, tabular numbers, strong rules. Business, economics, law, politics, social science.",
-      "fonts": "https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap",
+      "description": "The financial pages: DM Serif Display over DM Sans, salmon newsprint, Oxford-blue ink, tabular figures. Business, economics, law, politics, social science.",
+      "fonts": "https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=DM+Mono:wght@400;500&display=swap",
+      "fontsRtl": "https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@500..800&family=Noto+Sans+Arabic:wght@400..700&display=swap",
       "swatch": [
-        "#fafaf8",
-        "#1f3a5f"
+        "#fbf0e6",
+        "#17406f"
       ],
       "subjects": [
         "economics",
@@ -213,7 +245,15 @@
         "administration",
         "logistics",
         "supply chain",
-        "human resources"
+        "human resources",
+        "اقتصاد",
+        "قانون",
+        "محاسبة",
+        "إدارة",
+        "تسويق",
+        "علوم سياسية",
+        "اجتماع",
+        "مالية"
       ]
     }
   }

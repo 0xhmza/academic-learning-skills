@@ -14,10 +14,27 @@
   function sty(s, fallback) { return STYLES[s] ? s : (fallback || 'accent'); }
   function strokeCls(s, fb) { return 'd-' + sty(s, fb); }
   function solidCls(s, fb) { return 'd-solid-' + sty(s, fb); }
-  function textW(s, px) { return String(s == null ? '' : s).length * (px || 7.6); }
+  /* width estimate: TeX commands and delimiters do not take the space their source text does */
+  function plainLen(s) {
+    s = String(s == null ? '' : s);
+    if (s.indexOf('$') < 0 && s.indexOf('\\') < 0) return s.length;
+    return s.replace(/\\[a-zA-Z]+/g, 'x').replace(/[${}^_\\]/g, '').length;
+  }
+  function textW(s, px) { return plainLen(s) * (px || 7.6); }
   function svgOpen(w, h) { return '<svg viewBox="0 0 ' + r1(w) + ' ' + r1(h) + '" xmlns="http://www.w3.org/2000/svg">'; }
+  /* A label is plain SVG text unless it holds maths. Numbers use the maths font (class d-num); labels with
+     $…$ or recognisable maths (σ(z), x₁, w = 3) are typeset by KaTeX inside a <foreignObject>. */
+  var NUM_ONLY = /^[-+−]?\d+(?:[.,]\d+)?\s?%?$/;
   function text(x, y, s, cls, anchor, extra) {
-    return '<text class="' + (cls || 'd-text') + '" x="' + r1(x) + '" y="' + r1(y) + '" text-anchor="' + (anchor || 'middle') + '"' + (extra || '') + '>' + esc(s) + '</text>';
+    s = String(s == null ? '' : s); cls = cls || 'd-text'; anchor = anchor || 'middle';
+    var plain = '<text class="' + cls + (NUM_ONLY.test(s.trim()) ? ' d-num' : '') + '" x="' + r1(x) + '" y="' + r1(y) + '" text-anchor="' + anchor + '"' + (extra || '') + '>' + esc(s) + '</text>';
+    if (extra || !ALS.md || NUM_ONLY.test(s.trim()) || !s.trim()) return plain;
+    var html = ALS.md(s, { inline: true });
+    if (html.indexOf('als-math') < 0) return plain;
+    var w = 360, px = cls.indexOf('muted') > -1 ? 12 : 14;
+    var fx = anchor === 'middle' ? x - w / 2 : anchor === 'end' ? x - w : x;
+    return '<foreignObject x="' + r1(fx) + '" y="' + r1(y - px * 0.32 - 12) + '" width="' + w + '" height="24">' +
+      '<div xmlns="http://www.w3.org/1999/xhtml" class="d-fo ' + cls + ' a-' + anchor + '">' + html.replace(/<br>/g, '<br/>') + '</div></foreignObject>';
   }
   function group(id, body, cls) { return '<g id="' + esc(id) + '"' + (cls ? ' class="' + cls + '"' : '') + '>' + body + '</g>'; }
 

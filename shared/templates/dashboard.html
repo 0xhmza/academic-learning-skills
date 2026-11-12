@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{lang}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
+<html lang="{{lang}}" dir="{{dir}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,8 +19,8 @@
   .db-mod-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: .75rem; flex-wrap: wrap; }
   .db-topic { display: grid; grid-template-columns: minmax(0, 1fr) 7rem 2.75rem; gap: .75rem; align-items: center; font-size: .875rem; padding: .3rem 0; border-bottom: 1px dashed var(--border); }
   .db-topic:last-child { border-bottom: 0; }
-  .db-topic .w { color: var(--text-faint); font-size: .7rem; margin-left: .35rem; }
-  .db-topic .pct { font-family: var(--font-mono); font-size: .75rem; text-align: right; color: var(--text-muted); }
+  .db-topic .w { color: var(--text-faint); font-size: .7rem; margin-inline-start: .35rem; }
+  .db-topic .pct { font-family: var(--font-mono); font-size: .75rem; text-align: end; color: var(--text-muted); }
   .db-list { list-style: none; margin: 0; padding: 0; }
   .db-list li { display: grid; grid-template-columns: 4.5rem 1fr; gap: .75rem; padding: .55rem 0; border-bottom: 1px solid var(--border); font-size: .9rem; }
   .db-list li:last-child { border-bottom: 0; }
@@ -36,7 +36,7 @@
 <script>/*ALS:CORE*/</script>
 <script>
 ALS.boot(function (d) {
-  var E = ALS.el, $ = ALS.$;
+  var E = ALS.el, $ = ALS.$, T = ALS.t;
   var app = $('#app');
   function color(m) { return m == null ? 'var(--border-strong)' : m >= .8 ? 'var(--good)' : m >= .5 ? 'var(--warn)' : 'var(--bad)'; }
   function tile(v, l, s) { return E('div', { class: 'als-card db-tile' }, [E('div', { class: 'v', text: String(v) }), E('div', { class: 'l', text: l }), s ? E('div', { class: 's', text: s }) : null]); }
@@ -48,16 +48,16 @@ ALS.boot(function (d) {
   app.appendChild(ALS.topbar([]));
   var main = E('main', { class: 'als-shell als-frame' });
   main.appendChild(E('div', {}, [
-    E('div', { class: 'als-kicker', text: 'Generated ' + (d.generated || ALS.today()) }),
+    E('div', { class: 'als-kicker', text: T('Generated') + ' ' + (d.generated || ALS.today()) }),
     E('h1', { class: 'als-h1', html: ALS.esc(d.title) }),
     d.subtitle ? E('p', { class: 'als-sub', text: d.subtitle }) : null
   ]));
   var s = d.summary || {};
   main.appendChild(E('div', { class: 'db-tiles' }, [
-    tile(s.due != null ? s.due : 0, 'Reviews due today', s.dueSoon ? s.dueSoon + ' more this week' : null),
-    tile(s.mastery != null ? Math.round(s.mastery * 100) + '%' : '–', 'Average mastery', s.tracked ? s.tracked + ' topics tracked' : 'No practice recorded yet'),
-    tile(s.nextDeadline ? s.nextDeadline.days + 'd' : '–', 'Next deadline', s.nextDeadline ? s.nextDeadline.title : 'Nothing scheduled'),
-    tile((d.modules || []).length, 'Modules', s.nextExam ? 'Next exam in ' + s.nextExam.days + ' days' : null)
+    tile(s.due != null ? s.due : 0, T('Reviews due today'), s.dueSoon ? T('{0} more this week', s.dueSoon) : null),
+    tile(s.mastery != null ? Math.round(s.mastery * 100) + '%' : '–', T('Average mastery'), s.tracked ? T('{0} topics tracked', s.tracked) : T('No practice recorded yet')),
+    tile(s.nextDeadline ? s.nextDeadline.days + 'd' : '–', T('Next deadline'), s.nextDeadline ? s.nextDeadline.title : T('Nothing scheduled')),
+    tile((d.modules || []).length, T('Modules'), s.nextExam ? T('Next exam in {0} days', s.nextExam.days) : null)
   ]));
 
   var left = E('div');
@@ -66,44 +66,46 @@ ALS.boot(function (d) {
     card.appendChild(E('div', { class: 'db-mod-head' }, [
       E('h2', { class: 'als-h3', style: 'margin:0', text: m.title || m.id }),
       E('div', { class: 'als-row' }, [
-        m.examDays != null ? E('span', { class: 'als-chip ' + (m.examDays <= 14 ? 'als-chip--warn' : ''), text: 'Exam in ' + m.examDays + 'd' }) : null,
-        m.due ? E('span', { class: 'als-chip als-chip--accent', text: m.due + ' due' }) : null
+        m.examDays != null ? E('span', { class: 'als-chip ' + (m.examDays <= 14 ? 'als-chip--warn' : ''), text: T('Exam in {0}d', m.examDays) }) : null,
+        m.due ? E('span', { class: 'als-chip als-chip--accent', text: T('{0} due', m.due) }) : null
       ])
     ]));
-    if (!m.topics || !m.topics.length) card.appendChild(E('p', { class: 'db-empty', text: 'No topic map yet. Ask Claude to set up this module from your material.' }));
+    if (!m.topics || !m.topics.length) card.appendChild(E('p', { class: 'db-empty', text: T('No topic map yet. Ask Claude to set up this module from your material.') }));
     (m.topics || []).forEach(function (t) {
       var pct = t.mastery == null ? null : Math.round(t.mastery * 100);
       card.appendChild(E('div', { class: 'db-topic' }, [
         E('span', { html: ALS.esc(t.title || t.id) + (t.weight > 1 ? '<span class="w">' + '●'.repeat(t.weight) + '</span>' : '') }),
         E('div', { class: 'als-progress' }, [E('span', { style: 'width:' + (pct || 0) + '%;background:' + color(t.mastery) })]),
-        E('span', { class: 'pct', text: pct == null ? 'new' : pct + '%' })
+        E('span', { class: 'pct', text: pct == null ? T('new') : pct + '%' })
       ]));
     });
     left.appendChild(card);
   });
-  if (!(d.modules || []).length) left.appendChild(E('div', { class: 'als-card db-empty', text: 'No modules yet. Ask Claude to set one up from your lecture material.' }));
+  if (!(d.modules || []).length) left.appendChild(E('div', { class: 'als-card db-empty', text: T('No modules yet. Ask Claude to set one up from your lecture material.') }));
 
   var right = E('div', { class: 'als-stack' });
-  var nx = E('section', { class: 'als-card' }, [E('h2', { class: 'als-h3', text: 'What to do next' })]);
+  var nx = E('section', { class: 'als-card' }, [E('h2', { class: 'als-h3', text: T('What to do next') })]);
   if (d.next && d.next.length) {
-    var ol = E('ol', { class: 'als-rich', style: 'padding-left:1.2rem;margin:0' });
+    var ol = E('ol', { class: 'als-rich', style: 'padding-inline-start:1.2rem;margin:0' });
     d.next.forEach(function (n) { var li = E('li', { style: 'margin:.35rem 0' }); ALS.rich(li, n, { inline: true }); ol.appendChild(li); });
     nx.appendChild(ol);
-  } else nx.appendChild(E('p', { class: 'db-empty', text: 'Nothing urgent. A short review session keeps things fresh.' }));
+  } else nx.appendChild(E('p', { class: 'db-empty', text: T('Nothing urgent. A short review session keeps things fresh.') }));
   right.appendChild(nx);
 
-  var dl = E('section', { class: 'als-card' }, [E('h2', { class: 'als-h3', text: 'Upcoming' })]);
+  var dl = E('section', { class: 'als-card' }, [E('h2', { class: 'als-h3', text: T('Upcoming') })]);
   if (d.deadlines && d.deadlines.length) {
     var ul = E('ul', { class: 'db-list' });
     d.deadlines.forEach(function (x) {
       ul.appendChild(E('li', {}, [E('span', { class: 'db-date', html: dd(x.date) }), E('span', {}, [E('span', { text: x.title }), E('div', { class: 'als-faint', style: 'font-size:.75rem', text: [x.module, x.category].filter(Boolean).join(' · ') })])]));
     });
     dl.appendChild(ul);
-  } else dl.appendChild(E('p', { class: 'db-empty', text: 'No deadlines imported. Import your Moodle calendar to see them here.' }));
+  } else dl.appendChild(E('p', { class: 'db-empty', text: T('No deadlines imported. Import your Moodle calendar to see them here.') }));
   right.appendChild(dl);
 
   main.appendChild(E('div', { class: 'db-cols' }, [left, right]));
   app.appendChild(main);
+  app.appendChild(ALS.dock());
+  ALS.status([{ k: T('Reviews due today'), v: s.due != null ? s.due : 0 }, { k: T('Modules'), v: (d.modules || []).length }]);
 });
 </script>
 </body>

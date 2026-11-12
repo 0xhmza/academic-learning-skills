@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{lang}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
+<html lang="{{lang}}" dir="{{dir}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,7 +14,7 @@
   .tr-q { padding: 1.5rem; }
   .tr-prompt { font-size: 1.125rem; margin: .5rem 0 1.25rem; }
   .tr-opts { display: grid; gap: .55rem; }
-  .tr-opt { display: grid; grid-template-columns: 1.75rem 1fr; gap: .6rem; align-items: start; text-align: left; padding: .75rem .9rem; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--bg-elev); cursor: pointer; transition: border-color .15s, background-color .15s; }
+  .tr-opt { display: grid; grid-template-columns: 1.75rem 1fr; gap: .6rem; align-items: start; text-align: start; padding: .75rem .9rem; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--bg-elev); cursor: pointer; transition: border-color .15s, background-color .15s; }
   .tr-opt:hover { border-color: var(--text-faint); }
   .tr-opt[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); }
   .tr-opt .k { font-family: var(--font-mono); font-size: .75rem; color: var(--text-faint); width: 1.5rem; height: 1.5rem; border: 1px solid var(--border-strong); border-radius: 50%; display: grid; place-items: center; }
@@ -38,7 +38,7 @@
   .tr-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.25rem; align-items: center; }
   .tr-feedback { margin-top: 1.25rem; }
   .tr-feedback > * + * { margin-top: .75rem; }
-  .tr-solution ol { margin: .25rem 0 0; padding-left: 1.3rem; }
+  .tr-solution ol { margin: .25rem 0 0; padding-inline-start: 1.3rem; }
   .tr-solution li { margin: .4rem 0; }
   .tr-hints .als-callout + .als-callout { margin-top: .5rem; }
   .tr-kw { display: flex; flex-wrap: wrap; gap: .35rem; }
@@ -65,7 +65,7 @@
 <script>/*ALS:CORE*/</script>
 <script>
 ALS.boot(function (quiz) {
-  var E = ALS.el, $ = ALS.$, $$ = ALS.$$;
+  var E = ALS.el, $ = ALS.$, $$ = ALS.$$, T = ALS.t;
   var app = $('#app');
   var settings = Object.assign({ mode: 'practice', shuffle: true, passMark: 0.7 }, quiz.settings || {});
   var topics = {}; quiz.questions.forEach(function (q) { if (q.topic) topics[q.topic] = (topics[q.topic] || 0) + 1; });
@@ -106,28 +106,28 @@ ALS.boot(function (quiz) {
 
   /* ---------- start ---------- */
   function startView() {
-    var levels = [['all', 'All levels'], ['1', 'Warm-up'], ['2', 'Core'], ['3', 'Challenge']]; // ordered: numeric object keys would sort first
-    var topicSel = E('select', { class: 'als-select', id: 'tr-topic' }, [E('option', { value: 'all', text: 'All topics (' + quiz.questions.length + ')' })].concat(Object.keys(topics).sort().map(function (t) { return E('option', { value: t, text: t + ' (' + topics[t] + ')' }); })));
+    var levels = [['all', T('All levels')], ['1', T('Warm-up')], ['2', T('Core')], ['3', T('Challenge')]]; // ordered: numeric object keys would sort first
+    var topicSel = E('select', { class: 'als-select', id: 'tr-topic' }, [E('option', { value: 'all', text: T('All topics ({0})', quiz.questions.length) })].concat(Object.keys(topics).sort().map(function (t) { return E('option', { value: t, text: t + ' (' + topics[t] + ')' }); })));
     var levelSel = E('select', { class: 'als-select', id: 'tr-level' }, levels.map(function (l) { return E('option', { value: l[0], text: l[1] }); }));
     var modeSeg = E('div', { class: 'als-seg', role: 'group', 'aria-label': 'Mode' }, ['practice', 'test'].map(function (m) {
-      return E('button', { type: 'button', 'aria-pressed': String(S.mode === m), text: m === 'practice' ? 'Practice: feedback each step' : 'Test: feedback at the end', onclick: function () { S.mode = m; render(); } });
+      return E('button', { type: 'button', 'aria-pressed': String(S.mode === m), text: m === 'practice' ? T('Practice: feedback each step') : T('Test: feedback at the end'), onclick: function () { S.mode = m; render(); } });
     }));
     var last = ALS.store.get('last', null);
     return E('div', { class: 'tr-wrap tr-start als-rise' }, [
       E('div', {}, [
-        E('div', { class: 'als-kicker', text: (quiz.module ? quiz.module + ' · ' : '') + quiz.questions.length + ' questions' }),
+        E('div', { class: 'als-kicker', text: (quiz.module ? quiz.module + ' · ' : '') + T('{0} questions', quiz.questions.length) }),
         E('h1', { class: 'als-h1', text: quiz.title }),
         quiz.subtitle ? E('p', { class: 'als-sub', text: quiz.subtitle }) : null
       ]),
       E('div', { class: 'als-card tr-settings' }, [
-        E('div', {}, [E('label', { for: 'tr-topic', text: 'Topic' }), topicSel]),
-        E('div', {}, [E('label', { for: 'tr-level', text: 'Difficulty' }), levelSel]),
-        E('div', { style: 'grid-column: 1 / -1' }, [E('label', { text: 'Mode' }), modeSeg])
+        E('div', {}, [E('label', { for: 'tr-topic', text: T('Topic') }), topicSel]),
+        E('div', {}, [E('label', { for: 'tr-level', text: T('Difficulty') }), levelSel]),
+        E('div', { style: 'grid-column: 1 / -1' }, [E('label', { text: T('Mode') }), modeSeg])
       ]),
-      last ? E('p', { class: 'als-muted', style: 'margin:0', text: 'Last attempt: ' + last.score + '% on ' + last.date }) : null,
+      last ? E('p', { class: 'als-muted', style: 'margin:0', text: T('Last attempt: {0}% on {1}', last.score, last.date) }) : null,
       E('div', { class: 'als-row' }, [
-        E('button', { type: 'button', class: 'als-btn als-btn--primary', text: 'Start', onclick: function () { begin(topicSel.value, levelSel.value); } }),
-        settings.timeLimitMin ? E('span', { class: 'als-chip', text: 'Test mode time limit: ' + settings.timeLimitMin + ' min' }) : null
+        E('button', { type: 'button', class: 'als-btn als-btn--primary', text: T('Start'), onclick: function () { begin(topicSel.value, levelSel.value); } }),
+        settings.timeLimitMin ? E('span', { class: 'als-chip', text: T('Test mode time limit: {0} min', settings.timeLimitMin) }) : null
       ])
     ]);
   }
@@ -137,7 +137,7 @@ ALS.boot(function (quiz) {
       if (onlyIds) return onlyIds.indexOf(q.id) > -1;
       return (topic === 'all' || q.topic === topic) && (level === 'all' || String(q.difficulty || 2) === level);
     });
-    if (!pool.length) { ALS.toast('No questions match these filters'); return; }
+    if (!pool.length) { ALS.toast(T('No questions match these filters')); return; }
     S.list = settings.shuffle && !onlyIds ? ALS.shuffle(pool) : pool;
     S.i = 0; S.answers = {}; S.graded = {}; S.hints = {}; S.steps = {}; S.times = {};
     S.phase = 'question'; S.t0 = Date.now(); S.qt0 = Date.now();
@@ -147,7 +147,7 @@ ALS.boot(function (quiz) {
       S.timer = setInterval(function () {
         S.remaining--; var t = $('.tr-timer');
         if (t) { t.textContent = fmt(S.remaining); t.classList.toggle('is-low', S.remaining < 60); }
-        if (S.remaining <= 0) { clearInterval(S.timer); ALS.toast('Time is up'); finish(); }
+        if (S.remaining <= 0) { clearInterval(S.timer); ALS.toast(T('Time is up')); finish(); }
       }, 1000);
     }
     render();
@@ -176,14 +176,14 @@ ALS.boot(function (quiz) {
       return box;
     }
     if (q.type === 'numeric') {
-      var inp = E('input', { class: 'als-input', type: 'text', inputmode: 'decimal', autocomplete: 'off', placeholder: 'Your answer', value: a == null ? '' : a, disabled: locked || null, 'aria-label': 'Numeric answer' });
+      var inp = E('input', { class: 'als-input', type: 'text', inputmode: 'decimal', autocomplete: 'off', placeholder: T('Your answer'), value: a == null ? '' : a, disabled: locked || null, 'aria-label': T('Your answer') });
       inp.addEventListener('input', function () { S.answers[q.id] = inp.value; });
       inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') primary(); });
       if (g != null) inp.classList.add(g ? 'is-right' : 'is-wrong');
       return E('div', { class: 'tr-num' }, [inp, q.unit ? E('span', { class: 'tr-unit', text: q.unit }) : null]);
     }
     if (q.type === 'text') {
-      var ta = E('textarea', { class: 'als-textarea', placeholder: 'Write your answer, then compare it with the model answer.', disabled: locked || null, 'aria-label': 'Your answer' });
+      var ta = E('textarea', { class: 'als-textarea', placeholder: T('Write your answer, then compare it with the model answer.'), disabled: locked || null, 'aria-label': T('Your answer') });
       ta.value = (a && a.text) || '';
       ta.addEventListener('input', function () { S.answers[q.id] = Object.assign({}, S.answers[q.id], { text: ta.value }); });
       return ta;
@@ -207,13 +207,13 @@ ALS.boot(function (quiz) {
     }
     if (q.type === 'order') {
       if (!a) { a = ALS.shuffle(q.items); if (a.join() === q.items.join() && a.length > 1) a.reverse(); S.answers[q.id] = a; }
-      var ol = E('ol', { class: 'tr-order', 'aria-label': 'Put the items in the correct order' });
+      var ol = E('ol', { class: 'tr-order', 'aria-label': T('Put the items in the correct order') });
       a.forEach(function (item, k) {
         var li = E('li', {}, [
           E('span', { class: 'n', text: String(k + 1) }), E('span', { class: 'als-rich', html: ALS.md(item, { inline: true }) }),
           E('span', { class: 'mv' }, [
-            E('button', { type: 'button', class: 'als-btn als-btn--sm als-btn--ghost', 'aria-label': 'Move up', text: '↑', disabled: locked || k === 0 || null, onclick: function () { move(q, k, -1); } }),
-            E('button', { type: 'button', class: 'als-btn als-btn--sm als-btn--ghost', 'aria-label': 'Move down', text: '↓', disabled: locked || k === a.length - 1 || null, onclick: function () { move(q, k, 1); } })
+            E('button', { type: 'button', class: 'als-btn als-btn--sm als-btn--ghost', 'aria-label': T('Move up'), text: '↑', disabled: locked || k === 0 || null, onclick: function () { move(q, k, -1); } }),
+            E('button', { type: 'button', class: 'als-btn als-btn--sm als-btn--ghost', 'aria-label': T('Move down'), text: '↓', disabled: locked || k === a.length - 1 || null, onclick: function () { move(q, k, 1); } })
           ])
         ]);
         if (g != null) li.classList.add(item === q.items[k] ? 'is-right' : 'is-wrong');
@@ -253,18 +253,18 @@ ALS.boot(function (quiz) {
     var box = E('div', { class: 'tr-feedback' });
     if (q.type === 'text') {
       var a = S.answers[q.id] || {};
-      var model = E('div', { class: 'als-callout als-callout--info' }); ALS.rich(model, '**Model answer.** ' + q.answer);
+      var model = E('div', { class: 'als-callout als-callout--info' }); ALS.rich(model, '**' + T('Model answer') + '.** ' + q.answer);
       box.appendChild(model);
       if (q.keywords && q.keywords.length) {
         var txt = norm(a.text);
-        box.appendChild(E('div', {}, [E('div', { class: 'als-muted', style: 'font-size:.8125rem;margin-bottom:.35rem', text: 'Key ideas a full answer mentions' }),
+        box.appendChild(E('div', {}, [E('div', { class: 'als-muted', style: 'font-size:.8125rem;margin-bottom:.35rem', text: T('Key ideas a full answer mentions') }),
           E('div', { class: 'tr-kw' }, q.keywords.map(function (k) { var hit = txt.indexOf(norm(k)) > -1; return E('span', { class: 'als-chip ' + (hit ? 'als-chip--good' : 'als-chip--warn'), text: (hit ? '✓ ' : '○ ') + k }); }))]));
       }
       if (!a.self) {
-        box.appendChild(E('div', {}, [E('div', { style: 'font-weight:600;margin-bottom:.4rem', text: 'How did you do?' }), E('div', { class: 'als-row' }, [
-          E('button', { type: 'button', class: 'als-btn als-btn--good', text: 'Got it', onclick: function () { selfGrade(q, 'yes'); } }),
-          E('button', { type: 'button', class: 'als-btn als-btn--warn', text: 'Partly', onclick: function () { selfGrade(q, 'partly'); } }),
-          E('button', { type: 'button', class: 'als-btn als-btn--bad', text: 'Missed it', onclick: function () { selfGrade(q, 'no'); } })
+        box.appendChild(E('div', {}, [E('div', { style: 'font-weight:600;margin-bottom:.4rem', text: T('How did you do?') }), E('div', { class: 'als-row' }, [
+          E('button', { type: 'button', class: 'als-btn als-btn--good', text: T('Got it'), onclick: function () { selfGrade(q, 'yes'); } }),
+          E('button', { type: 'button', class: 'als-btn als-btn--warn', text: T('Partly'), onclick: function () { selfGrade(q, 'partly'); } }),
+          E('button', { type: 'button', class: 'als-btn als-btn--bad', text: T('Missed it'), onclick: function () { selfGrade(q, 'no'); } })
         ])]));
         return box;
       }
@@ -272,13 +272,13 @@ ALS.boot(function (quiz) {
       var verdict = E('div', { class: 'als-callout ' + (g ? 'als-callout--good' : 'als-callout--bad') });
       var right = '';
       if (!g) {
-        if (q.type === 'mcq') right = ' Correct answer: **' + (q.answer + 1) + '.** ' + q.options[q.answer];
-        else if (q.type === 'multi') right = ' Correct: ' + q.answer.map(function (k) { return '**' + (k + 1) + '**'; }).join(', ') + '.';
-        else if (q.type === 'numeric') right = ' Expected **' + q.answer + (q.unit ? ' ' + q.unit : '') + '**' + (q.tolerance ? ' (± ' + q.tolerance + ')' : '') + '.';
-        else if (q.type === 'cloze') right = ' Expected: ' + q.blanks.map(function (b) { return '**' + b[0] + '**'; }).join(', ') + '.';
-        else if (q.type === 'order') right = ' Correct order: ' + q.items.map(function (x, k) { return (k + 1) + '. ' + x; }).join(' · ');
+        if (q.type === 'mcq') right = ' ' + T('Correct answer') + ': **' + (q.answer + 1) + '.** ' + q.options[q.answer];
+        else if (q.type === 'multi') right = ' ' + T('Correct') + ': ' + q.answer.map(function (k) { return '**' + (k + 1) + '**'; }).join(', ') + '.';
+        else if (q.type === 'numeric') right = ' ' + T('Expected') + ' **' + q.answer + (q.unit ? ' ' + q.unit : '') + '**' + (q.tolerance ? ' (± ' + q.tolerance + ')' : '') + '.';
+        else if (q.type === 'cloze') right = ' ' + T('Expected') + ': ' + q.blanks.map(function (b) { return '**' + b[0] + '**'; }).join(', ') + '.';
+        else if (q.type === 'order') right = ' ' + T('Correct order') + ': ' + q.items.map(function (x, k) { return (k + 1) + '. ' + x; }).join(' · ');
       }
-      ALS.rich(verdict, (g ? '**Correct.**' : '**Not quite.**') + right);
+      ALS.rich(verdict, ('**' + (g ? T('Correct') : T('Not quite')) + '.**') + right);
       box.appendChild(verdict);
     }
     if (q.explain) { var ex = E('div', { class: 'als-rich' }); ALS.rich(ex, q.explain); box.appendChild(ex); }
@@ -291,14 +291,14 @@ ALS.boot(function (quiz) {
     var n = S.steps[q.id] || 0;
     if (afterAnswer && !S.graded[q.id] && n === 0) n = 0;
     var wrap = E('div', { class: 'tr-solution als-card als-card--sunken als-card--flat' });
-    wrap.appendChild(E('div', { class: 'als-kicker', text: 'Worked solution' }));
+    wrap.appendChild(E('div', { class: 'als-kicker', text: T('Worked solution') }));
     var ol = E('ol');
     q.solution.slice(0, n).forEach(function (s) { var li = E('li', { class: 'als-rise' }); ALS.rich(li, s); ol.appendChild(li); });
     wrap.appendChild(ol);
     if (n < q.solution.length) {
       wrap.appendChild(E('div', { class: 'als-row', style: 'margin-top:.5rem' }, [
-        E('button', { type: 'button', class: 'als-btn als-btn--sm', text: n === 0 ? 'Show first step' : 'Next step (' + n + '/' + q.solution.length + ')', onclick: function () { S.steps[q.id] = n + 1; render(); } }),
-        n > 0 ? E('button', { type: 'button', class: 'als-btn als-btn--sm als-btn--ghost', text: 'Show all', onclick: function () { S.steps[q.id] = q.solution.length; render(); } }) : null
+        E('button', { type: 'button', class: 'als-btn als-btn--sm', text: n === 0 ? T('Show first step') : T('Next step ({0}/{1})', n, q.solution.length), onclick: function () { S.steps[q.id] = n + 1; render(); } }),
+        n > 0 ? E('button', { type: 'button', class: 'als-btn als-btn--sm als-btn--ghost', text: T('Show all'), onclick: function () { S.steps[q.id] = q.solution.length; render(); } }) : null
       ]));
     }
     return wrap;
@@ -314,13 +314,13 @@ ALS.boot(function (quiz) {
     var q = S.list[S.i];
     if (S.mode === 'practice') {
       if (S.graded[q.id] == null && !(q.type === 'text' && S.answers[q.id] && S.answers[q.id].checked)) {
-        if (!answered(q)) { ALS.toast('Answer first, or use a hint'); return; }
+        if (!answered(q)) { ALS.toast(T('Answer first, or use a hint')); return; }
         S.times[q.id] = Math.round((Date.now() - S.qt0) / 1000);
         if (q.type === 'text') { S.answers[q.id] = Object.assign({}, S.answers[q.id], { checked: true }); }
         else S.graded[q.id] = check(q, S.answers[q.id]);
         render(); return;
       }
-      if (q.type === 'text' && S.graded[q.id] == null) { ALS.toast('Rate your answer first'); return; }
+      if (q.type === 'text' && S.graded[q.id] == null) { ALS.toast(T('Rate your answer first')); return; }
       advance(1);
     } else advance(1);
   }
@@ -334,7 +334,7 @@ ALS.boot(function (quiz) {
   }
   function confirmFinish() {
     var open = S.list.filter(function (q) { return !answered(q); }).length;
-    if (open && !window.confirm(open + ' question(s) unanswered. Finish anyway?')) return;
+    if (open && !window.confirm(T('{0} question(s) unanswered. Finish anyway?', open))) return;
     finish();
   }
 
@@ -343,35 +343,35 @@ ALS.boot(function (quiz) {
     var locked = S.mode === 'practice' && (S.graded[q.id] != null || (q.type === 'text' && S.answers[q.id] && S.answers[q.id].checked));
     var wrap = E('div', { class: 'tr-wrap' });
     wrap.appendChild(E('div', { class: 'tr-meta' }, [
-      E('span', { text: 'Question ' + (S.i + 1) + ' of ' + S.list.length + (q.topic ? ' · ' + q.topic : '') }),
-      S.remaining != null ? E('span', { class: 'tr-timer', text: fmt(S.remaining) }) : E('span', { text: ['', 'Warm-up', 'Core', 'Challenge'][q.difficulty || 2] })
+      E('span', { text: T('Question {0} of {1}', S.i + 1, S.list.length) + (q.topic ? ' · ' + q.topic : '') }),
+      S.remaining != null ? E('span', { class: 'tr-timer', text: fmt(S.remaining) }) : E('span', { text: T(['', 'Warm-up', 'Core', 'Challenge'][q.difficulty || 2]) })
     ]));
     wrap.appendChild(E('div', { class: 'als-progress', style: 'margin-bottom:1rem' }, [E('span', { style: 'width:' + Math.round(S.i / S.list.length * 100) + '%' })]));
     if (S.mode === 'test') {
-      wrap.appendChild(E('div', { class: 'tr-dots', role: 'navigation', 'aria-label': 'Jump to question' }, S.list.map(function (qq, k) {
+      wrap.appendChild(E('div', { class: 'tr-dots', role: 'navigation', 'aria-label': T('Jump to question') }, S.list.map(function (qq, k) {
         return E('button', { type: 'button', class: 'tr-dot' + (answered(qq) ? ' is-answered' : ''), 'aria-current': String(k === S.i), text: String(k + 1), onclick: function () { S.i = k; render(); } });
       })));
     }
     var card = E('div', { class: 'als-card tr-q als-rise' });
-    card.appendChild(E('div', { class: 'als-kicker', text: { mcq: 'Choose one', multi: 'Choose all that apply', numeric: 'Calculate', text: 'Explain', cloze: 'Fill the gaps', order: 'Put in order' }[q.type] }));
+    card.appendChild(E('div', { class: 'als-kicker', text: { mcq: T('Choose one'), multi: T('Choose all that apply'), numeric: T('Calculate'), text: T('Explain'), cloze: T('Fill the gaps'), order: T('Put in order') }[q.type] }));
     var prompt = E('div', { class: 'tr-prompt' }); ALS.rich(prompt, q.prompt); card.appendChild(prompt);
     card.appendChild(inputFor(q, locked));
 
     var used = S.hints[q.id] || 0;
     if (used && q.hints) {
       var hb = E('div', { class: 'tr-hints', style: 'margin-top:1rem' });
-      q.hints.slice(0, used).forEach(function (h, k) { var c = E('div', { class: 'als-callout als-callout--warn' }); ALS.rich(c, '**Hint ' + (k + 1) + '.** ' + h); hb.appendChild(c); });
+      q.hints.slice(0, used).forEach(function (h, k) { var c = E('div', { class: 'als-callout als-callout--warn' }); ALS.rich(c, '**' + T('Hint') + ' ' + (k + 1) + '.** ' + h); hb.appendChild(c); });
       card.appendChild(hb);
     }
     var actions = E('div', { class: 'tr-actions' });
     var isGraded = S.graded[q.id] != null;
-    var label = S.mode === 'test' ? (S.i === S.list.length - 1 ? 'Finish test' : 'Next') : (locked ? (S.i === S.list.length - 1 ? 'See results' : 'Next question') : 'Check');
+    var label = S.mode === 'test' ? (S.i === S.list.length - 1 ? T('Finish test') : T('Next')) : (locked ? (S.i === S.list.length - 1 ? T('See results') : T('Next question')) : T('Check'));
     actions.appendChild(E('button', { type: 'button', class: 'als-btn als-btn--primary', text: label, onclick: primary }));
-    if (S.mode === 'test' && S.i > 0) actions.appendChild(E('button', { type: 'button', class: 'als-btn', text: 'Back', onclick: function () { advance(-1); } }));
-    if (q.hints && used < q.hints.length && !isGraded) actions.appendChild(E('button', { type: 'button', class: 'als-btn als-btn--ghost', html: ALS.icon('bulb') + ' Hint (' + (q.hints.length - used) + ' left)', onclick: function () { S.hints[q.id] = used + 1; render(); } }));
-    if (S.mode === 'practice' && !locked && q.solution && q.solution.length && !S.steps[q.id]) actions.appendChild(E('button', { type: 'button', class: 'als-btn als-btn--ghost', text: 'Stuck? Walk me through it', onclick: function () { S.steps[q.id] = 1; S.hints[q.id] = (q.hints || []).length; render(); } }));
+    if (S.mode === 'test' && S.i > 0) actions.appendChild(E('button', { type: 'button', class: 'als-btn', text: T('Back'), onclick: function () { advance(-1); } }));
+    if (q.hints && used < q.hints.length && !isGraded) actions.appendChild(E('button', { type: 'button', class: 'als-btn als-btn--ghost', html: ALS.icon('bulb') + ' ' + T('Hint ({0} left)', q.hints.length - used), onclick: function () { S.hints[q.id] = used + 1; render(); } }));
+    if (S.mode === 'practice' && !locked && q.solution && q.solution.length && !S.steps[q.id]) actions.appendChild(E('button', { type: 'button', class: 'als-btn als-btn--ghost', text: T('Stuck? Walk me through it'), onclick: function () { S.steps[q.id] = 1; S.hints[q.id] = (q.hints || []).length; render(); } }));
     actions.appendChild(E('div', { class: 'als-spacer' }));
-    actions.appendChild(E('span', { class: 'als-faint', style: 'font-size:.75rem', html: '<span class="als-kbd">Enter</span> ' + (locked ? 'next' : 'check') }));
+    actions.appendChild(E('span', { class: 'als-faint', style: 'font-size:.75rem', html: '<span class="als-kbd">Enter</span> ' + (locked ? T('next') : T('check')) }));
     card.appendChild(actions);
     if (S.mode === 'practice' && !locked && S.steps[q.id]) card.appendChild(solutionBlock(q, false));
     if (S.mode === 'practice' && locked) card.appendChild(feedback(q));
@@ -410,12 +410,12 @@ ALS.boot(function (quiz) {
     var wrap = E('div', { class: 'tr-wrap als-stack' });
     var pass = pct / 100 >= settings.passMark;
     wrap.appendChild(E('div', { class: 'als-card als-rise' }, [
-      E('div', { class: 'als-kicker', text: S.mode === 'test' ? 'Test results' : 'Practice results' }),
+      E('div', { class: 'als-kicker', text: S.mode === 'test' ? T('Test results') : T('Practice results') }),
       E('div', { class: 'tr-score', text: pct + '%' }),
-      E('p', { class: 'als-muted', text: right + ' of ' + gradedN + ' correct' + (pending.length ? ' · ' + pending.length + ' written answers still to self-check below' : '') + ' · ' + Math.round((Date.now() - S.t0) / 60000) + ' min' }),
-      E('span', { class: 'als-chip ' + (pass ? 'als-chip--good' : 'als-chip--warn'), text: pass ? 'Above your pass mark' : 'Below your pass mark of ' + Math.round(settings.passMark * 100) + '%' })
+      E('p', { class: 'als-muted', text: T('{0} of {1} correct', right, gradedN) + (pending.length ? ' · ' + T('{0} written answers still to self-check below', pending.length) : '') + ' · ' + Math.round((Date.now() - S.t0) / 60000) + ' ' + T('min') }),
+      E('span', { class: 'als-chip ' + (pass ? 'als-chip--good' : 'als-chip--warn'), text: pass ? T('Above your pass mark') : T('Below your pass mark of {0}%', Math.round(settings.passMark * 100)) })
     ]));
-    var tp = E('div', { class: 'als-card tr-topics' }, [E('h3', { class: 'als-h3', text: 'By topic' })]);
+    var tp = E('div', { class: 'als-card tr-topics' }, [E('h3', { class: 'als-h3', text: T('By topic') })]);
     Object.keys(byTopic).sort(function (a, b) { return byTopic[a].ok / byTopic[a].n - byTopic[b].ok / byTopic[b].n; }).forEach(function (t) {
       var v = Math.round(byTopic[t].ok / byTopic[t].n * 100);
       tp.appendChild(E('div', { class: 'tr-topic' }, [E('span', { text: t }), E('div', { class: 'als-progress' }, [E('span', { style: 'width:' + v + '%;background:' + (v >= 80 ? 'var(--good)' : v >= 50 ? 'var(--warn)' : 'var(--bad)') })]), E('span', { class: 'als-mono', text: v + '%' })]));
@@ -423,16 +423,16 @@ ALS.boot(function (quiz) {
     wrap.appendChild(tp);
     var missed = S.list.filter(function (q) { return !S.graded[q.id]; });
     wrap.appendChild(E('div', { class: 'als-row' }, [
-      E('button', { type: 'button', class: 'als-btn als-btn--primary', html: ALS.icon('download') + ' Save results', onclick: function () { ALS.exportResults('quiz', resultItems(), { score: pct, mode: S.mode }); } }),
-      missed.length ? E('button', { type: 'button', class: 'als-btn', text: 'Retry ' + missed.length + ' missed', onclick: function () { S.mode = 'practice'; begin('all', 'all', missed.map(function (q) { return q.id; })); } }) : null,
-      E('button', { type: 'button', class: 'als-btn', text: 'New round', onclick: function () { S.phase = 'start'; render(); } })
+      E('button', { type: 'button', class: 'als-btn als-btn--primary', html: ALS.icon('download') + ' ' + T('Save results'), onclick: function () { ALS.exportResults('quiz', resultItems(), { score: pct, mode: S.mode }); } }),
+      missed.length ? E('button', { type: 'button', class: 'als-btn', text: T('Retry {0} missed', missed.length), onclick: function () { S.mode = 'practice'; begin('all', 'all', missed.map(function (q) { return q.id; })); } }) : null,
+      E('button', { type: 'button', class: 'als-btn', text: T('New round'), onclick: function () { S.phase = 'start'; render(); } })
     ]));
-    var rev = E('div', { class: 'tr-review' }, [E('h3', { class: 'als-h3', style: 'margin-top:1rem', text: 'Review' })]);
+    var rev = E('div', { class: 'tr-review' }, [E('h3', { class: 'als-h3', style: 'margin-top:1rem', text: T('Review') })]);
     S.list.forEach(function (q, k) {
       var c = E('details', { class: 'als-card', open: (!S.graded[q.id] && k < 12) || null });
       var g = S.graded[q.id];
       c.appendChild(E('summary', { style: 'cursor:pointer;list-style:none' }, [E('span', { class: 'als-row' }, [
-        E('span', { class: 'als-chip ' + (g === true ? 'als-chip--good' : g == null ? 'als-chip--warn' : 'als-chip--bad'), text: g === true ? 'Correct' : g == null ? 'Self-check' : 'Review' }),
+        E('span', { class: 'als-chip ' + (g === true ? 'als-chip--good' : g == null ? 'als-chip--warn' : 'als-chip--bad'), text: g === true ? T('Correct') : g == null ? T('Self-check') : T('Review') }),
         E('span', { class: 'als-rich', html: ALS.md((k + 1) + '. ' + String(q.prompt).split('\n')[0].slice(0, 140), { inline: true }) })
       ])]));
       var body = E('div', { style: 'margin-top:1rem' });
@@ -451,8 +451,20 @@ ALS.boot(function (quiz) {
     var main = E('main', { class: 'als-shell als-frame' });
     main.appendChild(S.phase === 'start' ? startView() : S.phase === 'question' ? questionView() : resultsView());
     app.appendChild(main);
+    app.appendChild(ALS.dock());
+    paintStatus();
     ALS.applyMode();
     ALS.renderMath(app);
+  }
+  function paintStatus() {
+    if (S.phase === 'start') return ALS.status([{ k: T('Questions'), v: quiz.questions.length }, { k: T('Mode'), v: T(S.mode) }]);
+    var done = S.list.filter(function (q) { return S.graded[q.id] != null; }), ok = done.filter(function (q) { return S.graded[q.id]; }).length;
+    var hints = Object.keys(S.hints).reduce(function (a, k) { return a + S.hints[k]; }, 0);
+    ALS.status([
+      { k: T('Question'), v: Math.min(S.i + 1, S.list.length) + ' / ' + S.list.length },
+      S.mode === 'practice' && done.length ? { k: T('Correct'), v: ok + ' / ' + done.length } : null,
+      { k: T('Hints'), v: hints }, { k: T('Mode'), v: T(S.mode) }
+    ]);
   }
 
   ALS.onKey({

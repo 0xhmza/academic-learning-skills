@@ -14,6 +14,10 @@ from als_lib import anki, build, paths  # noqa: E402
 
 
 def main() -> int:
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
     out_dir = ROOT / "examples" / "showcase"
     out_dir.mkdir(parents=True, exist_ok=True)
     rc = 0

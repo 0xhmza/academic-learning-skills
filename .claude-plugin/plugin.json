@@ -1,6 +1,6 @@
 {
   "name": "academic-learning-skills",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A complete study toolkit for students: module setup from lecture material, explanations, animated HTML lessons, flashcards (HTML + Anki), interactive practice and mock exams, study plans with .ics export, Moodle sync, vetted resources, and a learner profile that remembers how you study.",
   "author": {
     "name": "Hamza"

@@ -39,6 +39,10 @@ rules: `references/card-writing.md` (read before writing a deck). Format:
   `ALS progress import <file>`. Cards move through Leitner boxes (1, 2, 4, 8, 16, 32 days); "Again"
   resets to tomorrow.
 - Students using Anki schedule there instead; then skip results import.
+- One good answer is not mastery. A card is learned when it has been recalled correctly in several
+  sessions on different days, so encourage finishing the due cards before making new ones.
+- Decks in other languages: set `"lang"` (`"ar"`, `"de"`, …). Arabic decks are right-to-left on the
+  page and in the Anki export; formulas stay left-to-right.
 
 ## Edit a deck
 

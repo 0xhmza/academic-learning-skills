@@ -82,9 +82,14 @@ If it contains a durable preference ("I learn better when…"), also run **Remem
 2. Recommend **at most three** next actions, ranked by: deadlines within 3 days → due reviews → exams
    within 21 days (weak, heavily weighted topics first) → weak topics → untouched heavy topics.
    Each action names the skill and the duration: "15 min: review 23 due cards (flashcards)".
+   When a weak topic lists a prerequisite that is itself weak or untouched (`topics.json`), recommend
+   the prerequisite first; `ALS status` already words it that way.
 3. Read `modules/<id>/errors.md` for repeated misconceptions; name the pattern if one exists.
 4. Ground advice in `../../shared/references/learning-science.md`. No generic tips ("stay
    motivated"); be specific to their data.
+5. At the end of a study session, ask for a one-minute summary in the student's own words (what was
+   the main idea, what is still unclear) and offer to save it as a note. Producing the summary is part
+   of the learning, and the unclear point is the next session's start.
 
 ### Import results
 

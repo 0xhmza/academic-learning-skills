@@ -365,7 +365,11 @@ class TestLessons(TempWS):
         self.assertEqual(len(validate_data(d)[0]), 3)  # the three content slides still need their src
         for s in d["slides"][1:4]:
             s["src"] = "L3 s.1"
-        self.assertEqual(validate_data(d), ([], []))
+        errs, warns = validate_data(d)
+        self.assertEqual(errs, [])
+        self.assertEqual(len(warns), 1)  # skeleton slides carry no explanation yet
+        self.assertIn("thin slides", warns[0])
+        self.assertEqual(d["explain"], "full")
         self.assertEqual(self.run_cli("new", "lesson", str(out), "--force", "--outline", "title,nonsense"), 1)
 
     def test_build_embeds_components_and_images(self):
@@ -434,6 +438,101 @@ class TestPluginLayout(unittest.TestCase):
                     self.assertTrue((f.parent / ref).exists(), f"{f}: missing {ref}")
             for cmd_skill in re.findall(r"academic-learning-skills:([a-z-]+)", text):
                 self.assertIn(cmd_skill, skills, f"{f} points to unknown skill {cmd_skill}")
+
+
+class TestExplainAndRtl(TempWS):
+    """0.3.0: explanation on the page, maths lint, right-to-left pages, interface translations."""
+
+    def lesson(self):
+        return json.loads((ROOT / "shared/starters/lesson.json").read_text(encoding="utf-8"))
+
+    def test_thin_slides_warn_and_explained_slides_do_not(self):
+        d = {"als": "1", "kind": "lesson", "title": "T", "slides": [
+            {"layout": "points", "title": "Bare", "points": ["a", "b"]}]}
+        warns = validate_data(d)[1]
+        self.assertTrue(any("thin slides" in w for w in warns))
+        d["slides"][0]["explain"] = " ".join(["word"] * 40)
+        self.assertFalse(any("thin slides" in w for w in validate_data(d)[1]))
+        d["slides"][0].pop("explain")
+        d["explain"] = "off"
+        self.assertFalse(any("thin slides" in w for w in validate_data(d)[1]))
+
+    def test_code_slide_explain_must_be_a_list(self):
+        d = {"als": "1", "kind": "lesson", "title": "T", "slides": [
+            {"layout": "code", "code": "x = 1", "explain": "text"}]}
+        self.assertTrue(any("about" in e for e in validate_data(d)[0]))
+
+    def test_math_lint(self):
+        bs = chr(92)
+        d = {"als": "1", "kind": "sheet", "title": "T", "blocks": [
+            {"type": "section", "title": "s", "body": "Outside " + bs + "alpha here, and $x$ inside."},
+            {"type": "section", "title": "u", "body": "An unpaired $x here"},
+            {"type": "section", "title": "ok", "body": "Fine: $" + bs + "alpha$ and $$x^2$$ and 5 dollars."}]}
+        warns = chr(10).join(validate_data(d)[1])
+        self.assertIn("LaTeX outside", warns)
+        self.assertIn("unpaired $", warns)
+        self.assertEqual(warns.count("blocks[2]"), 0)
+
+    def test_rtl_page(self):
+        d = json.loads((ROOT / "examples/calculus-ar/lesson-derivative.json").read_text(encoding="utf-8"))
+        self.assertTrue(build.is_rtl(d))
+        page = build.render(d, "blueprint")
+        self.assertIn('dir="rtl"', page)
+        self.assertIn("ALS_I18N", page)
+        self.assertFalse(build.is_rtl({"lang": "en"}))
+        self.assertTrue(build.is_rtl({"lang": "en", "dir": "rtl"}))
+        self.assertFalse(build.is_rtl({"lang": "ar", "dir": "ltr"}))
+        self.assertTrue(build.is_rtl({"lang": "fa-IR"}))
+
+    def test_arabic_deck_export_is_rtl(self):
+        deck = {"als": "1", "kind": "deck", "title": "D", "lang": "ar", "cards": [{"id": "a", "type": "basic", "front": "س", "back": "ج"}]}
+        out, _ = anki.to_anki_tsv(deck, self.tmp / "ar.txt")
+        self.assertIn('dir=""rtl""', out.read_text(encoding="utf-8"))  # CSV-quoted
+        deck["lang"] = "en"
+        out, _ = anki.to_anki_tsv(deck, self.tmp / "en.txt")
+        self.assertNotIn('rtl', out.read_text(encoding="utf-8"))
+
+    def test_interface_translations_are_complete(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("i18n_keys", ROOT / "tools" / "i18n_keys.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        keys = mod.used_keys()
+        have = mod.translations()
+        self.assertIn("ar", have)
+        self.assertIn("de", have)
+        for lang, got in have.items():
+            self.assertEqual([k for k in keys if k not in got], [], lang)
+
+    def test_themes_keep_status_bar_and_rtl_fonts(self):
+        reg = themes.registry()["themes"]
+        for name, t in reg.items():
+            self.assertTrue(t.get("fontsRtl"), name)
+            css = (paths.DESIGN / (name + ".css")).read_text(encoding="utf-8")
+            self.assertIn('[dir="rtl"]', css, name)
+            self.assertIn("--status-bg", css, name)
+        self.assertEqual(themes.route("الفلسفة")[0], "folio")
+
+    def test_javascript_unit_tests(self):
+        import shutil as sh
+        import subprocess
+        node = sh.which("node")
+        if not node:
+            self.skipTest("node is not installed")
+        res = subprocess.run([node, str(ROOT / "tests" / "js" / "test_core.js")], capture_output=True, text=True)
+        self.assertEqual(res.returncode, 0, res.stdout + res.stderr)
+
+    def test_prerequisite_advice(self):
+        workspace.init(self.ws)
+        workspace.new_module(self.ws, "m", "M")
+        paths.write_json(paths.module_dir(self.ws, "m") / "topics.json", {"als": "1", "kind": "topics", "module": "m", "topics": [
+            {"id": "base", "title": "Basics", "weight": 1},
+            {"id": "adv", "title": "Advanced", "weight": 3, "prereqs": ["base"]}]})
+        progress.import_results(self.ws, {"kind": "results", "module": "m", "title": "q", "exported": "x", "date": dt.date.today().isoformat(),
+                                          "items": [{"id": "q1", "topic": "adv", "correct": False}, {"id": "q2", "topic": "base", "correct": False}]})
+        text = " ".join(report.snapshot(self.ws)["next"])
+        self.assertIn("builds on", text)
+        self.assertIn("Basics", text)
 
 
 if __name__ == "__main__":

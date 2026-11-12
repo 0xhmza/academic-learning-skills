@@ -1,70 +1,96 @@
 /* Ledger: economics, business, law, politics, social science, education.
-   Sober and structured: Libre Franklin body, Source Serif display, navy and burgundy,
-   tabular figures, strong horizontal rules, nearly square corners. */
+   The financial pages: DM Serif Display headlines over DM Sans text, salmon newsprint, Oxford-blue ink with
+   a claret second accent, section labels in small bold capitals with a short rule above each headline,
+   square clipping-style cards, tabular figures everywhere. */
 
 [data-als-theme="ledger"] {
-  --font-body: "Libre Franklin", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --font-display: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --font-body: "DM Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "DM Serif Display", "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-mono: "DM Mono", ui-monospace, Consolas, monospace;
   --font-features: "tnum", "lnum";
-  --display-weight: 650;
+  --display-weight: 400;
   --display-tracking: -0.012em;
   --kicker-font: var(--font-body);
-  --kicker-tracking: .16em;
+  --kicker-tracking: .13em;
+  --kicker-size: .6875rem;
+  --kicker-weight: 700;
+  --kicker-color: var(--accent-2);
   --radius: 3px;
   --radius-sm: 2px;
   --radius-btn: 2px;
+  --radius-chip: 2px;
 
-  --bg: #fafaf8;
-  --bg-elev: #ffffff;
-  --bg-sunken: #f2f2ee;
-  --text: #161b26;
-  --text-strong: #0b0f17;
-  --text-muted: #525a6a;
-  --text-faint: #8b92a0;
-  --border: #e3e3dd;
-  --border-strong: #c9c9c0;
-  --accent: #1f3a5f;
-  --accent-hover: #162b47;
+  --bg: #fbf0e6;
+  --bg-elev: #fff9f3;
+  --bg-sunken: #f4e5d6;
+  --text: #201b17;
+  --text-strong: #100d0b;
+  --text-muted: #5f554c;
+  --text-faint: #978a7e;
+  --border: #ead9c7;
+  --border-strong: #d3bfaa;
+  --accent: #17406f;
+  --accent-hover: #0f3059;
   --accent-contrast: #ffffff;
-  --accent-text: #1f3a5f;
-  --accent-soft: rgb(31 58 95 / .08);
-  --accent-2: #9b2c2c;
-  --good: #2f6b3a;   --good-text: #285c31;  --good-soft: rgb(47 107 58 / .10);
-  --bad: #a61b1b;    --bad-text: #8f1717;   --bad-soft: rgb(166 27 27 / .08);
-  --warn: #9a6700;   --warn-text: #7d5400;  --warn-soft: rgb(154 103 0 / .10);
+  --accent-text: #17406f;
+  --accent-soft: rgb(23 64 111 / .09);
+  --accent-2: #8f1f3f;
+  --good: #2c7343;   --good-text: #23603a;  --good-soft: rgb(44 115 67 / .12);
+  --bad: #b3261e;    --bad-text: #991f18;   --bad-soft: rgb(179 38 30 / .09);
+  --warn: #9a6200;   --warn-text: #7d5000;  --warn-soft: rgb(154 98 0 / .12);
   --shadow: none;
   --pattern: none;
-  --code-bg: #f2f2ee;
+  --status-bg: #f4e5d6;
+  --code-bg: #f4e5d6;
+  --code-keyword: #8f1f3f;
+  --code-string: #23603a;
+  --code-number: #17406f;
 }
 
 [data-als-theme="ledger"][data-als-mode="dark"] {
-  --bg: #0f141c;
-  --bg-elev: #151c27;
-  --bg-sunken: #0c1118;
-  --text: #e7e9ee;
-  --text-strong: #ffffff;
-  --text-muted: #a2aab8;
-  --text-faint: #687183;
-  --border: #232c3a;
-  --border-strong: #334055;
-  --accent: #8fb3e8;
-  --accent-hover: #b0caf0;
-  --accent-contrast: #0f141c;
-  --accent-text: #a9c5ee;
-  --accent-soft: rgb(143 179 232 / .13);
-  --accent-2: #e59a9a;
-  --good: #7cc48a;   --good-text: #9dd6a8;  --good-soft: rgb(124 196 138 / .12);
-  --bad: #f08a8a;    --bad-text: #f5a8a8;   --bad-soft: rgb(240 138 138 / .12);
-  --warn: #e8b85a;   --warn-text: #f0cc84;  --warn-soft: rgb(232 184 90 / .12);
-  --code-bg: #0c1118;
+  --bg: #15110e;
+  --bg-elev: #1d1814;
+  --bg-sunken: #100d0a;
+  --text: #efe7df;
+  --text-strong: #fffaf4;
+  --text-muted: #b5a99d;
+  --text-faint: #7f7469;
+  --border: #302923;
+  --border-strong: #473d34;
+  --accent: #8db8ea;
+  --accent-hover: #b0cdf1;
+  --accent-contrast: #0e141c;
+  --accent-text: #a5c6ee;
+  --accent-soft: rgb(141 184 234 / .14);
+  --accent-2: #ea93a8;
+  --good: #7cc48f;   --good-text: #9bd6ab;  --good-soft: rgb(124 196 143 / .13);
+  --bad: #f08e85;    --bad-text: #f6aaa2;   --bad-soft: rgb(240 142 133 / .13);
+  --warn: #e5b45c;   --warn-text: #efc983;  --warn-soft: rgb(229 180 92 / .13);
+  --status-bg: #100d0a;
+  --code-bg: #100d0a;
+  --code-keyword: #ea93a8;
+  --code-string: #9bd6ab;
+  --code-number: #a5c6ee;
 }
 
-/* Motif: heavy top rules on headings and cards, uppercase muted labels, tabular data feel. */
-[data-als-theme="ledger"] .als-h2 { border-top: 2px solid var(--text-strong); padding-top: .6rem; }
-[data-als-theme="ledger"] .als-card { border-top: 2px solid var(--text-strong); }
-[data-als-theme="ledger"] .als-kicker { color: var(--accent-2); font-weight: 600; }
-[data-als-theme="ledger"] .als-chip { border-radius: 2px; }
-[data-als-theme="ledger"] .als-grad { color: var(--accent); }
-[data-als-theme="ledger"] .als-callout { border-left-width: 4px; }
-[data-als-theme="ledger"] .als-btn--primary { text-transform: uppercase; letter-spacing: .08em; font-size: .8125rem; font-weight: 600; }
+/* Arabic and other right-to-left scripts: Noto Kufi headlines, Noto Sans Arabic text. */
+[data-als-theme="ledger"][dir="rtl"] {
+  --font-body: "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --font-display: "Noto Kufi Arabic", "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --display-weight: 700;
+}
+
+/* Motifs */
+[data-als-theme="ledger"] .als-h1 { line-height: 1.06; }
+[data-als-theme="ledger"] .als-h2::before { content: ""; display: block; width: 2.25rem; height: 3px; background: var(--accent-2); margin-bottom: .7rem; }
+[data-als-theme="ledger"] .als-grad, [data-als-theme="ledger"] .als-h1 em, [data-als-theme="ledger"] .als-h2 em { color: var(--accent-2); font-style: italic; }
+[data-als-theme="ledger"] .als-sub { font-size: 1.125rem; }
+[data-als-theme="ledger"] .als-card { border-color: var(--border-strong); }
+[data-als-theme="ledger"] .als-callout { border-inline-start-width: 3px; }
+[data-als-theme="ledger"] .als-btn { font-weight: 600; }
+[data-als-theme="ledger"] .als-btn--primary { background: var(--text-strong); border-color: var(--text-strong); color: var(--bg); }
+[data-als-theme="ledger"] .als-btn--primary:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); filter: none; }
+[data-als-theme="ledger"] .als-topbar { border-bottom: 1px solid var(--text-strong); }
+[data-als-theme="ledger"] .als-brand-title { font-size: 1.1rem; }
+[data-als-theme="ledger"] .als-divider { border-top: 1px solid var(--text-strong); }
+[data-als-theme="ledger"] th { font-family: var(--font-body); }

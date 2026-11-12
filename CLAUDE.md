@@ -13,13 +13,15 @@ hooks/                 SessionStart hook: prints workspace status when a study/ 
 shared/
   scripts/als.py       CLI entry point; logic in shared/scripts/als_lib/
   templates/           core.js + one HTML template per kind (deck, lesson, quiz, exam, sheet, dashboard);
+                       i18n.js = interface translations (English text is the key; ar, de);
                        viz.js = visual components for lessons (ids mirrored in als_lib/viz_ids.py)
   design-systems/      base.css (component contract), <theme>.css, themes.json (registry + routing)
   schemas/             JSON Schemas per kind + common.md
   starters/            one valid example data file per kind (what Claude copies)
   references/          shared guidance read by several skills
 examples/<module>/     showcase data; examples/showcase/ holds built pages (python tools/build_examples.py)
-tests/                 unittest suite
+tests/                 unittest suite; tests/js/ = Node tests for core.js (maths conversion, i18n)
+tools/                 build_examples.py, i18n_keys.py (translation coverage)
 ```
 
 ## Conventions
@@ -34,6 +36,13 @@ tests/                 unittest suite
 - **Visual components** (`viz.js`): when ids or auto steps change, change `als_lib/viz_ids.py`, the
   schema and `skills/visual-lesson/references/components.md` with them.
 - **Rich text** is rendered by `ALS.md` (core.js) and `richtext.py` (Anki); keep them in sync when adding syntax.
+- **Interface text:** every user-visible string in a template goes through `T('English text')`; add it to
+  every language in `i18n.js` (`python tools/i18n_keys.py` lists gaps; a test fails on them).
+- **Right-to-left:** use logical CSS (`inline-start`, `text-align: start`, `padding-inline-*`), never
+  `left`/`right`, so pages mirror; keep maths, code and drawings `direction: ltr`.
+- **Panels:** wrap a hideable region with `ALS.panel(id, node)`; the status bar and handles pick it up.
+- **Shell quoting:** files with LaTeX backslashes must be written with the file tool; shell heredocs
+  and `python -c` strings can halve them.
 - **Data format changes** need: schema update, starter update, semantic checks in `validate.py` if needed,
   template support, `shared/references/data-formats.md`, and a test.
 - **Python:** standard library only (genanki optional), 3.9+. Write files with `encoding="utf-8"`.

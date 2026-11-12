@@ -48,6 +48,21 @@ def _deck_name(deck: dict) -> str:
     return f"{deck['module']}::{title}" if deck.get("module") else title
 
 
+RTL_LANGS = {"ar", "he", "fa", "ur", "ps", "sd", "ckb", "yi", "dv", "ug"}
+
+
+def _rtl(deck: dict) -> bool:
+    if deck.get("dir") in ("rtl", "ltr"):
+        return deck["dir"] == "rtl"
+    return str(deck.get("lang") or "en").split("-")[0].lower() in RTL_LANGS
+
+
+def _field(deck: dict, text: str | None) -> str:
+    """Rich text as card HTML; right-to-left decks get a dir wrapper so Anki aligns them correctly."""
+    h = to_html(text)
+    return f'<div dir="rtl">{h}</div>' if h and _rtl(deck) else h
+
+
 def has_genanki() -> bool:
     try:
         import genanki  # noqa: F401
@@ -96,10 +111,10 @@ def to_apkg(deck: dict, out: Path) -> tuple[Path, int]:
         guid = genanki.guid_for("als", deck.get("module") or "", deck["title"], c["id"])
         src = c.get("src", "")
         if c["type"] == "cloze":
-            note = genanki.Note(model=cloze, fields=[to_html(c["text"]), to_html(c.get("extra")), src], tags=_tags(c, deck.get("module")), guid=guid)
+            note = genanki.Note(model=cloze, fields=[_field(deck, c["text"]), _field(deck, c.get("extra")), src], tags=_tags(c, deck.get("module")), guid=guid)
         else:
             model = reverse if c["type"] == "reverse" else basic
-            note = genanki.Note(model=model, fields=[to_html(c["front"]), to_html(c["back"]), to_html(c.get("extra")), src], tags=_tags(c, deck.get("module")), guid=guid)
+            note = genanki.Note(model=model, fields=[_field(deck, c["front"]), _field(deck, c["back"]), _field(deck, c.get("extra")), src], tags=_tags(c, deck.get("module")), guid=guid)
         gdeck.add_note(note)
     out.parent.mkdir(parents=True, exist_ok=True)
     genanki.Package(gdeck).write_to_file(str(out))
@@ -115,10 +130,10 @@ def to_anki_tsv(deck: dict, out: Path) -> tuple[Path, int]:
     for c in deck["cards"]:
         tags = " ".join(_tags(c, deck.get("module")))
         if c["type"] == "cloze":
-            w.writerow(["Cloze", name, to_html(c["text"]), to_html(c.get("extra")), c.get("src", ""), tags])
+            w.writerow(["Cloze", name, _field(deck, c["text"]), _field(deck, c.get("extra")), c.get("src", ""), tags])
         else:
             nt = "Basic (and reversed card)" if c["type"] == "reverse" else "Basic"
-            w.writerow([nt, name, to_html(c["front"]), to_html(c["back"]), c.get("src", ""), tags])
+            w.writerow([nt, name, _field(deck, c["front"]), _field(deck, c["back"]), c.get("src", ""), tags])
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(buf.getvalue(), encoding="utf-8")
     return out, len(deck["cards"])

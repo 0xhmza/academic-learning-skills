@@ -1,82 +1,110 @@
 /* Folio: philosophy, literature, history, languages, arts.
-   Editorial book typography: Garamond body, Cormorant display, paper tones, oxblood ink,
-   small-caps labels, ornamented dividers, square corners. */
+   A modern literary quarterly: Fraunces headlines (soft, optical-size serif), Newsreader text set large with
+   generous leading, warm paper, plum ink with an ochre second accent, hairline rules, ink-black primary
+   buttons. No textures, no ornaments: the typography carries it. */
 
 [data-als-theme="folio"] {
-  --font-body: "EB Garamond", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --font-display: "Cormorant Garamond", "EB Garamond", "Palatino Linotype", Georgia, serif;
+  --font-body: "Newsreader", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-display: "Fraunces", "Newsreader", "Iowan Old Style", Georgia, serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
-  --font-size: 18.5px;
-  --font-features: "kern", "liga", "onum";
-  --display-weight: 600;
-  --display-tracking: -0.005em;
+  --font-size: 1.125rem;
+  --leading: 1.68;
+  --font-features: "kern", "liga", "onum", "pnum";
+  --display-weight: 560;
+  --display-tracking: -0.022em;
   --kicker-font: var(--font-body);
-  --kicker-transform: lowercase;
-  --kicker-variant: small-caps;
-  --kicker-tracking: .14em;
-  --radius: 4px;
-  --radius-sm: 3px;
-  --radius-btn: 3px;
-  --shell-max: 64rem;
+  --kicker-tracking: .16em;
+  --kicker-size: .7rem;
+  --kicker-weight: 600;
+  --radius: 6px;
+  --radius-sm: 4px;
+  --radius-btn: 4px;
+  --radius-chip: 4px;
+  --shell-max: 74rem;
 
-  --bg: #f7f3ea;
-  --bg-elev: #fbf8f1;
-  --bg-sunken: #efe8d9;
-  --text: #2a241e;
-  --text-strong: #1c1712;
-  --text-muted: #6b5e50;
-  --text-faint: #9c8f7f;
-  --border: #e3d9c6;
-  --border-strong: #cdbfa5;
-  --accent: #8c2f2b;
-  --accent-hover: #74231f;
-  --accent-contrast: #fbf8f1;
-  --accent-text: #7a2622;
-  --accent-soft: rgb(140 47 43 / .09);
-  --accent-2: #a0712a;
-  --good: #4d7a3a;   --good-text: #3f6630;  --good-soft: rgb(77 122 58 / .12);
-  --bad: #a33a2e;    --bad-text: #8e2f24;   --bad-soft: rgb(163 58 46 / .10);
-  --warn: #a8741a;   --warn-text: #8a5f12;  --warn-soft: rgb(168 116 26 / .12);
-  --shadow: 0 1px 0 rgb(80 60 30 / .06);
-  --pattern: radial-gradient(rgb(90 60 20 / .035) 1px, transparent 1.2px);
-  --pattern-size: 5px 5px;
-  --code-bg: #efe8d9;
+  --bg: #fbf8f2;
+  --bg-elev: #fffdf9;
+  --bg-sunken: #f3eee4;
+  --text: #221d18;
+  --text-strong: #15110d;
+  --text-muted: #675c50;
+  --text-faint: #9d9183;
+  --border: #e7dfd1;
+  --border-strong: #d0c5b3;
+  --accent: #7a3e6f;
+  --accent-hover: #63315a;
+  --accent-contrast: #fffdf9;
+  --accent-text: #6e3764;
+  --accent-soft: rgb(122 62 111 / .09);
+  --accent-2: #a9691f;
+  --good: #3f6f3a;   --good-text: #345d30;  --good-soft: rgb(63 111 58 / .11);
+  --bad: #b0352b;    --bad-text: #972c23;   --bad-soft: rgb(176 53 43 / .09);
+  --warn: #a9691f;   --warn-text: #8a5516;  --warn-soft: rgb(169 105 31 / .12);
+  --shadow: none;
+  --pattern: none;
+  --status-bg: #f3eee4;
+  --code-bg: #f3eee4;
+  --code-keyword: #7a3e6f;
+  --code-string: #3f6f3a;
+  --code-number: #a9691f;
 }
 
 [data-als-theme="folio"][data-als-mode="dark"] {
-  --bg: #1a1613;
-  --bg-elev: #221d19;
-  --bg-sunken: #15110f;
-  --text: #ece3d3;
-  --text-strong: #f7efe1;
-  --text-muted: #b3a691;
-  --text-faint: #7d715f;
-  --border: #352d26;
-  --border-strong: #4a3f35;
-  --accent: #d88a6c;
-  --accent-hover: #e8a487;
-  --accent-contrast: #1a1613;
-  --accent-text: #e9a588;
-  --accent-soft: rgb(216 138 108 / .14);
-  --accent-2: #d4a95a;
-  --good: #9cc27f;   --good-text: #b5d69c;  --good-soft: rgb(156 194 127 / .13);
-  --bad: #e08a7a;    --bad-text: #eba597;   --bad-soft: rgb(224 138 122 / .13);
-  --warn: #e0b25e;   --warn-text: #ecc884;  --warn-soft: rgb(224 178 94 / .13);
-  --shadow: none;
-  --pattern: radial-gradient(rgb(255 240 210 / .025) 1px, transparent 1.2px);
-  --code-bg: #15110f;
+  --bg: #171416;
+  --bg-elev: #1f1b1e;
+  --bg-sunken: #121011;
+  --text: #ebe4dc;
+  --text-strong: #f8f2ea;
+  --text-muted: #b0a59b;
+  --text-faint: #7b7169;
+  --border: #322c30;
+  --border-strong: #483f45;
+  --accent: #d59ac6;
+  --accent-hover: #e3b4d7;
+  --accent-contrast: #1b141a;
+  --accent-text: #e0add2;
+  --accent-soft: rgb(213 154 198 / .14);
+  --accent-2: #d9a85c;
+  --good: #9bc48f;   --good-text: #b3d6a9;  --good-soft: rgb(155 196 143 / .13);
+  --bad: #e8897d;    --bad-text: #f0a49a;   --bad-soft: rgb(232 137 125 / .13);
+  --warn: #d9a85c;   --warn-text: #e6bf82;  --warn-soft: rgb(217 168 92 / .13);
+  --status-bg: #121011;
+  --code-bg: #121011;
+  --code-keyword: #e0add2;
+  --code-string: #b3d6a9;
+  --code-number: #e6bf82;
 }
 
-/* Motif: italic subtitles, ornamented dividers, drop caps, hanging quotes. */
-[data-als-theme="folio"] .als-sub { font-style: italic; font-size: 1.125rem; }
-[data-als-theme="folio"] .als-h1 { font-weight: 600; line-height: 1.05; }
-[data-als-theme="folio"] .als-divider { border: 0; text-align: center; margin: 2rem 0; height: auto; }
-[data-als-theme="folio"] .als-divider::before { content: "\2766"; color: var(--accent); font-size: 1.1rem; letter-spacing: 1rem; }
-[data-als-theme="folio"] .als-dropcap > p:first-child::first-letter {
-  float: left; font-family: var(--font-display); font-size: 3.6em; line-height: .82; padding: .06em .08em 0 0; color: var(--accent); font-weight: 600;
+/* Arabic and other right-to-left scripts: Amiri headlines, Noto Naskh text. */
+[data-als-theme="folio"][dir="rtl"] {
+  --font-body: "Noto Naskh Arabic", "Amiri", "Traditional Arabic", "Times New Roman", serif;
+  --font-display: "Amiri", "Noto Naskh Arabic", "Traditional Arabic", serif;
+  --font-size: 1.2rem;
+  --display-weight: 700;
 }
+
+/* Motifs */
+[data-als-theme="folio"] .als-h1 { font-variation-settings: "opsz" 144, "SOFT" 50; line-height: 1.04; }
+[data-als-theme="folio"] .als-h2 { font-variation-settings: "opsz" 72, "SOFT" 50; }
+[data-als-theme="folio"] .als-grad, [data-als-theme="folio"] .als-h1 em, [data-als-theme="folio"] .als-h2 em { color: var(--accent-text); font-style: italic; font-weight: 480; }
+[data-als-theme="folio"] .als-sub { font-style: italic; font-size: 1.2rem; line-height: 1.5; }
+[data-als-theme="folio"] .als-kicker { display: inline-flex; align-items: center; gap: .6em; font-feature-settings: "lnum"; }
+[data-als-theme="folio"] .als-kicker::before { content: ""; width: 1.5rem; height: 1px; background: currentColor; opacity: .7; }
 [data-als-theme="folio"] .als-card { border-color: var(--border); }
-[data-als-theme="folio"] .als-btn { font-family: var(--font-body); letter-spacing: .02em; }
-[data-als-theme="folio"] .als-btn--primary { font-variant: small-caps; letter-spacing: .08em; }
-[data-als-theme="folio"] .als-grad { color: var(--accent); font-style: italic; }
-[data-als-theme="folio"] .als-kicker::before, [data-als-theme="folio"] .als-kicker::after { content: "\2014"; margin: 0 .4em; opacity: .6; }
+[data-als-theme="folio"] .als-callout { border: 0; border-inline-start: 2px solid var(--accent); border-radius: 0; background: transparent; padding: .25rem 0 .25rem 1.1rem; padding-inline: 1.1rem 0; }
+[data-als-theme="folio"] .als-callout--good, [data-als-theme="folio"] .als-callout--bad, [data-als-theme="folio"] .als-callout--warn, [data-als-theme="folio"] .als-callout--info { border-radius: var(--radius-sm); padding: .75rem 1.1rem; }
+[data-als-theme="folio"] .als-callout--good { background: var(--good-soft); border-inline-start-color: var(--good); }
+[data-als-theme="folio"] .als-callout--bad { background: var(--bad-soft); border-inline-start-color: var(--bad); }
+[data-als-theme="folio"] .als-callout--warn { background: var(--warn-soft); border-inline-start-color: var(--warn); }
+[data-als-theme="folio"] .als-callout--info { background: var(--accent-soft); }
+[data-als-theme="folio"] .als-btn { font-family: var(--font-body); font-size: 1rem; }
+[data-als-theme="folio"] .als-btn--primary { background: var(--text-strong); border-color: var(--text-strong); color: var(--bg); }
+[data-als-theme="folio"] .als-btn--primary:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); filter: none; }
+[data-als-theme="folio"] .als-divider { border: 0; height: auto; margin: 2.25rem 0; text-align: center; }
+[data-als-theme="folio"] .als-divider::before { content: "\00b7\2002\00b7\2002\00b7"; color: var(--text-faint); font-size: 1.25rem; }
+[data-als-theme="folio"] .als-dropcap > p:first-child::first-letter {
+  float: inline-start; font-family: var(--font-display); font-size: 3.7em; line-height: .8; padding: .08em .1em 0 0; color: var(--accent-text); font-weight: 560;
+}
+[data-als-theme="folio"][dir="rtl"] .als-dropcap > p:first-child::first-letter { float: none; font-size: inherit; padding: 0; color: inherit; }
+[data-als-theme="folio"][dir="rtl"] .als-sub { font-style: normal; }
+[data-als-theme="folio"] .als-rich a { text-decoration-thickness: 1px; }

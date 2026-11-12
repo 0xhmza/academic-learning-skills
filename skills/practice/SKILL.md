@@ -30,12 +30,23 @@ After each answer: verdict, the key reason, and the next question. Use worked-ex
 twice on a type, show a full worked example, then a near-identical problem, then a fresh one. Stop after
 ~10 questions or on request; summarise and log mistakes.
 
+Three habits that make a drill teach more:
+
+- **Diagnose first.** On a topic the student has not practised, open with 2–3 questions before any
+  explanation. A wrong first attempt, followed by feedback, improves what is learned next.
+- **Ask for confidence** on about one question in three ("sure, fairly sure or guessing?") before
+  giving the verdict. Point out confident errors: they are the ones worth a line in `errors.md`.
+- **Ask why.** After a correct answer to a core question, ask once in a while why the method applies
+  here or what would change if a condition were dropped.
+
 ### Trainer (interactive HTML)
 
 1. `ALS new quiz modules/<id>/data/quiz-<scope>.json --title "…" --module <id> --subject "…"`.
 2. Write 8–20 questions: roughly 30% warm-up (difficulty 1), 50% core (2), 20% challenge (3); mix
    types; every question has `topic`, `explain` or `solution` (or both), and 1–3 graded `hints`.
-   Numeric questions always get a `tolerance` and `unit`.
+   Numeric questions always get a `tolerance` and `unit`. Include one or two find-the-error questions
+   (a worked solution with one wrong step) per set. For a set in another language set `"lang"`
+   (`"ar"` gives a right-to-left page with Arabic interface text).
 3. `settings.mode`: `practice` (feedback after each question) or `test` (feedback at the end; set
    `timeLimitMin` for timed tests).
 4. `ALS build …`. The page exports results ("Save results"); import with

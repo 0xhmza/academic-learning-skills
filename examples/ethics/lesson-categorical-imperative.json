@@ -6,46 +6,230 @@
   "module": "ethics",
   "subject": "Philosophy: ethics",
   "sources": [
-    { "id": "G", "title": "Kant, Groundwork of the Metaphysic of Morals (1785), tr. T. K. Abbott (1895)", "locator": "Academy pagination 4:389-445" },
-    { "id": "L4", "title": "Lecture 4: Kantian ethics", "locator": "slides 1-28" }
+    {
+      "id": "G",
+      "title": "Kant, Groundwork of the Metaphysic of Morals (1785), tr. T. K. Abbott (1895)",
+      "locator": "Academy pagination 4:389-445"
+    },
+    {
+      "id": "L4",
+      "title": "Lecture 4: Kantian ethics",
+      "locator": "slides 1-28"
+    }
   ],
   "slides": [
-    { "layout": "title", "title": "Kant's *categorical* imperative", "subtitle": "A test for maxims that does not appeal to consequences", "kicker": "Ethics · Lecture 4" },
-    { "layout": "compare", "title": "Two kinds of *ought*", "columns": [
-      { "heading": "Hypothetical imperative", "points": ["*If you want X, do Y.*", "Binds only those who want X", "Instrumental: about means to ends", "\"If you want to pass, revise.\""] },
-      { "heading": "Categorical imperative", "points": ["*Do Y.* Full stop.", "Binds every rational agent", "Unconditional: about the form of the will", "\"Do not make false promises.\""] }
-    ], "src": "G 4:414-416" },
-    { "layout": "definition", "kind": "Key term", "term": "Maxim", "definition": "The subjective principle on which a person acts: *in situation S, I will do A in order to achieve E*.", "example": "\"When I need money, I will borrow it and promise to repay, although I know I never can.\"", "src": "G 4:421n" },
-    { "layout": "quote", "quote": "Act only on that maxim whereby thou canst at the same time will that it should become a universal law.", "by": "Kant, *Groundwork* 4:421 (Abbott tr.)", "comment": "The **Formula of Universal Law** (FUL). It tests a maxim, not an outcome.", "src": "G 4:421" },
-    { "layout": "steps", "title": "The false promise, step by step", "steps": [
-      { "text": "**1. Formulate the maxim.** When in need of money, I will promise to repay a loan I know I cannot repay." },
-      { "text": "**2. Universalise it.** Imagine a world where *everyone* in need makes such promises, as a law of nature." },
-      { "text": "**3. Follow it through.** In that world no one would believe a promise of repayment." },
-      { "text": "**4. Find the contradiction.** Then my promise could not work as a promise: the maxim undermines itself." },
-      { "text": "**5. Conclude.** The maxim cannot even be *conceived* as universal law, so acting on it is forbidden: a **perfect duty**." }
-    ], "notes": "Stress that the problem is not bad consequences but self-defeat: the universalised practice destroys the institution the maxim relies on.", "src": "G 4:422" },
-    { "layout": "compare", "title": "Two ways a maxim can fail", "columns": [
-      { "heading": "Contradiction in conception", "points": ["The universalised maxim cannot even be thought consistently", "Grounds **perfect** duties (no exceptions for inclination)", "Kant's examples: false promising, suicide from self-love"] },
-      { "heading": "Contradiction in the will", "points": ["Conceivable, but a rational agent cannot *will* it", "Grounds **imperfect** duties (latitude in how and when)", "Kant's examples: neglecting one's talents, refusing to help others"] }
-    ], "src": "G 4:424; L4 s.14" },
-    { "layout": "check", "question": "Which of these is a **hypothetical** imperative?", "options": ["Do not lie.", "If you want to be trusted, keep your promises.", "Treat humanity never merely as a means.", "Act only on maxims you could will as universal law."], "answer": 1, "explain": "It binds only on the condition that you want to be trusted. The others claim to bind unconditionally." },
-    { "layout": "definition", "kind": "Second formulation", "term": "Formula of Humanity", "definition": "\"So act as to treat humanity, whether in thine own person or in that of any other, in every case as an end withal, never as means only.\" (4:429)", "example": "The false promiser uses the lender **merely** as a means: the lender cannot consent to a deal whose real terms are hidden from them.", "src": "G 4:429" },
-    { "layout": "timeline", "title": "Where this sits in Kant's work", "events": [
-      { "when": "1781", "what": "*Critique of Pure Reason*: the limits of theoretical knowledge" },
-      { "when": "1785", "what": "*Groundwork of the Metaphysics of Morals*: the categorical imperative" },
-      { "when": "1788", "what": "*Critique of Practical Reason*: freedom and the moral law" },
-      { "when": "1797", "what": "*Metaphysics of Morals*; the essay *On a Supposed Right to Lie*" }
-    ], "grounded": false },
-    { "layout": "compare", "title": "Two classic objections", "columns": [
-      { "heading": "Rigorism: the murderer at the door", "points": ["Lying to save a friend seems right, yet the FUL appears to forbid it", "Constant raised it; Kant (1797) bit the bullet", "Reply: refine the maxim's description, or give the Formula of Humanity priority"] },
-      { "heading": "Empty formalism", "points": ["Any maxim can be redescribed so that it universalises", "Hegel: the test yields no content by itself", "Reply: maxims must state the agent's *actual* reasons, not gerrymandered ones"] }
-    ], "src": "L4 s.22-26" },
-    { "layout": "check", "question": "Why, for Kant, is the false promise wrong?", "options": ["Because if everyone did it, the results would be bad.", "Because the universalised maxim defeats itself.", "Because God forbids lying.", "Because it makes the promiser unhappy."], "answer": 1, "explain": "The test is about consistency, not consequences: universal false promising makes promising impossible, so the maxim cannot be willed as law. Answer A is the most common misreading." },
-    { "layout": "summary", "title": "Remember", "points": [
-      "Categorical imperatives bind unconditionally; hypothetical ones depend on what you want.",
-      "FUL tests **maxims** for self-defeat when universalised, not outcomes.",
-      "Conception → perfect duties; will → imperfect duties.",
-      "Formula of Humanity: never treat persons **merely** as means."
-    ] }
-  ]
+    {
+      "layout": "title",
+      "title": "Kant's *categorical* imperative",
+      "subtitle": "A test for maxims that does not appeal to consequences",
+      "kicker": "Ethics · Lecture 4"
+    },
+    {
+      "layout": "objectives",
+      "title": "After this lesson you can",
+      "points": [
+        "explain the difference between hypothetical and categorical imperatives",
+        "state a maxim and apply the Formula of Universal Law to it",
+        "distinguish contradiction in conception from contradiction in the will",
+        "give the Formula of Humanity and one objection to Kant's view"
+      ],
+      "src": "L4 s.2"
+    },
+    {
+      "layout": "compare",
+      "title": "Two kinds of *ought*: conditional and unconditional",
+      "columns": [
+        {
+          "heading": "Hypothetical imperative",
+          "points": [
+            "*If you want X, do Y.*",
+            "Binds only those who want X",
+            "Instrumental: about means to ends",
+            "\"If you want to pass, revise.\""
+          ],
+          "text": "Advice about the means to an end you may or may not have."
+        },
+        {
+          "heading": "Categorical imperative",
+          "points": [
+            "*Do Y.* Full stop.",
+            "Binds every rational agent",
+            "Unconditional: about the form of the will",
+            "\"Do not make false promises.\""
+          ],
+          "text": "A demand that holds for every rational agent, whatever they want."
+        }
+      ],
+      "src": "G 4:414-416",
+      "lead": "Kant begins by separating commands that depend on what you want from commands that bind you whatever you want.",
+      "explain": "A hypothetical imperative gives advice: if you want to pass, revise. Drop the goal and the command lapses. A categorical imperative has no *if*. Kant argues that moral duties must be of this second kind: if keeping a promise mattered only when you happened to want something, it would be prudence, not morality.",
+      "takeaway": "Moral duties, for Kant, are categorical: they do not depend on your wishes."
+    },
+    {
+      "layout": "definition",
+      "kind": "Key term",
+      "term": "Maxim",
+      "definition": "The subjective principle on which a person acts: *in situation S, I will do A in order to achieve E*.",
+      "example": "\"When I need money, I will borrow it and promise to repay, although I know I never can.\"",
+      "src": "G 4:421n",
+      "explain": "The test that follows is not applied to an action but to the principle behind it. Two people can do the same thing for different reasons; only the reason, the maxim, is judged. So the first task in any application is to state the maxim honestly, including the situation and the purpose.",
+      "intuition": "Think of a maxim as the sentence you would give if someone asked: what rule are you following here, and why?"
+    },
+    {
+      "layout": "quote",
+      "quote": "Act only on that maxim whereby thou canst at the same time will that it should become a universal law.",
+      "by": "Kant, *Groundwork* 4:421 (Abbott tr.)",
+      "comment": "The **Formula of Universal Law** (FUL). It tests a maxim, not an outcome.",
+      "src": "G 4:421",
+      "explain": "The sentence has two halves. First, imagine your maxim as a law that everyone follows. Second, ask whether you could still will it, that is, want it, in that situation. The test fails when the universalised maxim contradicts itself or contradicts what any rational agent wills."
+    },
+    {
+      "layout": "steps",
+      "title": "The false promise, step by step",
+      "steps": [
+        {
+          "text": "**1. Formulate the maxim.** When in need of money, I will promise to repay a loan I know I cannot repay."
+        },
+        {
+          "text": "**2. Universalise it.** Imagine a world where *everyone* in need makes such promises, as a law of nature."
+        },
+        {
+          "text": "**3. Follow it through.** In that world no one would believe a promise of repayment."
+        },
+        {
+          "text": "**4. Find the contradiction.** Then my promise could not work as a promise: the maxim undermines itself."
+        },
+        {
+          "text": "**5. Conclude.** The maxim cannot even be *conceived* as universal law, so acting on it is forbidden: a **perfect duty**."
+        }
+      ],
+      "notes": "Stress that the problem is not bad consequences but self-defeat: the universalised practice destroys the institution the maxim relies on.",
+      "src": "G 4:422",
+      "lead": "Kant's standard example runs the test on a promise made without any intention of keeping it.",
+      "explain": "Notice where the argument breaks. It does not say the result would be bad. It says the practice of promising would disappear if everyone broke promises when convenient, and then the false promiser's own maxim could not work, because it relies on others believing promises. The maxim defeats itself.",
+      "result": "The maxim fails the test, so acting on it is forbidden."
+    },
+    {
+      "layout": "compare",
+      "title": "Two ways a maxim can fail",
+      "columns": [
+        {
+          "heading": "Contradiction in conception",
+          "points": [
+            "The universalised maxim cannot even be thought consistently",
+            "Grounds **perfect** duties (no exceptions for inclination)",
+            "Kant's examples: false promising, suicide from self-love"
+          ],
+          "text": "The maxim cannot be thought as a universal law without contradiction."
+        },
+        {
+          "heading": "Contradiction in the will",
+          "points": [
+            "Conceivable, but a rational agent cannot *will* it",
+            "Grounds **imperfect** duties (latitude in how and when)",
+            "Kant's examples: neglecting one's talents, refusing to help others"
+          ],
+          "text": "The maxim can be thought, but could not consistently be willed."
+        }
+      ],
+      "src": "G 4:424; L4 s.14",
+      "lead": "Kant distinguishes two ways a universalised maxim can fail, and links each to a kind of duty.",
+      "explain": "The first kind of failure is logical: the universalised maxim cannot even be conceived. The second is practical: it can be conceived, but no rational agent could want to live in that world, for instance because they would sometimes need help from others. The first yields strict duties without exceptions, the second duties with room for judgement."
+    },
+    {
+      "layout": "check",
+      "question": "Which of these is a **hypothetical** imperative?",
+      "options": [
+        "Do not lie.",
+        "If you want to be trusted, keep your promises.",
+        "Treat humanity never merely as a means.",
+        "Act only on maxims you could will as universal law."
+      ],
+      "answer": 1,
+      "explain": "It binds only on the condition that you want to be trusted. The others claim to bind unconditionally."
+    },
+    {
+      "layout": "definition",
+      "kind": "Second formulation",
+      "term": "Formula of Humanity",
+      "definition": "\"So act as to treat humanity, whether in thine own person or in that of any other, in every case as an end withal, never as means only.\" (4:429)",
+      "example": "The false promiser uses the lender **merely** as a means: the lender cannot consent to a deal whose real terms are hidden from them.",
+      "src": "G 4:429",
+      "explain": "This second formulation turns attention from the form of the law to the people affected. The key word is *merely*: using someone as a means, as when you buy bread, is fine. What is forbidden is treating a person only as a tool, in a way they could not agree to if they knew your plan.",
+      "intuition": "A white lie to get someone to a surprise party and a lie to cheat them of money both use deception. Ask in each case whether the person could consent if they knew the whole story."
+    },
+    {
+      "layout": "timeline",
+      "title": "Where this sits in Kant's work",
+      "events": [
+        {
+          "when": "1781",
+          "what": "*Critique of Pure Reason*: the limits of theoretical knowledge"
+        },
+        {
+          "when": "1785",
+          "what": "*Groundwork of the Metaphysics of Morals*: the categorical imperative"
+        },
+        {
+          "when": "1788",
+          "what": "*Critique of Practical Reason*: freedom and the moral law"
+        },
+        {
+          "when": "1797",
+          "what": "*Metaphysics of Morals*; the essay *On a Supposed Right to Lie*"
+        }
+      ],
+      "grounded": false,
+      "lead": "The categorical imperative belongs to a middle period of Kant's work, after the first Critique and before the later moral writings.",
+      "explain": "The dates show a development: the first Critique limits what theoretical reason can know, the Groundwork then builds morality on practical reason, and the later works apply and defend it. Reading the Groundwork against this background explains why Kant insists that duty cannot rest on experience or inclination."
+    },
+    {
+      "layout": "compare",
+      "title": "Two classic objections",
+      "columns": [
+        {
+          "heading": "Rigorism: the murderer at the door",
+          "points": [
+            "Lying to save a friend seems right, yet the FUL appears to forbid it",
+            "Constant raised it; Kant (1797) bit the bullet",
+            "Reply: refine the maxim's description, or give the Formula of Humanity priority"
+          ]
+        },
+        {
+          "heading": "Empty formalism",
+          "points": [
+            "Any maxim can be redescribed so that it universalises",
+            "Hegel: the test yields no content by itself",
+            "Reply: maxims must state the agent's *actual* reasons, not gerrymandered ones"
+          ]
+        }
+      ],
+      "src": "L4 s.22-26",
+      "lead": "Any serious theory must face its hardest cases. Two objections recur in the lecture.",
+      "explain": "Both objections target the same worry from different sides. Rigorism says the theory is too strict, because it forbids lying even to save a life. Formalism says it is too weak, because a clever description of the maxim can make almost anything pass. Each reply refines how maxims must be stated rather than abandoning the test."
+    },
+    {
+      "layout": "check",
+      "question": "Why, for Kant, is the false promise wrong?",
+      "options": [
+        "Because if everyone did it, the results would be bad.",
+        "Because the universalised maxim defeats itself.",
+        "Because God forbids lying.",
+        "Because it makes the promiser unhappy."
+      ],
+      "answer": 1,
+      "explain": "The test is about consistency, not consequences: universal false promising makes promising impossible, so the maxim cannot be willed as law. Answer A is the most common misreading."
+    },
+    {
+      "layout": "summary",
+      "title": "Remember",
+      "points": [
+        "Categorical imperatives bind unconditionally; hypothetical ones depend on what you want.",
+        "FUL tests **maxims** for self-defeat when universalised, not outcomes.",
+        "Conception → perfect duties; will → imperfect duties.",
+        "Formula of Humanity: never treat persons **merely** as means."
+      ]
+    }
+  ],
+  "explain": "full"
 }

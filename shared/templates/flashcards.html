@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{lang}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
+<html lang="{{lang}}" dir="{{dir}}" data-als-theme="{{theme}}" data-als-default="{{theme}}" data-als-mode="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,7 +27,7 @@
   .fc-back { transform: rotateY(180deg); }
   .fc-label { font-family: var(--kicker-font, var(--font-mono)); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text-faint); }
   .fc-body { flex: 1; display: flex; flex-direction: column; justify-content: center; font-size: clamp(1.1rem, 2.4vw, 1.4rem); line-height: 1.5; padding: 1rem 0; text-align: center; }
-  .fc-body.is-long { font-size: 1.05rem; text-align: left; }
+  .fc-body.is-long { font-size: 1.05rem; text-align: start; }
   .fc-extra { font-size: .9375rem; color: var(--text-muted); border-top: 1px dashed var(--border-strong); padding-top: .75rem; margin-top: .25rem; }
   .fc-foot { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; justify-content: space-between; min-height: 1.5rem; }
   .fc-hint { font-size: .75rem; color: var(--text-faint); }
@@ -64,7 +64,7 @@
 <script>/*ALS:CORE*/</script>
 <script>
 ALS.boot(function (deck) {
-  var E = ALS.el, $ = ALS.$;
+  var E = ALS.el, $ = ALS.$, T = ALS.t;
   var app = $('#app');
 
   /* ---- expand source cards into study cards (cloze -> one per cN, reverse -> two) ---- */
@@ -130,8 +130,8 @@ ALS.boot(function (deck) {
     var foot = E('div', { class: 'fc-foot' });
     var prov = ALS.provenance(card);
     foot.appendChild(prov || E('span'));
-    if (!isBack) foot.appendChild(E('span', { class: 'fc-hint', text: 'Tap or press Space to flip' }));
-    var kids = [E('div', { class: 'fc-label', text: isBack ? 'Answer' : (card.kind === 'Cloze' ? 'Fill the gap' : card.kind === 'Reverse' ? 'Reverse' : 'Question') }), body];
+    if (!isBack) foot.appendChild(E('span', { class: 'fc-hint', text: T('Tap or press Space to flip') }));
+    var kids = [E('div', { class: 'fc-label', text: isBack ? T('Answer') : (card.kind === 'Cloze' ? T('Fill the gap') : card.kind === 'Reverse' ? T('Reverse') : T('Question')) }), body];
     if (isBack && card.extra) { var ex = E('div', { class: 'fc-extra' }); ALS.rich(ex, card.extra); kids.push(ex); }
     kids.push(foot);
     return E('div', { class: 'fc-face fc-' + side }, kids);
@@ -141,7 +141,7 @@ ALS.boot(function (deck) {
     var el = $('#fc-card'); if (!el) return;
     state.flipped = !state.flipped;
     el.classList.toggle('is-flipped', state.flipped);
-    el.setAttribute('aria-label', state.flipped ? 'Answer side. Press 1 to 4 to grade.' : 'Question side. Press Space to show the answer.');
+    el.setAttribute('aria-label', state.flipped ? T('Answer side. Press 1 to 4 to grade.') : T('Question side. Press Space to show the answer.'));
     var g = $('#fc-grades'); if (g) g.hidden = !state.flipped;
     var fb = $('#fc-flipbar'); if (fb) fb.hidden = state.flipped;
   }
@@ -164,13 +164,13 @@ ALS.boot(function (deck) {
   /* ---- views ---- */
   function header() {
     var seg = E('div', { class: 'als-seg', role: 'group', 'aria-label': 'View' }, ['study', 'browse'].map(function (v) {
-      return E('button', { type: 'button', 'aria-pressed': String(state.view === v), text: v === 'study' ? 'Study' : 'Browse all', onclick: function () { state.view = v; ALS.store.set('view', v); render(); } });
+      return E('button', { type: 'button', 'aria-pressed': String(state.view === v), text: v === 'study' ? T('Study') : T('Browse all'), onclick: function () { state.view = v; ALS.store.set('view', v); render(); } });
     }));
-    var shuf = E('button', { type: 'button', class: 'als-btn als-btn--sm', 'aria-pressed': String(state.shuffle), html: ALS.icon('shuffle') + (state.shuffle ? ' Shuffled' : ' In order'), onclick: function () { state.shuffle = !state.shuffle; ALS.store.set('shuffle', state.shuffle); startSession(); } });
+    var shuf = E('button', { type: 'button', class: 'als-btn als-btn--sm', 'aria-pressed': String(state.shuffle), html: ALS.icon('shuffle') + ' ' + (state.shuffle ? T('Shuffled') : T('In order')), onclick: function () { state.shuffle = !state.shuffle; ALS.store.set('shuffle', state.shuffle); startSession(); } });
     shuf.querySelector('svg').style.width = '1rem';
     return E('div', { class: 'fc-head' }, [
       E('div', {}, [
-        E('div', { class: 'als-kicker', text: (deck.module ? deck.module + ' · ' : '') + cards.length + ' cards' }),
+        E('div', { class: 'als-kicker', text: (deck.module ? deck.module + ' · ' : '') + T('{0} cards', cards.length) }),
         E('h1', { class: 'als-h1', text: deck.title }),
         deck.subtitle ? E('p', { class: 'als-sub', text: deck.subtitle }) : null
       ]),
@@ -184,8 +184,8 @@ ALS.boot(function (deck) {
     var mk = function (val, label, count) {
       return E('button', { type: 'button', class: 'als-chip', 'aria-pressed': String(state.filter === val), text: label + (count != null ? ' · ' + count : ''), onclick: function () { state.filter = val; startSession(); } });
     };
-    var row = [mk('all', 'All', cards.length)];
-    if (due) row.push(mk('@due', 'Due today', cards.filter(function (c) { return due.indexOf(c.origin) > -1 || due.indexOf(c.id) > -1; }).length));
+    var row = [mk('all', T('All'), cards.length)];
+    if (due) row.push(mk('@due', T('Due today'), cards.filter(function (c) { return due.indexOf(c.origin) > -1 || due.indexOf(c.id) > -1; }).length));
     keys.forEach(function (k) { row.push(mk(k, k.charAt(0) === '#' ? k.slice(1) : k, tags[k])); });
     return E('div', { class: 'fc-filters als-noprint', role: 'group', 'aria-label': 'Filter cards' }, row);
   }
@@ -197,24 +197,24 @@ ALS.boot(function (deck) {
     var total = state.queue.length;
     var pct = Math.round(state.pos / total * 100);
     wrap.appendChild(E('div', { class: 'fc-meta' }, [
-      E('span', { text: 'Card ' + (state.pos + 1) + ' of ' + total }),
-      E('span', { text: state.counts.again + ' again · ' + (state.counts.good + state.counts.easy + state.counts.hard) + ' recalled' })
+      E('span', { text: T('Card {0} of {1}', state.pos + 1, total) }),
+      E('span', { text: T('{0} again · {1} recalled', state.counts.again, state.counts.good + state.counts.easy + state.counts.hard) })
     ]));
     var bar = E('div', { class: 'als-progress', style: 'margin-bottom:1rem' }, [E('span', { style: 'width:' + pct + '%' })]);
     wrap.appendChild(bar);
-    var cardEl = E('div', { id: 'fc-card', class: 'fc-card als-rise', tabindex: '0', role: 'button', 'aria-label': 'Question side. Press Space to show the answer.', onclick: flip }, [face(card, 'front'), face(card, 'back')]);
+    var cardEl = E('div', { id: 'fc-card', class: 'fc-card als-rise', tabindex: '0', role: 'button', 'aria-label': T('Question side. Press Space to show the answer.'), onclick: flip }, [face(card, 'front'), face(card, 'back')]);
     wrap.appendChild(E('div', { class: 'fc-stage' }, [cardEl]));
     wrap.appendChild(E('div', { id: 'fc-flipbar', class: 'fc-flipbar als-noprint' }, [
-      E('button', { type: 'button', class: 'als-btn als-btn--primary', html: ALS.icon('rotate') + ' Show answer', onclick: flip })
+      E('button', { type: 'button', class: 'als-btn als-btn--primary', html: ALS.icon('rotate') + ' ' + T('Show answer'), onclick: flip })
     ]));
     var g = E('div', { id: 'fc-grades', class: 'fc-grades als-noprint', hidden: true }, [
-      E('button', { type: 'button', class: 'als-btn als-btn--bad', onclick: function () { grade('again'); }, html: 'Again<small>forgot · 1</small>' }),
-      E('button', { type: 'button', class: 'als-btn als-btn--warn', onclick: function () { grade('hard'); }, html: 'Hard<small>struggled · 2</small>' }),
-      E('button', { type: 'button', class: 'als-btn als-btn--good', onclick: function () { grade('good'); }, html: 'Good<small>recalled · 3</small>' }),
-      E('button', { type: 'button', class: 'als-btn', onclick: function () { grade('easy'); }, html: 'Easy<small>instant · 4</small>' })
+      E('button', { type: 'button', class: 'als-btn als-btn--bad', onclick: function () { grade('again'); }, html: T('Again') + '<small>' + T('forgot') + ' · 1</small>' }),
+      E('button', { type: 'button', class: 'als-btn als-btn--warn', onclick: function () { grade('hard'); }, html: T('Hard') + '<small>' + T('struggled') + ' · 2</small>' }),
+      E('button', { type: 'button', class: 'als-btn als-btn--good', onclick: function () { grade('good'); }, html: T('Good') + '<small>' + T('recalled') + ' · 3</small>' }),
+      E('button', { type: 'button', class: 'als-btn', onclick: function () { grade('easy'); }, html: T('Easy') + '<small>' + T('instant') + ' · 4</small>' })
     ]);
     wrap.appendChild(g);
-    wrap.appendChild(E('div', { class: 'fc-keys als-noprint', html: '<span class="als-kbd">Space</span> flip &nbsp; <span class="als-kbd">1</span><span class="als-kbd">2</span><span class="als-kbd">3</span><span class="als-kbd">4</span> grade' }));
+    wrap.appendChild(E('div', { class: 'fc-keys als-noprint', html: '<span class="als-kbd">Space</span> ' + T('flip') + ' &nbsp; <span class="als-kbd">1</span><span class="als-kbd">2</span><span class="als-kbd">3</span><span class="als-kbd">4</span> ' + T('grade') }));
     return wrap;
   }
 
@@ -223,16 +223,16 @@ ALS.boot(function (deck) {
     var againIds = {}; state.results.forEach(function (r) { if (r.grade === 'again') againIds[r.card] = 1; });
     var again = Object.keys(againIds);
     var box = E('div', { class: 'fc-done als-card als-rise' }, [
-      E('div', { class: 'als-kicker', text: 'Session complete' }),
-      E('h2', { class: 'als-h2', text: n ? 'Nice work.' : 'Nothing to review here.' }),
-      E('p', { class: 'als-muted', text: n ? 'Save your results and ask Claude to import them; it schedules each card for its next review.' : 'Pick another filter or browse all cards.' }),
+      E('div', { class: 'als-kicker', text: T('Session complete') }),
+      E('h2', { class: 'als-h2', text: n ? T('Nice work.') : T('Nothing to review here.') }),
+      E('p', { class: 'als-muted', text: n ? T('Save your results and ask Claude to import them; it schedules each card for its next review.') : T('Pick another filter or browse all cards.') }),
       E('div', { class: 'fc-stats' }, [['again', 'Again'], ['hard', 'Hard'], ['good', 'Good'], ['easy', 'Easy']].map(function (p) {
-        return E('div', { class: 'fc-stat' }, [E('b', { text: String(c[p[0]]) }), E('span', { text: p[1] })]);
+        return E('div', { class: 'fc-stat' }, [E('b', { text: String(c[p[0]]) }), E('span', { text: T(p[1]) })]);
       })),
       E('div', { class: 'als-row', style: 'justify-content:center' }, [
-        n ? E('button', { type: 'button', class: 'als-btn als-btn--primary', html: ALS.icon('download') + ' Save results', onclick: function () { ALS.exportResults('deck', state.results); } }) : null,
-        again.length ? E('button', { type: 'button', class: 'als-btn', text: 'Review ' + again.length + ' missed', onclick: function () { startSession(again); } }) : null,
-        E('button', { type: 'button', class: 'als-btn', text: 'Restart', onclick: function () { startSession(); } })
+        n ? E('button', { type: 'button', class: 'als-btn als-btn--primary', html: ALS.icon('download') + ' ' + T('Save results'), onclick: function () { ALS.exportResults('deck', state.results); } }) : null,
+        again.length ? E('button', { type: 'button', class: 'als-btn', text: T('Review {0} missed', again.length), onclick: function () { startSession(again); } }) : null,
+        E('button', { type: 'button', class: 'als-btn', text: T('Restart'), onclick: function () { startSession(); } })
       ])
     ]);
     return box;
@@ -241,7 +241,7 @@ ALS.boot(function (deck) {
   function browseView() {
     var grid = E('div', { class: 'fc-browse' });
     cards.filter(inFilter).forEach(function (card) {
-      var el = E('div', { class: 'fc-card', tabindex: '0', role: 'button', 'aria-label': 'Flashcard, press Enter to flip' }, [face(card, 'front'), face(card, 'back')]);
+      var el = E('div', { class: 'fc-card', tabindex: '0', role: 'button', 'aria-label': T('Flashcard, press Enter to flip') }, [face(card, 'front'), face(card, 'back')]);
       var toggle = function () { el.classList.toggle('is-flipped'); };
       el.addEventListener('click', toggle);
       el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); toggle(); } });
@@ -252,15 +252,26 @@ ALS.boot(function (deck) {
 
   function render() {
     app.innerHTML = '';
-    var printBtn = ALS.iconBtn('print', 'Print all cards', function () { state.view = 'browse'; render(); setTimeout(function () { window.print(); }, 150); }, 'als-noprint');
+    var printBtn = ALS.iconBtn('print', T('Print all cards'), function () { state.view = 'browse'; render(); setTimeout(function () { window.print(); }, 150); }, 'als-noprint');
     app.appendChild(ALS.topbar([printBtn]));
     var main = E('main', { class: 'als-shell als-frame' });
     main.appendChild(header());
     var f = filters(); if (f) main.appendChild(f);
     main.appendChild(state.view === 'study' ? studyView() : browseView());
     app.appendChild(main);
+    app.appendChild(ALS.dock());
+    paintStatus();
     ALS.applyMode();
     ALS.renderMath(app);
+  }
+  function paintStatus() {
+    var done = state.results.length, ok = state.counts.hard + state.counts.good + state.counts.easy;
+    ALS.status([
+      { k: T('Card'), v: Math.min(state.pos + 1, state.queue.length) + ' / ' + state.queue.length },
+      { k: T('Recalled'), v: ok }, { k: T('Again'), v: state.counts.again },
+      done ? { k: T('Accuracy'), v: Math.round(ok / done * 100) + '%' } : null,
+      done && ALS.elapsed() > 20 ? { k: T('Pace'), v: (done / (ALS.elapsed() / 60)).toFixed(1) + ' / ' + T('min') } : null
+    ]);
   }
 
   ALS.onKey({

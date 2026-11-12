@@ -50,7 +50,7 @@ def snapshot(ws: Path, on: dt.date | None = None) -> dict:
         topics = []
         for t in m.get("topics", []):
             st = mastery.get(f"{m['id']}/{t['id']}", {})
-            topics.append({"id": t["id"], "title": t.get("title", t["id"]), "weight": int(t.get("weight", 1) or 1),
+            topics.append({"id": t["id"], "title": t.get("title", t["id"]), "weight": int(t.get("weight", 1) or 1), "prereqs": list(t.get("prereqs") or []),
                            "mastery": st.get("mastery"), "attempts": st.get("attempts", 0), "status": progress.label(st.get("mastery"))})
         # topics practised but not in the topic map still count
         known = {t["id"] for t in topics}
@@ -99,6 +99,12 @@ def recommend(mods: list[dict], dls: list[dict], due_now: dict) -> list[str]:
                 recs.append((95 - m["examDays"], f"Exam in *{m['title']}* in {m['examDays']} days: practise **{target[0]['title']}** with a timed mock test."))
         if weak:
             w = sorted(weak, key=lambda t: (-t["weight"], t["mastery"]))[0]
+            # a weak topic often rests on a weaker prerequisite: repair that first
+            by_id = {t["id"]: t for t in m["topics"]}
+            shaky = [by_id[x] for x in w.get("prereqs", []) if x in by_id and (by_id[x]["mastery"] is None or by_id[x]["mastery"] < 0.5)]
+            if shaky:
+                pre = sorted(shaky, key=lambda t: t["mastery"] if t["mastery"] is not None else -1)[0]
+                recs.append((82 + 5 * w["weight"], f"**{w['title']}** builds on **{pre['title']}**, which is not secure yet: go through that first (explain, then 5 questions) in *{m['title']}*."))
             recs.append((70 + 5 * w["weight"], f"Strengthen **{w['title']}** ({round(w['mastery'] * 100)}% mastery) in *{m['title']}*: a worked-example drill, then 5 fresh questions."))
         elif new_heavy:
             recs.append((60, f"Start **{new_heavy[0]['title']}** in *{m['title']}*: it carries a lot of weight and has not been practised yet."))
